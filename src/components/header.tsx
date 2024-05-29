@@ -95,7 +95,7 @@ export const Header = () => {
                       </div>
                     </div>
                     <div
-                      className={`md:absolute bottom-0 pt-2 md:-bottom-3 md:p-5 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[512px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
+                      className={`md:absolute bottom-0 pt-2 md:-bottom-3 md:p-5 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[384px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
                         isDropdownOpened ? "grid sm:grid-cols-2" : "hidden"
                       } md:border`}
                     >

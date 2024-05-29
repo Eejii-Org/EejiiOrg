@@ -52,3 +52,17 @@ body {
   opacity: 0.2;
   transition: 0s;
 }
+
+.partner-scroll {
+  position: absolute;
+  animation: scroll linear 10s infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-704px - 64px));
+  }
+}

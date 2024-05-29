@@ -1,5 +1,13 @@
-import { Banner } from "@/components";
-import Image from "next/image";
+import {
+  Banner,
+  UserTypeExplain,
+  Features,
+  LatestProjects,
+  MediaSection,
+  PartnersHome,
+  EmailCta,
+} from "@/components";
+import VolunteersMap from "@/components/home/volunteers-map";
 
 export default function Home() {
   const data = {
@@ -8,9 +16,14 @@ export default function Home() {
     volunteersPercentage: 100,
     totalDonation: 12200000,
     thisMonthProjectsAndEvents: 1,
+    countries: [],
+    level_1: 0,
+    level_2: 0,
+    level_3: 0,
+    level_4: 0,
   };
   return (
-    <section className="container mx-auto px-3">
+    <>
       <Banner
         totalProjects={(data?.totalProjects as number) ?? 0}
         totalVolunteeringEvents={(data?.totalVolunteeringEvents as number) ?? 0}
@@ -20,6 +33,19 @@ export default function Home() {
           (data?.thisMonthProjectsAndEvents as number) ?? 0
         }
       />
+      <UserTypeExplain />
+      <Features />
+      <LatestProjects />
+      <MediaSection />
+      <VolunteersMap
+        level_1={data.level_1}
+        level_2={data.level_2}
+        level_3={data.level_3}
+        level_4={data.level_4}
+        countries={data?.countries}
+      />
+      <PartnersHome />
+      <EmailCta />
       {/* <UsertypeExplain />
       <Features />
       <LatestProjects />
@@ -33,6 +59,6 @@ export default function Home() {
       />
       <PartnersHome />
       <EmailCta /> */}
-    </section>
+    </>
   );
 }

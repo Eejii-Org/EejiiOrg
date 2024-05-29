@@ -41,14 +41,24 @@ export const Card = (props: CardPropsType) => {
         {loading ? (
           <Skeleton
             className={`flex-1 rounded-2xl ${
-              cardSize == "base" ? "min-h-52" : "min-h-64"
+              cardSize == "base"
+                ? "min-h-52"
+                : cardType == "event"
+                ? "min-h-40"
+                : "min-h-64"
             }`}
           />
         ) : (
           <div
             className={`relative flex-1 w-full rounded-2xl ${
               showHighlight ? "shadow-primary/20 shadow drop-shadow" : ""
-            } overflow-hidden ${cardSize == "base" ? "min-h-52" : "min-h-64"}`}
+            } overflow-hidden ${
+              cardSize == "base"
+                ? "min-h-52"
+                : cardType == "event"
+                ? "min-h-40"
+                : "min-h-64"
+            }`}
           >
             <Image
               src={
@@ -100,14 +110,14 @@ export const Card = (props: CardPropsType) => {
           {loading ? (
             <>
               <Skeleton className="h-6 rounded" />
-              <Skeleton className="h-40 rounded" />
+              <Skeleton className="h-32 rounded" />
             </>
           ) : (
             <>
               <h3 className="font-bold text-xl pt-5 md:pt-0">
                 {cardData?.title}
               </h3>
-              <p className="text-lg md:text-md text-black/60">
+              <p className="text-lg md:text-md text-black/60 min-h-32">
                 {cardData?.[cardType == "media" ? "body" : "description"]
                   ?.split(" ")
                   .slice(0, 30)
@@ -118,7 +128,7 @@ export const Card = (props: CardPropsType) => {
           {cardType == "media" && (
             <>
               {loading ? (
-                <Skeleton className="h-7 w-24 rounded" />
+                <></>
               ) : (
                 <div className="w-full flex items-start">
                   <Link
