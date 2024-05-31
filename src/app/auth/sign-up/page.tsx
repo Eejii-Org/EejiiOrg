@@ -11,11 +11,23 @@ import {
 } from "@/components";
 import { GenderType, UserType } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 type UserTypes = "supporter" | "partner" | "volunteer";
 
+const Fallback = () => {
+  return <>placeholder</>;
+};
+
 const SignUp = () => {
+  return (
+    <Suspense fallback={<Fallback />}>
+      <Comp />
+    </Suspense>
+  );
+};
+
+const Comp = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [userDetail, setUserDetail] = useState<UserType>({

@@ -1,9 +1,21 @@
 "use client";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+
+const Fallback = () => {
+  return <>placeholder</>;
+};
 
 const VerifyEmail = () => {
+  return (
+    <Suspense fallback={<Fallback />}>
+      <Comp />
+    </Suspense>
+  );
+};
+
+const Comp = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const token = searchParams.get("token");
@@ -14,7 +26,7 @@ const VerifyEmail = () => {
   const requestNewVerification = async () => {
     setRequestLoading(true);
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
         {
           email,
