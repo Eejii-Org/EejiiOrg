@@ -5,6 +5,7 @@ export type IconPropsType = {
 };
 
 export * from "./arrow-right";
+export * from "./arrow-left";
 export * from "./close";
 export * from "./menu";
 export * from "./caret-down";
@@ -15,3 +16,4 @@ export * from "./person";
 export * from "./partner";
 export * from "./volunteer";
 export * from "./thank-you-illustration";
+export * from "./search";

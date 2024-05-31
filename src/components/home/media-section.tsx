@@ -17,7 +17,7 @@ export const MediaSection = () => {
           байгаарай
         </div>
         <Link
-          href="/projects"
+          href="/media"
           className="text-primary font-bold text-lg flex justify-center items-center gap-2"
         >
           Дэлгэрэнгүй
@@ -29,6 +29,7 @@ export const MediaSection = () => {
           <div
             key={index}
             className="max-md:min-w-[90vw] md:flex-1 md:flex max-md:snap-always max-md:snap-center overflow-hidden"
+            // onClick={() => console.log(mediaData)}
           >
             <Card cardData={mediaData} cardType="media" loading={isLoading} />
           </div>

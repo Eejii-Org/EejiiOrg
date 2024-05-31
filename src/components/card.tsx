@@ -66,12 +66,12 @@ export const Card = (props: CardPropsType) => {
                   ? process.env.NEXT_PUBLIC_AWS_PATH +
                     "/" +
                     cardData?.Images?.[0]?.path
-                  : "/images/placeholder.svg"
+                  : "/assets/placeholder.svg"
               }
               fill
               onError={(event) => {
                 (event.target as HTMLImageElement).src =
-                  "/images/placeholder.svg";
+                  "/assets/placeholder.svg";
               }}
               className="object-cover"
               alt={"Card" + cardData?.id}
@@ -100,7 +100,7 @@ export const Card = (props: CardPropsType) => {
                 <Skeleton className="h-6 w-24 rounded" />
               ) : (
                 <div className="">
-                  <span className="px-2 py-1 bg-black/10 text-black/50 font-bold text-md rounded-full">
+                  <span className="px-2 py-1 bg-black/10 text-black/50 font-medium text-md rounded-full">
                     {toDateString(cardData?.createdAt)}
                   </span>
                 </div>
@@ -114,15 +114,14 @@ export const Card = (props: CardPropsType) => {
             </>
           ) : (
             <>
-              <h3 className="font-bold text-xl pt-5 md:pt-0">
+              <h3 className="font-semibold text-base pt-5 md:pt-0 max-line-2">
                 {cardData?.title}
               </h3>
-              <p className="text-lg md:text-md text-black/60 min-h-32">
-                {cardData?.[cardType == "media" ? "body" : "description"]
-                  ?.split(" ")
-                  .slice(0, 30)
-                  .join(" ")}
-              </p>
+              {cardType !== "media" && (
+                <p className="text-lg md:text-md text-black/60 min-h-24">
+                  {cardData?.["description"]?.split(" ").slice(0, 30).join(" ")}
+                </p>
+              )}
             </>
           )}
           {cardType == "media" && (
@@ -132,13 +131,14 @@ export const Card = (props: CardPropsType) => {
               ) : (
                 <div className="w-full flex items-start">
                   <Link
-                    href={`/media/${cardData.id}`}
-                    className=" text-primary font-bold text-lg flex justify-center items-center gap-2"
+                    href={`/media/${cardData?.["@id"]
+                      .split("/")
+                      .slice(3)
+                      .join("/")}`}
+                    className=" text-primary font-medium text-lg flex justify-center items-center gap-2"
                   >
                     Унших
-                    <span className="-rotate-45 origin-center">
-                      <ArrowRight />
-                    </span>
+                    <ArrowRight />
                   </Link>
                 </div>
               )}
