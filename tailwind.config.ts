@@ -21,6 +21,9 @@ const config: Config = {
         secondary: "var(--secondary)",
         tertiary: "var(--tertiary)",
       },
+      dropShadow: {
+        card: "0px 4px 40px rgba(0, 0, 0, 0.06)",
+      },
     },
     fontSize: {
       xs: ["10px", "12px"],
