@@ -31,6 +31,7 @@ const Comp = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState("");
+  const [signUpLoading, setSignUpLoading] = useState(false);
   const [userDetail, setUserDetail] = useState<UserType>({
     email: "",
     plainPassword: "",
@@ -126,15 +127,16 @@ const Comp = () => {
                 setStep(step + 1);
               } else {
                 const bio = formData.get("bio") as string;
-                setUserDetail({
-                  ...userDetail,
-                  bio,
-                });
+                const newUser = { ...userDetail, bio };
+                setUserDetail(newUser);
                 try {
-                  console.log(userDetail);
-                  await signUp(userDetail);
+                  setSignUpLoading(true);
+                  await signUp(newUser);
+                  setSignUpLoading(false);
                   router.push("/auth/sign-up/success");
                 } catch (e) {
+                  console.log(e);
+                  setSignUpLoading(false);
                   setErrorMessage(
                     "Имэйл бүртгэлтэй байна. Та дараа дахин оролдоно уу."
                   );
@@ -223,6 +225,11 @@ const Comp = () => {
           </form>
         )}
       </div>
+      {signUpLoading && (
+        <div className=" z-50 w-screen h-screen left-0 top-0 absolute bg-black/50 flex items-center justify-center">
+          <p className="text-white font-medium text-lg">Loading...</p>
+        </div>
+      )}
     </section>
   );
 };
