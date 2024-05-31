@@ -13,7 +13,7 @@ const SignIn = () => {
   const router = useRouter();
   return (
     <section className="container flex flex-col flex-1 justify-center h-full pb-48">
-      <div className="flex flex-col xs:items-center justify-center">
+      <div className="flex flex-col xs:items-center justify-center gap-4">
         <form
           ref={ref}
           action={async (formData) => {
@@ -63,6 +63,8 @@ const SignIn = () => {
             )}
             <SignInButton />
           </div>
+        </form>
+        <div className="flex flex-col gap-3 max-w-[364px] xs:w-[364px]">
           <Link
             href="/auth/forgot-password"
             className="text-md underline text-center text-primary"
@@ -76,7 +78,7 @@ const SignIn = () => {
           >
             Бүртгүүлэх
           </Button>
-        </form>
+        </div>
       </div>
     </section>
   );

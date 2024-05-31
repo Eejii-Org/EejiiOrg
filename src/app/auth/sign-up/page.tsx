@@ -30,6 +30,7 @@ const SignUp = () => {
 const Comp = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [errorMessage, setErrorMessage] = useState("");
   const [userDetail, setUserDetail] = useState<UserType>({
     email: "",
     plainPassword: "",
@@ -81,6 +82,7 @@ const Comp = () => {
           <form
             className="w-full md:min-w-[800px] flex flex-col gap-12 items-center"
             action={async (formData) => {
+              setErrorMessage("");
               if (step == 1) {
                 const email = formData.get("email") as string;
                 const plainPassword = formData.get("plainPassword") as string;
@@ -129,10 +131,13 @@ const Comp = () => {
                   bio,
                 });
                 try {
+                  console.log(userDetail);
                   await signUp(userDetail);
                   router.push("/auth/sign-up/success");
                 } catch (e) {
-                  console.log(e);
+                  setErrorMessage(
+                    "Имэйл бүртгэлтэй байна. Та дараа дахин оролдоно уу."
+                  );
                 }
               }
             }}
@@ -193,19 +198,27 @@ const Comp = () => {
                 <p>Supporter</p>
               )}
             </div>
-            <div className="flex flex-row gap-4 w-full md:w-fit">
-              <Button
-                className="border border-primary bg-transparent !text-primary hover:bg-gray-200 flex-1 md:flex-auto md:min-w-64"
-                type="button"
-                onClick={() =>
-                  setStep(step == null ? 0 : step == 0 ? step : step - 1)
-                }
-              >
-                Буцах
-              </Button>
-              <Button type="submit" className="flex-1 md:flex-auto md:min-w-64">
-                {step == steps ? "Бүртгүүлэх" : "Үргэлжлүүлэх"}
-              </Button>
+            <div className="flex flex-col gap-2">
+              {errorMessage && (
+                <p className="text-red-600 text-md">{errorMessage}</p>
+              )}
+              <div className="flex flex-row gap-4 w-full md:w-fit">
+                <Button
+                  className="border border-primary bg-transparent !text-primary hover:bg-gray-200 flex-1 md:flex-auto md:min-w-64"
+                  type="button"
+                  onClick={() =>
+                    setStep(step == null ? 0 : step == 0 ? step : step - 1)
+                  }
+                >
+                  Буцах
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1 md:flex-auto md:min-w-64"
+                >
+                  {step == steps ? "Бүртгүүлэх" : "Үргэлжлүүлэх"}
+                </Button>
+              </div>
             </div>
           </form>
         )}

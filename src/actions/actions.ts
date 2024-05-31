@@ -23,13 +23,14 @@ export const signIn = async (formData: FormData) => {
 
 export const signUp = async (userData: UserType) => {
   try {
-    const { data } = await axios.post(
+    const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
       {
         ...userData,
       }
     );
-  } catch (error) {
-    throw error;
+    console.log(res);
+  } catch (error: any) {
+    throw error?.response?.data;
   }
 };
