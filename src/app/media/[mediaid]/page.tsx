@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 // import type { Media } from '@/lib/types';
 // import { format } from 'date-fns';
 import Link from "next/link";
@@ -9,18 +9,21 @@ import { useEffect, useState } from "react";
 
 // media-гаа авахгүй байсан тул гараар content орууллаа.
 
-const MediaPage = (props: any) => {
+const MediaPage = async (props: any) => {
   const mediaId = props.params?.["mediaid"];
-  const [data, setData] = useState<any>(null);
-  useEffect(() => {
-    const getMedia = async () => {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media/${mediaId}`
-      );
-      setData(res.data);
-    };
-    getMedia();
-  }, [mediaId]);
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media/${mediaId}`
+  );
+  // const [data, setData] = useState<any>(null);
+  // useEffect(() => {
+  //   const getMedia = async () => {
+  //     const res = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media/${mediaId}`
+  //     );
+  //     setData(res.data);
+  //   };
+  //   getMedia();
+  // }, [mediaId]);
   // const image =
   //   process.env.NEXT_PUBLIC_AWS_PATH + '/' + media?.Images?.[0]?.path;
   return (
