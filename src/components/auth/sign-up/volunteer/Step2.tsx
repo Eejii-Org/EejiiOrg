@@ -66,7 +66,6 @@ export const VolunteerStep2 = () => {
         placeholder="АА12341234"
         title="Регистрийн дугаараа бүрэн бөглөнө үү. АА12341234 байх ёстой"
         type="text"
-        pattern="[a-zA-Z]{2}\d{8}"
         required
         name="registerNumber"
       />
