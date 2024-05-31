@@ -30,16 +30,6 @@ const links = [
   {
     link: "/auth",
     label: "Нэвтрэх",
-    links: [
-      {
-        link: "/auth",
-        label: "Volunteer",
-      },
-      {
-        link: "/auth",
-        label: "Partner",
-      },
-    ],
   },
   { link: "/projects", label: "Donate" },
 ];
@@ -47,7 +37,6 @@ const links = [
 export const Header = () => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [isNavOpened, setIsNavOpened] = useState(false);
-  const [isAuthOpened, setIsAuthOpened] = useState(false);
 
   return (
     <header className="bg-white fixed w-full z-50 shadow-sm">
@@ -108,37 +97,7 @@ export const Header = () => {
                   </button>
                 );
               }
-              if (link.label == "Нэвтрэх") {
-                return (
-                  <button
-                    onClick={() => setIsAuthOpened((prevState) => !prevState)}
-                    className="transition all duration-500 ease-out pl-6 pr-4 py-3 text-base font-semibold md:hover:bg-black/5 rounded-xl relative flex flex-col gap-1 text-left"
-                    key={index}
-                  >
-                    <div className="flex flex-row items-center">
-                      {link.label}
-                      <div
-                        className={`inline transition-all ${
-                          isAuthOpened && "rotate-180"
-                        }`}
-                      >
-                        <CaretDown />
-                      </div>
-                    </div>
-                    <div
-                      className={`md:absolute bottom-0 pl-4 md:pl-0 md:-bottom-3 md:px-0 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[160px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
-                        isAuthOpened ? "flex flex-col" : "hidden"
-                      } md:border`}
-                    >
-                      {link.links?.map((l, i) => (
-                        <NavLink href={l.link} key={i}>
-                          {l.label}
-                        </NavLink>
-                      ))}
-                    </div>
-                  </button>
-                );
-              }
+
               if (link.label === "Donate") {
                 return <DonateModal key={link.label} />;
               } else

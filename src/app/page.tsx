@@ -6,24 +6,17 @@ import {
   MediaSection,
   PartnersHome,
   EmailCta,
+  MainLayout,
 } from "@/components";
 import VolunteersMap from "@/components/home/volunteers-map";
+import axios from "axios";
 
-export default function Home() {
-  const data = {
-    totalProjects: 1,
-    totalVolunteeringEvents: 1,
-    volunteersPercentage: 100,
-    totalDonation: 12200000,
-    thisMonthProjectsAndEvents: 1,
-    countries: [],
-    level_1: 0,
-    level_2: 0,
-    level_3: 0,
-    level_4: 0,
-  };
+const Home = async () => {
+  const {
+    data: { data },
+  } = await axios.get(`${process.env.BACKEND_URL}/api/home/statistics`);
   return (
-    <>
+    <MainLayout>
       <Banner
         totalProjects={(data?.totalProjects as number) ?? 0}
         totalVolunteeringEvents={(data?.totalVolunteeringEvents as number) ?? 0}
@@ -59,6 +52,8 @@ export default function Home() {
       />
       <PartnersHome />
       <EmailCta /> */}
-    </>
+    </MainLayout>
   );
-}
+};
+
+export default Home;
