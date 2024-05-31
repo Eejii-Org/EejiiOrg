@@ -1,7 +1,8 @@
 "use client";
+import { getVerifyEmail, verifyEmail } from "@/actions";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 const Fallback = () => {
   return <>placeholder</>;
@@ -26,12 +27,7 @@ const Comp = () => {
   const requestNewVerification = async () => {
     setRequestLoading(true);
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
-        {
-          email,
-        }
-      );
+      await getVerifyEmail(email as string);
       setRequestLoading(false);
       setRequestSuccess(true);
     } catch (e) {
@@ -39,29 +35,27 @@ const Comp = () => {
       setRequestSuccess(false);
     }
   };
+  const combined = useMemo(() => {
+    if (!email || !token) return null;
+    return { email, token };
+  }, [email, token]);
   useEffect(() => {
     const verify = async () => {
-      if (email && token) {
-        try {
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
-            {
-              email,
-              token,
-            }
-          );
-          console.log(res);
-          setSuccess(true);
-          setLoading(false);
-        } catch (e) {
-          console.log(e);
-          setSuccess(false);
-          setLoading(false);
-        }
+      if (!combined) return;
+      try {
+        const res = await verifyEmail(combined.email, combined.token);
+        console.log(res);
+        setSuccess(true);
+        setLoading(false);
+      } catch (e) {
+        setSuccess(false);
+        setLoading(false);
       }
     };
-    verify();
-  }, [email, token]);
+    if (combined) {
+      verify();
+    }
+  }, [combined]);
   return (
     <section className="flex flex-col gap-4 items-center justify-center">
       {loading ? (

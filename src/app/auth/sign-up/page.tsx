@@ -46,7 +46,7 @@ const Comp = () => {
     address: {
       country: "Mongolia",
       countryCode: "MN",
-      region: "",
+      region: "УБ — Баянзүрх",
       regionCode: "UB-BZD",
       address: "",
     },

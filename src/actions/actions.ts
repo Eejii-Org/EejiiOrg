@@ -22,6 +22,7 @@ export const signIn = async (formData: FormData) => {
 };
 
 export const signUp = async (userData: UserType) => {
+  "use server";
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
@@ -33,4 +34,25 @@ export const signUp = async (userData: UserType) => {
   } catch (error: any) {
     throw error?.response?.data;
   }
+};
+
+export const verifyEmail = async (email: string, token: string) => {
+  "use server";
+  return await axios.post(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
+    {
+      email,
+      token,
+    }
+  );
+};
+
+export const getVerifyEmail = async (email: string) => {
+  "use server";
+  return await axios.post(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
+    {
+      email,
+    }
+  );
 };
