@@ -43,13 +43,14 @@ const Comp = () => {
     const verify = async () => {
       if (email && token) {
         try {
-          const { data } = await axios.post(
+          const res = await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
             {
               email,
               token,
             }
           );
+          console.log(res);
           setSuccess(true);
           setLoading(false);
         } catch (e) {
