@@ -14,7 +14,9 @@ import axios from "axios";
 const Home = async () => {
   const {
     data: { data },
-  } = await axios.get(`${process.env.BACKEND_URL}/api/home/statistics`);
+  } = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/statistics`
+  );
   return (
     <MainLayout>
       <Banner

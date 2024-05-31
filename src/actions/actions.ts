@@ -8,10 +8,13 @@ export const signIn = async (formData: FormData) => {
   const email = formData.get("email");
   const password = formData.get("password");
   try {
-    const data = await axios.post(`${process.env.BACKEND_URL}/api/auth`, {
-      email,
-      password,
-    });
+    const data = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth`,
+      {
+        email,
+        password,
+      }
+    );
     return data;
   } catch (error) {
     throw error;
@@ -21,7 +24,7 @@ export const signIn = async (formData: FormData) => {
 export const signUp = async (userData: UserType) => {
   try {
     const { data } = await axios.post(
-      `${process.env.BACKEND_URL}/api/register/volunteer`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
       {
         ...userData,
       }

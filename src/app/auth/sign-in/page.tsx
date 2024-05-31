@@ -3,13 +3,11 @@
 import { Button, Input } from "@/components";
 import { useRef, useState } from "react";
 import SignInButton from "./button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { setCookie } from "cookies-next";
 const SignIn = () => {
-  const searchParams = useSearchParams();
-  const userType = searchParams.get("user");
   const ref = useRef<HTMLFormElement>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
