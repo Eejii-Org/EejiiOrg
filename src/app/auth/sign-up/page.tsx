@@ -10,6 +10,7 @@ import {
   VolunteerStep4,
 } from "@/components";
 import { GenderType, UserType } from "@/types";
+import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
@@ -126,12 +127,22 @@ const Comp = () => {
                 });
                 setStep(step + 1);
               } else {
+                setSignUpLoading(true);
                 const bio = formData.get("bio") as string;
                 const newUser = { ...userDetail, bio };
                 setUserDetail(newUser);
                 try {
-                  setSignUpLoading(true);
-                  await signUp(newUser);
+                  try {
+                    const res = await axios.post(
+                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
+                      {
+                        ...newUser,
+                      }
+                    );
+                    console.log(res);
+                  } catch (error: any) {
+                    throw error?.response?.data;
+                  }
                   setSignUpLoading(false);
                   router.push("/auth/sign-up/success");
                 } catch (e) {
@@ -225,11 +236,13 @@ const Comp = () => {
           </form>
         )}
       </div>
-      {signUpLoading && (
-        <div className=" z-50 w-screen h-screen left-0 top-0 absolute bg-black/50 flex items-center justify-center">
-          <p className="text-white font-medium text-lg">Loading...</p>
-        </div>
-      )}
+      <div
+        className={`z-50 w-screen h-screen left-0 top-0 absolute bg-black/50 items-center justify-center ${
+          signUpLoading ? "flex" : "hidden"
+        }`}
+      >
+        <p className="text-white font-medium text-lg">Loading...</p>
+      </div>
     </section>
   );
 };
