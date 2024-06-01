@@ -39,7 +39,7 @@ const SignIn = () => {
               );
             }
           }}
-          className="flex flex-col gap-3 max-w-[364px] xs:w-[364px]"
+          className="flex flex-col gap-3 xs:max-w-[364px] xs:w-[364px]"
         >
           <Input
             // label="Имэйл"
@@ -64,7 +64,7 @@ const SignIn = () => {
             <SignInButton />
           </div>
         </form>
-        <div className="flex flex-col gap-3 max-w-[364px] xs:w-[364px]">
+        <div className="flex flex-col gap-3 xs:max-w-[364px] xs:w-[364px]">
           <Link
             href="/auth/forgot-password"
             className="text-md underline text-center text-primary"
