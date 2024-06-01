@@ -27,7 +27,12 @@ const Comp = () => {
   const requestNewVerification = async () => {
     setRequestLoading(true);
     try {
-      await getVerifyEmail(email as string);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
+        {
+          email,
+        }
+      );
       setRequestLoading(false);
       setRequestSuccess(true);
     } catch (e) {
@@ -43,7 +48,13 @@ const Comp = () => {
     const verify = async () => {
       if (!combined) return;
       try {
-        const res = await verifyEmail(combined.email, combined.token);
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
+          {
+            email: combined.email,
+            token: combined.token,
+          }
+        );
         console.log(res);
         setSuccess(true);
         setLoading(false);
