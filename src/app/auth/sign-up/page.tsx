@@ -83,7 +83,9 @@ const Comp = () => {
         ) : (
           <form
             className="w-full md:min-w-[800px] flex flex-col gap-12 items-center"
-            action={async (formData) => {
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const formData = new FormData(event.target as HTMLFormElement);
               setErrorMessage("");
               if (step == 1) {
                 const email = formData.get("email") as string;
@@ -200,11 +202,11 @@ const Comp = () => {
                   {step == 1 ? (
                     <VolunteerStep1 userDetail={userDetail} />
                   ) : step == 2 ? (
-                    <VolunteerStep2 />
+                    <VolunteerStep2 userDetail={userDetail} />
                   ) : step == 3 ? (
-                    <VolunteerStep3 />
+                    <VolunteerStep3 userDetail={userDetail} />
                   ) : (
-                    <VolunteerStep4 />
+                    <VolunteerStep4 userDetail={userDetail} />
                   )}
                 </>
               ) : (
