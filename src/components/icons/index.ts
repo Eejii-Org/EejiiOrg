@@ -17,3 +17,5 @@ export * from "./partner";
 export * from "./volunteer";
 export * from "./thank-you-illustration";
 export * from "./search";
+export * from "./chevronlefticon";
+export * from "./chevronrighticon";

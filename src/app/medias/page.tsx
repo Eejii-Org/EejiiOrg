@@ -5,7 +5,7 @@ import { MediaSearch } from "@/components/media";
 import axios from "axios";
 // import { useEffect, useState } from "react";
 
-const Media = async () => {
+const Medias = async () => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media`
   );
@@ -34,4 +34,4 @@ const Media = async () => {
   );
 };
 
-export default Media;
+export default Medias;
