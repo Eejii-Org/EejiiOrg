@@ -3,6 +3,10 @@
 import { UserType } from "@/types";
 import axios from "axios";
 
+/* 
+  Authentication
+*/
+
 export const signIn = async (formData: FormData) => {
   "use server";
   const email = formData.get("email");
@@ -54,5 +58,27 @@ export const getVerifyEmail = async (email: string) => {
     {
       email,
     }
+  );
+};
+
+/* 
+  Media
+*/
+
+export const getEvents = async (page: number, q: string) => {
+  "use server";
+  return await axios.get(
+    `${
+      process.env.NEXT_PUBLIC_BACKEND_URL
+    }/api/events?state=new&enabled=true&limit=12&page=${page}${
+      q ? "&title=" + q : ""
+    }`
+  );
+};
+
+export const getFeaturedEvents = async () => {
+  "use server";
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&enabled=true&limit=4&isFeatured=true`
   );
 };

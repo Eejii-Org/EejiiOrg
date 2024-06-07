@@ -23,7 +23,7 @@ const links = [
     ],
   },
   {
-    link: "/media",
+    link: "/medias",
     label: "Медиа",
   },
   { link: "/about", label: "Бидний тухай" },

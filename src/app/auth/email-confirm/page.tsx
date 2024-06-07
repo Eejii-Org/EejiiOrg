@@ -1,5 +1,4 @@
 "use client";
-import { getVerifyEmail, verifyEmail } from "@/actions";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
