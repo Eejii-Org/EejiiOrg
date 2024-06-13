@@ -7,8 +7,11 @@ export const toDateString = (d: string | Date) => {
 };
 export const toShortDate = (d: string | Date) => {
   const date = new Date(d);
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-  return `${month} сарын`;
+  var formattedDate =
+    date.getFullYear() +
+    "." +
+    ("0" + (date.getMonth() + 1)).slice(-2) +
+    "." +
+    ("0" + date.getDate()).slice(-2);
+  return formattedDate;
 };

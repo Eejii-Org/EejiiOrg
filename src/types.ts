@@ -10,15 +10,25 @@ export type UserType = {
   bio: string;
   registerNumber: string;
   birthday: string;
-  address: {
-    country: string;
-    countryCode: string;
-    region: string;
-    regionCode: string;
-    address: string;
-  };
+  address: AddressType;
+};
+export type OwnerType = {
+  "@id": string;
+  "@type": string;
+  id: number;
+  email: string;
+  images: ImageType[];
+  phoneNumber: string;
+  type: string;
+  username: string;
+  organizationType: string;
+};
+export type ContactType = {
+  email: string;
+  phoneNumber: string;
 };
 export type EventType = {
+  "@context": string;
   "@id": string;
   "@type": string;
   id: number;
@@ -26,32 +36,35 @@ export type EventType = {
   title: string;
   type: string;
   description: string;
-  shortDescription: string;
+  shortDescription: string | null;
   state: string;
   isEnabled: boolean;
   isFeatured: boolean;
+  contact: ContactType;
+  maxPoint: number;
+  volunteeringHours: null | number;
   startTime: string;
   endTime: string;
   createdAt: string;
-  updatedAt: null | string;
-  owner: string;
-  images: [
-    {
-      "@type": "EventImage";
-      "@id": "/api/.well-known/genid/8b0c1febab531373a63b";
-      id: 37;
-      path: "4c/da/b6b2348d8c09ef7d91cb6ce31365.png";
-      type: "hero";
-    },
-    {
-      "@type": "EventImage";
-      "@id": "/api/.well-known/genid/34c21806b50514f5a7bd";
-      id: 38;
-      path: "3a/47/fbc30d1e4757117b2638a427a317.png";
-      type: "main";
-    }
-  ];
+  updatedAt: string;
+  owner: OwnerType;
+  images: ImageType[];
+  address: AddressType;
+  media: MediaType[];
+  eventUsers: EventUserType[];
+  roles: RoleType[];
+  categories: CategoryType[];
   approvedAt: null;
+};
+export type EventUserType = {
+  "@id": string;
+  "@type": string;
+  id: number;
+  event: string;
+  owner: OwnerType;
+  state: "pending" | "accepted" | "denied";
+  requestType: "invitation" | "request";
+  userType: "volunteer";
 };
 
 export type ImageType = {
@@ -61,3 +74,29 @@ export type ImageType = {
   path: string;
   type: "hero" | "main";
 };
+
+export type AddressType = {
+  "@id"?: string;
+  "@type"?: string;
+  id?: number;
+  country: string;
+  region: string;
+  regionCode: null | string;
+  countryCode: string;
+  address: null | string;
+};
+
+export type RoleType = {
+  "@id": string;
+  "@type": string;
+  id: number;
+  name: string;
+  slots: number;
+  accepted: null | string;
+  event: string;
+  eventUsers: EventUserType[];
+};
+
+export type CategoryType = {};
+
+export type MediaType = {};

@@ -11,12 +11,15 @@ export const EventCard = ({ event }: { event: EventType }) => {
     >
       <div className="relative h-48">
         <Image
-          src={"/assets/placeholder.svg"}
+          src={
+            event.images.find((img) => img.type == "hero")?.path ||
+            "/assets/placeholder.svg"
+          }
           fill
           onError={(event) => {
             (event.target as HTMLImageElement).src = "/assets/placeholder.svg";
           }}
-          className="object-cover"
+          className="object-contain bg-white"
           alt={"Card" + event?.id}
         />
       </div>
@@ -38,7 +41,7 @@ export const EventCard = ({ event }: { event: EventType }) => {
             alt={"CardProfile" + event?.id}
           />
           <label className="text-black/70 text-md font-medium">
-            {event.title}
+            {event.owner?.username || event.title}
           </label>
         </div>
       </div>

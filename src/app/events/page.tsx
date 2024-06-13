@@ -1,14 +1,15 @@
 import { getEvents, getFeaturedEvents } from "@/actions";
 import { EventsBody, MainLayout } from "@/components";
 import { EventType } from "@/types";
+import Image from "next/image";
 
 const EventsPage = async ({
   searchParams,
 }: {
-  searchParams: { page: number; q: string };
+  searchParams: { page: number; q: string; t: string };
 }) => {
-  const { page = 1, q } = searchParams;
-  const { data: eventsData } = await getEvents(page, q);
+  const { page = 1, q, t = "event" } = searchParams;
+  const { data: eventsData } = await getEvents(page, q, t);
   const { data: featuredEventsData } = await getFeaturedEvents();
   const events: EventType[] = eventsData?.["hydra:member"];
   const featuredEvents: EventType[] = featuredEventsData?.["hydra:member"];
@@ -17,11 +18,21 @@ const EventsPage = async ({
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
         <div className="flex max-md:flex-col gap-5 md:gap-9">
+          <div className="absolute top-0 left-0 h-80 w-screen">
+            <Image
+              src="/assets/event/banner.webp"
+              fill
+              alt="event-banner"
+              className="object-cover"
+            />
+          </div>
           <EventsBody
             pageIndex={page}
             lastPageIndex={lastPageIndex}
             events={events}
             featuredEvents={featuredEvents}
+            t={t}
+            q={q}
           />
         </div>
       </div>
