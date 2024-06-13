@@ -19,3 +19,7 @@ export * from "./thank-you-illustration";
 export * from "./search";
 export * from "./chevronlefticon";
 export * from "./chevronrighticon";
+export * from "./facebook-colored";
+export * from "./instagram-colored";
+export * from "./x-colored";
+export * from "./gmail-colored";

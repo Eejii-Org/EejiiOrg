@@ -65,12 +65,12 @@ export const getVerifyEmail = async (email: string) => {
   Media
 */
 
-export const getEvents = async (page: number, q: string) => {
+export const getEvents = async (page: number, q: string, t: string) => {
   "use server";
   return await axios.get(
     `${
       process.env.NEXT_PUBLIC_BACKEND_URL
-    }/api/events?state=new&enabled=true&limit=12&page=${page}${
+    }/api/events?state=new&order[startTime]=asc&type=${t}&enabled=true&limit=12&page=${page}${
       q ? "&title=" + q : ""
     }`
   );
@@ -80,5 +80,12 @@ export const getFeaturedEvents = async () => {
   "use server";
   return await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&enabled=true&limit=4&isFeatured=true`
+  );
+};
+
+export const getEvent = async (slug: string) => {
+  "use server";
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`
   );
 };

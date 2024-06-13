@@ -13,11 +13,15 @@ export const EventsBody = ({
   events,
   pageIndex,
   featuredEvents,
+  t,
+  q,
 }: {
   lastPageIndex: number;
   events: EventType[];
   pageIndex: number;
   featuredEvents: EventType[];
+  t: string;
+  q: string;
 }) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -28,12 +32,12 @@ export const EventsBody = ({
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
   return (
-    <div className="flex flex-1 w-full flex-col items-center gap-8">
+    <div className="flex flex-1 w-full flex-col items-center gap-8 z-10 mt-36">
       <div className="flex flex-row w-full gap-6">
         <div className="flex flex-col gap-6 w-full">
           {/* Events Search */}
           <div className="flex flex-col p-6 bg-white w-full gap-6  drop-shadow rounded-2xl">
-            <h1 className="text-3xl font-semibold">Арга хэмжээ хайх</h1>
+            <h1 className="text-2xl font-semibold">Арга хэмжээ хайх</h1>
             <div className="flex flex-row gap-6 flex-1">
               <div className="flex-1 flex justify-between px-4 py-5 md:py-5 md:px-6 bg-white rounded-full border">
                 <input
@@ -55,6 +59,32 @@ export const EventsBody = ({
           Ad Space
         </div>
       </div>
+      <div className="flex flex-row w-full">
+        <div
+          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
+            t == "event"
+              ? "border-primary text-primary"
+              : "border-transparent text-black/30"
+          }`}
+          onClick={() => {
+            router.push(`/events?page=1&q=${q}&t=event`);
+          }}
+        >
+          Арга хэмжээ
+        </div>
+        <div
+          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
+            t == "volunteering_event"
+              ? "border-primary text-primary"
+              : "border-transparent text-black/30"
+          }`}
+          onClick={() => {
+            router.push(`/events?page=1&q=${q}&t=volunteering_event`);
+          }}
+        >
+          Сайн дурын арга хэмжээ
+        </div>
+      </div>
       <div className="flex flex-row">
         <div className="flex-1 grid grid-cols-4 gap-8">
           {events.map((event, index) => (
@@ -62,7 +92,12 @@ export const EventsBody = ({
           ))}
         </div>
       </div>
-      <Pagination pageIndex={Number(pageIndex)} lastPageIndex={lastPageIndex} />
+      <Pagination
+        pageIndex={Number(pageIndex)}
+        q={q}
+        t={t}
+        lastPageIndex={lastPageIndex}
+      />
     </div>
   );
 };
@@ -70,9 +105,13 @@ export const EventsBody = ({
 const Pagination = ({
   pageIndex,
   lastPageIndex,
+  q,
+  t,
 }: {
   pageIndex: number;
   lastPageIndex: number;
+  q: string;
+  t: string;
 }) => {
   return (
     <div className="flex flex-row gap-2">
@@ -96,6 +135,8 @@ const Pagination = ({
             pathname: "/events",
             query: {
               page: pageIndex - 1,
+              q: q,
+              t: t,
             },
           }}
         >
@@ -108,6 +149,8 @@ const Pagination = ({
           pathname: "/events",
           query: {
             page: pageIndex,
+            q: q,
+            t: t,
           },
         }}
       >
@@ -120,6 +163,8 @@ const Pagination = ({
             pathname: "/events",
             query: {
               page: pageIndex + 1,
+              q: q,
+              t: t,
             },
           }}
         >
@@ -133,6 +178,8 @@ const Pagination = ({
             pathname: "/events",
             query: {
               page: pageIndex + 2,
+              q: q,
+              t: t,
             },
           }}
         >
@@ -185,7 +232,10 @@ const FeaturedEventsCarousel = ({
           key={i}
         >
           <Image
-            src={"/assets/placeholder.svg"}
+            src={
+              featuredEvent.images.find((img) => img.type == "main")?.path ||
+              "/assets/placeholder.svg"
+            }
             fill
             className="object-cover"
             alt={"Picture-" + featuredEvent.title}

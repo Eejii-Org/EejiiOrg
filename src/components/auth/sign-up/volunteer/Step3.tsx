@@ -22,7 +22,7 @@ export const VolunteerStep3 = ({ userDetail }: { userDetail: UserType }) => {
         label="Гэрийн хаяг"
         type="text"
         name="address"
-        defaultValue={userDetail.address.address}
+        defaultValue={userDetail.address?.address || ""}
       />
     </>
   );
