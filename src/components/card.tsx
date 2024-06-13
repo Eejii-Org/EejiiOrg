@@ -131,7 +131,7 @@ export const Card = (props: CardPropsType) => {
               ) : (
                 <div className="w-full flex items-start">
                   <Link
-                    href={`/media/${cardData?.["@id"]
+                    href={`/medias/${cardData?.["@id"]
                       .split("/")
                       .slice(3)
                       .join("/")}`}

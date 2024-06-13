@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowLeft, MainLayout, Skeleton } from "@/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toDateString } from "@/utils";
 
 // media-гаа авахгүй байсан тул гараар content орууллаа.
 
@@ -37,33 +38,31 @@ const MediaPage = async (props: any) => {
         alt="Media Background IMG"
       />
       <div className="w-full mx-auto mb-24">
-        <div className="container px-10 py-7 sm:px-[64px] sm:py-[48px] bg-white relative mx-auto shadow-sm rounded-2xl md:max-w-[800px] xs:-mt-28 md:-mt-44">
+        <div className="container px-10 py-7 sm:px-[64px] sm:py-[48px] bg-white relative mx-auto shadow-sm rounded-2xl xl:max-w-[800px] 2xl:max-w-[1096px] xs:-mt-28 md:-mt-44">
           {data ? (
             <>
               <header className="flex flex-col gap-1 mb-6">
-                <h5 className="font-bold text-lg md:text-[30px] mb-2">
+                <h5 className="font-bold text-lg md:text-[30px] leading-tight mb-2">
                   {data?.title}
                 </h5>
-                <div className="flex items-center gap-2 justify-between">
-                  {data?.owner && (
-                    <div className="flex gap-2">
-                      <Image
-                        width={25}
-                        height={25}
-                        src={"/images/volunteer/volunteer_logo.png"}
-                        alt="publisher's avatar"
-                      />
-                      <p className="font-semibold text-xl text-black/60">
-                        {/* {media.Owner.organizationName ?? media.Owner.email} */}
-                        Тэмүүжин
-                      </p>
-                    </div>
-                  )}
+                <div className="flex gap-2 flex-col">
+                  <div className="flex gap-2">
+                    <Image
+                      width={25}
+                      height={25}
+                      src={"/assets/placeholder.svg"}
+                      alt="publisher's avatar"
+                    />
+                    <p className="font-medium text-lg text-black/60">
+                      {/* {media.Owner.organizationName ?? media.Owner.email} */}
+                      Тэмүүжин
+                    </p>
+                  </div>
 
                   <p className="text-lg text-black/50">
                     {/* Published at{' '}
               {format(media.createdAt as unknown as Date, 'LLL do yyyy, H:mm')} */}
-                    {new Date(data?.createdAt).toDateString()}
+                    {toDateString(data?.createdAt)}
                   </p>
                 </div>
               </header>
@@ -72,7 +71,7 @@ const MediaPage = async (props: any) => {
                 dangerouslySetInnerHTML={{ __html: data?.body }}
               />
               <div className="">
-                <Link className="flex gap-2" href={"/media"}>
+                <Link className="flex gap-2" href={"/medias"}>
                   <ArrowLeft color="black" /> Буцах
                 </Link>
               </div>

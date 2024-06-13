@@ -65,6 +65,21 @@ export const getVerifyEmail = async (email: string) => {
   Media
 */
 
+export const getMedias = async (page: number, q: string) => {
+  "use server";
+  return await axios.get(
+    `${
+      process.env.NEXT_PUBLIC_BACKEND_URL
+    }/api/media?order[startTime]=asc&limit=12&page=${page}${
+      q ? "&title=" + q : ""
+    }`
+  );
+};
+
+/* 
+  Events
+*/
+
 export const getEvents = async (page: number, q: string, t: string) => {
   "use server";
   return await axios.get(
