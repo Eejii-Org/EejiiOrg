@@ -54,7 +54,6 @@ const Comp = () => {
             token: combined.token,
           }
         );
-        console.log(res);
         setSuccess(true);
         setLoading(false);
       } catch (e) {

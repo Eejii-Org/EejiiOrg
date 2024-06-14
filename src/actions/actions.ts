@@ -34,7 +34,6 @@ export const signUp = async (userData: UserType) => {
         ...userData,
       }
     );
-    console.log(res);
   } catch (error: any) {
     throw error?.response?.data;
   }
@@ -58,6 +57,17 @@ export const getVerifyEmail = async (email: string) => {
     {
       email,
     }
+  );
+};
+
+/* 
+  Home
+*/
+
+export const getHomeStatistics = async () => {
+  "use server";
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/statistics`
   );
 };
 
@@ -102,5 +112,34 @@ export const getEvent = async (slug: string) => {
   "use server";
   return await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`
+  );
+};
+
+/* 
+  Events
+*/
+
+export const getProjects = async (page: number, q: string, t: string) => {
+  "use server";
+  return await axios.get(
+    `${
+      process.env.NEXT_PUBLIC_BACKEND_URL
+    }/api/projects?state=new&isEnabled=true&order[startTime]=asc&type=${t}&limit=12&page=${page}${
+      q ? "&title=" + q : ""
+    }`
+  );
+};
+
+export const getFeaturedProjects = async () => {
+  "use server";
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&isEnabled=true&limit=4&isFeatured=true`
+  );
+};
+
+export const getProject = async (slug: string) => {
+  "use server";
+  return await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects/${slug}`
   );
 };

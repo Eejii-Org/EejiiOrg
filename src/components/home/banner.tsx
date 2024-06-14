@@ -53,11 +53,11 @@ export const Banner = ({
               <div className="p-3 bg-[#3c888D] bannerMasking -scale-x-100 rounded-[32px] pt-9 relative h-56 md:h-80 flex justify-end flex-col gap-6">
                 <div className="flex flex-col gap-1 -scale-x-100">
                   <h5 className=" text-white font-medium text-[48px] hidden md:inline pb-3">
-                    {volunteersPercentage}%
+                    {volunteersPercentage.toFixed(2)}%
                   </h5>
                   <p className="font-medium text-white">
-                    Манай нийт оролцогчдын {volunteersPercentage} хувийг нь сайн
-                    дурын ажилчид эзэлж байна
+                    Манай нийт оролцогчдын {volunteersPercentage.toFixed(2)}{" "}
+                    хувийг нь сайн дурын ажилчид эзэлж байна
                   </p>
                 </div>
 

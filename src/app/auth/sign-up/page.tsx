@@ -141,7 +141,6 @@ const Comp = () => {
                         ...newUser,
                       }
                     );
-                    console.log(res);
                   } catch (error: any) {
                     throw error?.response?.data;
                   }

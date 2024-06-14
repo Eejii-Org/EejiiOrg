@@ -1,25 +1,25 @@
 "use client";
 import Link from "next/link";
 import { EventType } from "@/types";
-import { EventCard } from "./eventcard";
+import { ProjectCard } from "./projectcard";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, Search } from "../icons";
 import Image from "next/image";
 import { Button } from "../button";
 
-export const EventsBody = ({
+export const ProjectBody = ({
   lastPageIndex,
-  events,
+  projects,
   pageIndex,
-  featuredEvents,
+  featuredProjects,
   t,
   q,
 }: {
   lastPageIndex: number;
-  events: EventType[];
+  projects: any[];
   pageIndex: number;
-  featuredEvents: EventType[];
+  featuredProjects: any[];
   t: string;
   q: string;
 }) => {
@@ -27,7 +27,7 @@ export const EventsBody = ({
   const router = useRouter();
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      router.push(`/events?page=1&q=${search}`);
+      router.push(`/projects?page=1&q=${search}`);
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
@@ -35,9 +35,11 @@ export const EventsBody = ({
     <div className="flex flex-1 w-full flex-col items-center gap-8 z-10 mt-36">
       <div className="flex flex-row w-full gap-6">
         <div className="flex flex-col gap-6 w-full">
-          {/* Events Search */}
+          {/* Projects Search */}
           <div className="flex flex-col p-6 bg-white w-full gap-6  drop-shadow rounded-2xl">
-            <h1 className="text-2xl font-semibold">Арга хэмжээ хайх</h1>
+            <h1 className="text-2xl font-semibold">
+              Та ямар төсөл дэмжихийг хүсч байна вэ?
+            </h1>
             <div className="flex flex-row gap-6 flex-1">
               <div className="flex-1 flex justify-between px-4 py-5 md:py-5 md:px-6 bg-white rounded-full border">
                 <input
@@ -52,8 +54,8 @@ export const EventsBody = ({
               </div>
             </div>
           </div>
-          {/* Featured Events */}
-          <FeaturedCarousel featured={featuredEvents} />
+          {/* Featured Projects */}
+          <FeaturedCarousel featured={featuredProjects} />
         </div>
         <div className="min-w-80 bg-primary rounded-2xl flex items-center justify-center text-white font-bold">
           Ad Space
@@ -62,33 +64,33 @@ export const EventsBody = ({
       <div className="flex flex-row w-full">
         <div
           className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
-            t == "event"
+            t == "fundraising"
               ? "border-primary text-primary"
               : "border-transparent text-black/30"
           }`}
           onClick={() => {
-            router.push(`/events?page=1&q=${q}&t=event`);
+            router.push(`/projects?page=1&q=${q}&t=fundraising`);
           }}
         >
-          Арга хэмжээ
+          Хандив өгөх
         </div>
         <div
           className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
-            t == "volunteering_event"
+            t == "grant_fundraising"
               ? "border-primary text-primary"
               : "border-transparent text-black/30"
           }`}
           onClick={() => {
-            router.push(`/events?page=1&q=${q}&t=volunteering_event`);
+            router.push(`/projects?page=1&q=${q}&t=grant_fundraising`);
           }}
         >
-          Сайн дурын арга хэмжээ
+          Хандив авах
         </div>
       </div>
       <div className="flex flex-row">
         <div className="flex-1 grid grid-cols-4 gap-8">
-          {events.map((event, index) => (
-            <EventCard event={event} key={index} />
+          {projects.map((event, index) => (
+            <ProjectCard event={event} key={index} />
           ))}
         </div>
       </div>
@@ -119,7 +121,7 @@ const Pagination = ({
         <Link
           className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
           href={{
-            pathname: "/events",
+            pathname: "/projects",
             query: {
               page: pageIndex - 2,
             },
@@ -132,7 +134,7 @@ const Pagination = ({
         <Link
           className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
           href={{
-            pathname: "/events",
+            pathname: "/projects",
             query: {
               page: pageIndex - 1,
               q: q,
@@ -146,7 +148,7 @@ const Pagination = ({
       <Link
         className=" w-8 h-8 flex items-center justify-center rounded-sm text-white bg-primary"
         href={{
-          pathname: "/events",
+          pathname: "/projects",
           query: {
             page: pageIndex,
             q: q,
@@ -160,7 +162,7 @@ const Pagination = ({
         <Link
           className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
           href={{
-            pathname: "/events",
+            pathname: "/projects",
             query: {
               page: pageIndex + 1,
               q: q,
@@ -175,7 +177,7 @@ const Pagination = ({
         <Link
           className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
           href={{
-            pathname: "/events",
+            pathname: "/projects",
             query: {
               page: pageIndex + 2,
               q: q,

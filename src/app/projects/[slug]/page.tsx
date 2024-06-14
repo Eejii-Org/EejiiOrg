@@ -1,4 +1,4 @@
-import { getEvent } from "@/actions";
+import { getEvent, getProject } from "@/actions";
 import {
   Button,
   FacebookColored,
@@ -12,7 +12,7 @@ import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
 const EventPage = async ({ params }: { params: { slug: string } }) => {
-  const { data } = await getEvent(params.slug);
+  const { data } = await getProject(params.slug);
   const eventData: any = data;
   return (
     <MainLayout>

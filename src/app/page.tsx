@@ -1,3 +1,4 @@
+import { getHomeStatistics } from "@/actions";
 import {
   Banner,
   UserTypeExplain,
@@ -9,14 +10,11 @@ import {
   MainLayout,
 } from "@/components";
 import VolunteersMap from "@/components/home/volunteers-map";
-import axios from "axios";
 
 const Home = async () => {
   const {
     data: { data },
-  } = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/statistics`
-  );
+  } = await getHomeStatistics();
   return (
     <MainLayout>
       <Banner
