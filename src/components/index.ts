@@ -13,5 +13,6 @@ export * from "./card";
 export * from "./skeleton";
 export * from "./goback";
 export * from "./featuredcarousel";
+export * from "./sharebutton";
 
 export * from "./main-layout";

@@ -1,13 +1,5 @@
-import { getEvent, getProject } from "@/actions";
-import {
-  Button,
-  FacebookColored,
-  GmailColored,
-  GoBack,
-  InstagramColored,
-  MainLayout,
-  XColored,
-} from "@/components";
+import { getProject } from "@/actions";
+import { Button, GoBack, MainLayout, ShareButton } from "@/components";
 import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
@@ -112,20 +104,7 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
           {/* Share Content */}
           <div className="pt-6 flex flex-col gap-6">
             <h4 className="font-medium text-xl">Бусадтай хуваалцаарай!</h4>
-            <div className="flex flex-row gap-6">
-              <div className="p-3 bg-white rounded-full border cursor-pointer">
-                <FacebookColored />
-              </div>
-              <div className="p-3 bg-white rounded-full border cursor-pointer">
-                <InstagramColored />
-              </div>
-              <div className="p-3 bg-white rounded-full border cursor-pointer">
-                <XColored />
-              </div>
-              <div className="p-3 bg-white rounded-full border cursor-pointer flex items-center justify-center">
-                <GmailColored />
-              </div>
-            </div>
+            <ShareButton />
           </div>
         </div>
         {/* Right Section for Event Detail */}
