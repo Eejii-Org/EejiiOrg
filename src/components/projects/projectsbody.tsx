@@ -36,7 +36,7 @@ export const ProjectBody = ({
       <div className="flex flex-row w-full gap-6">
         <div className="flex flex-col gap-6 w-full">
           {/* Projects Search */}
-          <div className="flex flex-col p-6 bg-white w-full gap-6  drop-shadow rounded-2xl">
+          <div className="flex flex-col p-6 bg-white w-full gap-6 drop-shadow rounded-2xl">
             <h1 className="text-2xl font-semibold">
               Та ямар төсөл дэмжихийг хүсч байна вэ?
             </h1>
@@ -89,8 +89,8 @@ export const ProjectBody = ({
       </div>
       <div className="flex flex-row">
         <div className="flex-1 grid grid-cols-4 gap-8">
-          {projects.map((event, index) => (
-            <ProjectCard event={event} key={index} />
+          {projects.map((project, index) => (
+            <ProjectCard project={project} key={index} />
           ))}
         </div>
       </div>
@@ -203,25 +203,34 @@ const FeaturedCarousel = ({ featured }: { featured: EventType[] }) => {
     setIndex(index + 1);
   };
   return (
-    <div className="flex-1 min-h-80 relative flex">
-      <button
-        className={`absolute top-1/2 -translate-y-1/2 left-2 bg-black/20 z-40 rounded-full backdrop-blur-sm p-2 transition-all ${
-          index == 0 ? "opacity-50 bg-white/20 cursor-default" : "flex"
-        }`}
-        onClick={onLeft}
-      >
-        <ChevronLeftIcon color="white" />
-      </button>
-      <button
-        className={`absolute top-1/2 -translate-y-1/2 right-2 bg-black/10 z-40 rounded-full backdrop-blur-sm p-2 transition-all ${
-          index == featured.length - 3
-            ? "opacity-50 bg-white/20 cursor-default"
-            : "flex"
-        }`}
-        onClick={onRight}
-      >
-        <ChevronRightIcon color="white" />
-      </button>
+    <div className="flex-1 min-h-80 relative flex rounded-2xl bg-white drop-shadow">
+      {featured.length !== 0 ? (
+        <>
+          <button
+            className={`absolute top-1/2 -translate-y-1/2 left-2 bg-black/20 z-40 rounded-full backdrop-blur-sm p-2 transition-all ${
+              index == 0 ? "opacity-50 bg-white/20 cursor-default" : "flex"
+            }`}
+            onClick={onLeft}
+          >
+            <ChevronLeftIcon color="white" />
+          </button>
+          <button
+            className={`absolute top-1/2 -translate-y-1/2 right-2 bg-black/10 z-40 rounded-full backdrop-blur-sm p-2 transition-all ${
+              index == featured.length - 1
+                ? "opacity-50 bg-white/20 cursor-default"
+                : "flex"
+            }`}
+            onClick={onRight}
+          >
+            <ChevronRightIcon color="white" />
+          </button>
+        </>
+      ) : (
+        <div className="flex-1 flex items-center justify-center font-semibold text-xl text-black/70">
+          Онцолсон төсөл хөтөлбөр олдсонгүй
+        </div>
+      )}
+
       {featured.map((event, i) => (
         <div
           className={`flex-1 items-center absolute left-0 top-0 w-full h-full flex justify-center flex-col transition-all duration-300 ${
