@@ -4,8 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import { Card } from "../card";
 import { Search } from "../icons";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export const MediaSearch = ({ medias }: { medias: any[] }) => {
+export const MediaSearch = ({
+  medias,
+  lastPageIndex,
+  pageIndex,
+  q,
+}: {
+  medias: any[];
+  lastPageIndex: number;
+  pageIndex: number;
+  q: string;
+}) => {
   const [searchInput, setSearchInput] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -34,6 +45,91 @@ export const MediaSearch = ({ medias }: { medias: any[] }) => {
           </div>
         ))}
       </div>
+      <div className="flex items-center justify-center pt-6">
+        <Pagination q={q} pageIndex={pageIndex} lastPageIndex={lastPageIndex} />
+      </div>
+    </div>
+  );
+};
+
+const Pagination = ({
+  pageIndex,
+  lastPageIndex,
+  q,
+}: {
+  pageIndex: number;
+  lastPageIndex: number;
+  q: string;
+}) => {
+  return (
+    <div className="flex flex-row gap-2">
+      {pageIndex >= 3 && (
+        <Link
+          className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
+          href={{
+            pathname: "/medias",
+            query: {
+              page: pageIndex - 2,
+            },
+          }}
+        >
+          {pageIndex - 2}
+        </Link>
+      )}
+      {pageIndex >= 2 && (
+        <Link
+          className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
+          href={{
+            pathname: "/medias",
+            query: {
+              page: pageIndex - 1,
+              q: q,
+            },
+          }}
+        >
+          {pageIndex - 1}
+        </Link>
+      )}
+      <Link
+        className=" w-8 h-8 flex items-center justify-center rounded-sm text-white bg-primary"
+        href={{
+          pathname: "/medias",
+          query: {
+            page: pageIndex,
+            q: q,
+          },
+        }}
+      >
+        {pageIndex}
+      </Link>
+      {pageIndex + 1 <= lastPageIndex && (
+        <Link
+          className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
+          href={{
+            pathname: "/medias",
+            query: {
+              page: pageIndex + 1,
+              q: q,
+            },
+          }}
+        >
+          {pageIndex + 1}
+        </Link>
+      )}
+      {pageIndex + 2 <= lastPageIndex && (
+        <Link
+          className=" w-8 h-8 flex items-center justify-center rounded-sm text-secondary"
+          href={{
+            pathname: "/medias",
+            query: {
+              page: pageIndex + 2,
+              q: q,
+            },
+          }}
+        >
+          {pageIndex + 2}
+        </Link>
+      )}
     </div>
   );
 };
