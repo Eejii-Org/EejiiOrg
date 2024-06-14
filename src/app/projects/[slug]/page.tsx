@@ -1,11 +1,12 @@
 import { getProject } from "@/actions";
 import { Button, GoBack, MainLayout, ShareButton } from "@/components";
-import { toDateString, toShortDate } from "@/utils";
+import { formatPrice, toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
 const EventPage = async ({ params }: { params: { slug: string } }) => {
   const { data } = await getProject(params.slug);
-  const eventData: any = data;
+  const projectData: any = data;
+  console.log(projectData);
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-row gap-16">
@@ -15,20 +16,20 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
           <div className="flex flex-col gap-2">
             <div className="flex flex-row items-center gap-4">
               <GoBack />
-              <h1 className="text-2xl font-semibold">{eventData.title}</h1>
+              <h1 className="text-2xl font-semibold">{projectData.title}</h1>
             </div>
             <h2 className="text-lg text-tertiary">
-              {toDateString(eventData.startTime) +
+              {toDateString(projectData.startTime) +
                 " - " +
-                toDateString(eventData.endTime)}
+                toDateString(projectData.endTime)}
             </h2>
           </div>
           {/* Content Hero Image */}
           <div className="relative h-[448px] rounded-2xl overflow-hidden">
             <Image
               src={
-                eventData.images?.[0]?.path
-                  ? eventData.images?.[0]?.path
+                projectData.images?.[0]?.path
+                  ? projectData.images?.[0]?.path
                   : "/assets/placeholder.svg"
               }
               fill
@@ -37,9 +38,9 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
             />
           </div>
           {/* Content Categories */}
-          {eventData.categories && (
+          {projectData.categories && (
             <div className="flex flex-row gap-6 flex-wrap">
-              {eventData.categories.map((category: string, ind: number) => (
+              {projectData.categories.map((category: string, ind: number) => (
                 <div
                   className=" px-3 py-[2px] rounded-full border border-primary text-primary"
                   key={ind}
@@ -57,12 +58,12 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
             </div>
             <div
               className="w-full"
-              dangerouslySetInnerHTML={{ __html: eventData.description }}
+              dangerouslySetInnerHTML={{ __html: projectData.description }}
             ></div>
-            {/* <p className="w-full">{eventData.description || ""}</p> */}
+            {/* <p className="w-full">{projectData.description || ""}</p> */}
           </div>
           {/* Content Medias */}
-          {eventData.media.length !== 0 && (
+          {projectData.media.length !== 0 && (
             <div className="flex flex-col gap-5 pt-8">
               <h3 className="text-2xl font-semibold">Арга хэмжээний мэдээ</h3>
               <div className="flex bg-white rounded-2xl p-4">
@@ -75,7 +76,7 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {eventData.media.map((media: any, index: number) => (
+                    {projectData.media.map((media: any, index: number) => (
                       <tr className="border-b" key={index}>
                         <td className="flex flex-row items-center gap-3 py-3 font-semibold">
                           <Image
@@ -109,20 +110,15 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
         </div>
         {/* Right Section for Event Detail */}
         <div className="w-[360px] flex flex-col gap-4">
-          <div className="border border-primary rounded-full font-semibold text-center">
-            {eventData.type == "volunteering_event"
-              ? "Сайн дурын арга хэмжээ"
-              : "Арга хэмжээ"}
-          </div>
           {/* Owner */}
           <div className="bg-white border p-5 rounded-2xl flex flex-col items-center justify-center gap-2">
-            {eventData?.owner && (
+            {projectData?.owner && (
               <>
                 <h4 className="text-lg font-semibold">Зохион байгуулагч</h4>
                 <div className="flex flex-row gap-2 items-center justify-center">
                   <Image
                     src={
-                      eventData.owner.images?.[0]?.path ||
+                      projectData.owner.images?.[0]?.path ||
                       "/assets/placeholder.svg"
                     }
                     width={36}
@@ -131,19 +127,19 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
                     alt={"OwnerProfile"}
                   />
                   <h3 className="text-lg font-semibold text-black/70">
-                    {eventData.owner.username}
+                    {projectData.owner.username}
                   </h3>
                 </div>
               </>
             )}
 
-            <Button className={`w-full ${eventData?.owner ? "mt-4" : ""}`}>
+            <Button className={`w-full ${projectData?.owner ? "mt-4" : ""}`}>
               ОРОЛЦОХ
             </Button>
           </div>
           {/* Partner and register details */}
           <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
-            {eventData.roles}
+            {projectData.roles}
             <div className="flex flex-col gap-2">
               <label className="font-medium">Хамтрагч байгууллага:</label>
               <div className="flex flex-row gap-2 items-center">
@@ -160,24 +156,65 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
               </div>
             </div>
             <hr className="mt-2" />
-            {eventData.address && (
+            <div className="flex flex-row justify-between text-md">
+              <div className="text-black/60">
+                Цугласан:{" "}
+                <span className="text-black font-semibold">
+                  {formatPrice(projectData.currentAmount ?? 0, "MNT")}
+                </span>
+              </div>
+              <div className="text-black/60">
+                Зорилго:{" "}
+                <span className="text-black font-semibold">
+                  {formatPrice(projectData.goalAmount ?? 0, "MNT")}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-row items-center gap-1">
+              <div className="w-full bg-[#ECECEC] rounded-full h-[5px]">
+                <div
+                  className="bg-primary h-[5px] rounded-full"
+                  style={{
+                    width:
+                      Math.min(
+                        Math.floor(
+                          (projectData.currentAmount / projectData.goalAmount) *
+                            100
+                        ),
+                        100
+                      ) + "%",
+                  }}
+                ></div>
+              </div>
+              <span className="text-md">
+                {Math.min(
+                  Math.floor(
+                    (projectData.currentAmount / projectData.goalAmount) * 100
+                  ),
+                  100
+                )}
+                %
+              </span>
+            </div>
+            <hr />
+            {/* {projectData.address && (
               <>
                 <div className="flex gap-2 flex-row">
                   <h5 className="text-black/70 font-semibold">
                     <label className="text-black font-medium">Байршил: </label>
-                    {eventData.address?.address}
+                    {projectData.address?.address}
                   </h5>
                 </div>
                 <hr />
               </>
-            )}
+            )} */}
 
             <div className="flex flex-col gap-2">
-              <label className="font-medium">
+              {/* <label className="font-medium">
                 Өргөдөл хүлээн авах хугацаа:
-              </label>
+              </label> */}
               <h5 className="text-black/70 font-semibold">
-                {toDateString(eventData.endTime)}
+                {toDateString(projectData.endTime)}
               </h5>
             </div>
           </div>
