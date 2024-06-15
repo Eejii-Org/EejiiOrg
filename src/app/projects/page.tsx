@@ -13,7 +13,7 @@ const ProjectPage = async ({
     t: "fundraising" | "grant_fundraising";
   };
 }) => {
-  const { page = 1, q, t = "fundraising" } = searchParams;
+  const { page = 1, q = "", t = "fundraising" } = searchParams;
   const { data: eventsData } = await getProjects(page, q, t);
   const { data: featuredProjectsData } = await getFeaturedProjects();
   const events: EventType[] = eventsData?.["hydra:member"];

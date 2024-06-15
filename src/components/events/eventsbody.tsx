@@ -27,7 +27,10 @@ export const EventsBody = ({
   const router = useRouter();
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      router.push(`/events?page=1&q=${search}`);
+      if (search == "" && q == "") {
+        return;
+      }
+      router.push(`/events?page=1&t=${t}&q=${search}`);
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
@@ -60,30 +63,30 @@ export const EventsBody = ({
         </div>
       </div>
       <div className="flex flex-row w-full">
-        <div
+        <Link
+          href={`/events?page=1&q=${q}&t=event`}
           className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
             t == "event"
               ? "border-primary text-primary"
               : "border-transparent text-black/30"
           }`}
-          onClick={() => {
-            router.push(`/events?page=1&q=${q}&t=event`);
-          }}
+          shallow
+          passHref
         >
           Арга хэмжээ
-        </div>
-        <div
+        </Link>
+        <Link
+          href={`/events?page=1&q=${q}&t=volunteering_event`}
           className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
             t == "volunteering_event"
               ? "border-primary text-primary"
               : "border-transparent text-black/30"
           }`}
-          onClick={() => {
-            router.push(`/events?page=1&q=${q}&t=volunteering_event`);
-          }}
+          shallow
+          passHref
         >
           Сайн дурын арга хэмжээ
-        </div>
+        </Link>
       </div>
       <div className="flex flex-row">
         <div className="flex-1 grid grid-cols-4 gap-8">

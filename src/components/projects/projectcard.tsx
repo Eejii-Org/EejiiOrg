@@ -27,7 +27,7 @@ export const ProjectCard = ({ project }: { project: any }) => {
             width={28}
             height={28}
             onError={(event) => {
-              (project.target as HTMLImageElement).src =
+              (event.target as HTMLImageElement).src =
                 "/assets/placeholder.svg";
             }}
             className="object-cover"

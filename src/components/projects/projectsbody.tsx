@@ -27,7 +27,10 @@ export const ProjectBody = ({
   const router = useRouter();
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      router.push(`/projects?page=1&q=${search}`);
+      if (search == "" && q == "") {
+        return;
+      }
+      router.push(`/projects?page=1&t=${t}&q=${search}`);
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);

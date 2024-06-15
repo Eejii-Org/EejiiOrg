@@ -8,7 +8,7 @@ const EventsPage = async ({
 }: {
   searchParams: { page: number; q: string; t: string };
 }) => {
-  const { page = 1, q, t = "event" } = searchParams;
+  const { page = 1, q = "", t = "event" } = searchParams;
   const { data: eventsData } = await getEvents(page, q, t);
   const { data: featuredEventsData } = await getFeaturedEvents();
   const events: EventType[] = eventsData?.["hydra:member"];

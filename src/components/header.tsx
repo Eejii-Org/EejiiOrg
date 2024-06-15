@@ -11,9 +11,9 @@ const links = [
     label: "Платформ",
     links: [
       { link: "/projects", label: "Projects", icon: <></> },
-      { link: "/events", label: "Events", icon: <></> },
+      { link: "/events?page=1&t=event", label: "Events", icon: <></> },
       {
-        link: "/volunteering",
+        link: "/events?page=1&t=volunteering_event",
         label: "Volunteering",
         icon: <></>,
       },
