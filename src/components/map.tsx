@@ -49,88 +49,88 @@ const MapChart = ({ countries }: { countries?: any[] }) => {
       },
     }));
     polygonSeries.data.setAll(countriesData ?? []);
-    polygonSeries.data.setAll([
-      {
-        id: "FR",
-        name: "France",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "MN",
-        name: "Mongolia",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "US",
-        name: "United States",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "DZ",
-        name: "Algeria",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "SE",
-        name: "Sweden",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "AL",
-        name: "Albania",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "UG",
-        name: "Uganda",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "KR",
-        name: "Korea",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "MM",
-        name: "Myanmar",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-      {
-        id: "BD",
-        name: "Bangladesh",
-        // value: 100,
-        polygonSettings: {
-          fill: am5.Color.fromString("#3c888d"),
-        },
-      },
-    ]);
+    // polygonSeries.data.setAll([
+    //   {
+    //     id: "FR",
+    //     name: "France",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "MN",
+    //     name: "Mongolia",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "US",
+    //     name: "United States",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "DZ",
+    //     name: "Algeria",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "SE",
+    //     name: "Sweden",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "AL",
+    //     name: "Albania",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "UG",
+    //     name: "Uganda",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "KR",
+    //     name: "Korea",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "MM",
+    //     name: "Myanmar",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    //   {
+    //     id: "BD",
+    //     name: "Bangladesh",
+    //     // value: 100,
+    //     polygonSettings: {
+    //       fill: am5.Color.fromString("#3c888d"),
+    //     },
+    //   },
+    // ]);
 
     // Set hover and active states
     polygonSeries.mapPolygons.template.states.create("hover", {

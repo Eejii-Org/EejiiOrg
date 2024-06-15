@@ -1,3 +1,4 @@
+"use client";
 // Media | Event | Project | Fundraise
 
 import Image from "next/image";
@@ -27,6 +28,7 @@ export const Card = (props: CardPropsType) => {
     showHighlight = false,
     highlightColor = "#FFE787",
   } = props;
+
   const { cardData } = props;
   return (
     <div
@@ -62,10 +64,8 @@ export const Card = (props: CardPropsType) => {
           >
             <Image
               src={
-                cardData?.Images?.[0]?.path
-                  ? process.env.NEXT_PUBLIC_AWS_PATH +
-                    "/" +
-                    cardData?.Images?.[0]?.path
+                cardData?.images?.[0]?.path
+                  ? cardData?.images?.[0]?.path
                   : "/assets/placeholder.svg"
               }
               fill
@@ -118,8 +118,11 @@ export const Card = (props: CardPropsType) => {
                 {cardData?.title}
               </h3>
               {cardType !== "media" && (
-                <p className="text-lg md:text-md text-black/60 min-h-24">
-                  {cardData?.["description"]?.split(" ").slice(0, 30).join(" ")}
+                <p className="text-lg md:text-md text-black/60 max-line-4">
+                  {cardData?.["shortDescription"]
+                    ?.split(" ")
+                    .slice(0, 30)
+                    .join(" ")}
                 </p>
               )}
             </>
@@ -194,9 +197,12 @@ export const Card = (props: CardPropsType) => {
                     </div>
                   </div>
                   {cardSize == "large" && (
-                    <button className="bg-primary py-2 mt-2 rounded-[8px] text-white font-bold text-[18px] w-full">
+                    <Link
+                      href={`/projects/${cardData.slug}`}
+                      className="bg-primary py-2 mt-2 rounded-[8px] text-center text-white font-bold text-[18px] w-full"
+                    >
                       Хандив өгөх
-                    </button>
+                    </Link>
                   )}
                 </div>
               )}

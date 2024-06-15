@@ -2,10 +2,8 @@ import Link from "next/link";
 import { ArrowRight } from "../icons";
 import { Card } from "../card";
 
-export const MediaSection = () => {
+export const MediaSection = ({ latestMedia }: { latestMedia: any[] }) => {
   // const { data, isLoading } = api.media.findAll.useQuery({ limit: 4 });
-  const isLoading = true;
-  const data = [null, null, null, null];
   return (
     <div className="md:container py-16">
       <div className="max-md:container font-bold text-2xl md:text-4xl">
@@ -25,13 +23,13 @@ export const MediaSection = () => {
         </Link>
       </div>
       <div className="flex max-md:overflow-x-scroll h-full max-md:snap-x max-md:snap-mandatory flex-row max-md:px-16 gap-16 md:gap-6 pt-8">
-        {data?.map((mediaData, index) => (
+        {latestMedia?.map((mediaData, index) => (
           <div
             key={index}
             className="max-md:min-w-[90vw] md:flex-1 md:flex max-md:snap-always max-md:snap-center overflow-hidden"
             // onClick={() => console.log(mediaData)}
           >
-            <Card cardData={mediaData} cardType="media" loading={isLoading} />
+            <Card cardData={mediaData} cardType="media" />
           </div>
         ))}
       </div>

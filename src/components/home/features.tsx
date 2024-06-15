@@ -3,10 +3,7 @@ import { useMemo } from "react";
 import { ArrowRight } from "../icons";
 import { Card } from "../card";
 
-export const Features = () => {
-  const isVolunteeringEventLoading = true;
-  const isEventLoading = true;
-  const isProjectLoading = true;
+export const Features = ({ features }: { features: any }) => {
   // const {
   //   data: lastVolunteeringEventData,
   //   isLoading: isVolunteeringEventLoading,
@@ -29,14 +26,6 @@ export const Features = () => {
   //     limit: 1,
   //   });
 
-  const featuresData = useMemo(() => {
-    return {
-      event: null,
-      volunteeringEvent: null,
-      project: null,
-    };
-  }, []);
-
   return (
     <div className="container py-16 items-center">
       <h1 className="text-2xl md:text-4xl font-semibold pb-16">
@@ -51,8 +40,7 @@ export const Features = () => {
             <Card
               showHighlight
               cardType="event"
-              cardData={featuresData.project}
-              loading={isProjectLoading}
+              cardData={features.project}
               cardSize="small"
             />
           </div>
@@ -71,8 +59,7 @@ export const Features = () => {
             <Card
               showHighlight
               cardType="event"
-              cardData={featuresData.event}
-              loading={isEventLoading}
+              cardData={features.event}
               highlightColor="#C99FFF"
               cardSize="small"
             />
@@ -90,8 +77,7 @@ export const Features = () => {
             <Card
               showHighlight
               cardType="event"
-              cardData={featuresData.volunteeringEvent}
-              loading={isVolunteeringEventLoading}
+              cardData={features.volunteeringEvent}
               highlightColor="#BFE88C"
               cardSize="small"
             />

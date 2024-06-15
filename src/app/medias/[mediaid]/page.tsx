@@ -15,6 +15,7 @@ const MediaPage = async (props: any) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media/${mediaId}`
   );
+  console.log(data);
   // const [data, setData] = useState<any>(null);
   // useEffect(() => {
   //   const getMedia = async () => {
@@ -46,18 +47,22 @@ const MediaPage = async (props: any) => {
                   {data?.title}
                 </h5>
                 <div className="flex gap-2 flex-col">
-                  <div className="flex gap-2">
-                    <Image
-                      width={25}
-                      height={25}
-                      src={"/assets/placeholder.svg"}
-                      alt="publisher's avatar"
-                    />
-                    <p className="font-medium text-lg text-black/60">
-                      {/* {media.Owner.organizationName ?? media.Owner.email} */}
-                      Тэмүүжин
-                    </p>
-                  </div>
+                  {data.owner && (
+                    <div className="flex gap-2">
+                      <Image
+                        width={25}
+                        height={25}
+                        src={
+                          data.owner.images[0].path || "/assets/placeholder.svg"
+                        }
+                        alt="publisher's avatar"
+                      />
+                      <p className="font-medium text-lg text-black/60">
+                        {/* {media.Owner.organizationName ?? media.Owner.email} */}
+                        {data.owner.username}
+                      </p>
+                    </div>
+                  )}
 
                   <p className="text-lg text-black/50">
                     {/* Published at{' '}

@@ -6,7 +6,6 @@ import Image from "next/image";
 const EventPage = async ({ params }: { params: { slug: string } }) => {
   const { data } = await getProject(params.slug);
   const projectData: any = data;
-  console.log(projectData);
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-row gap-16">

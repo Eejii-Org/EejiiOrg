@@ -1,4 +1,4 @@
-import { getHomeStatistics } from "@/actions";
+import { getHomeData, getHomeStatistics } from "@/actions";
 import {
   Banner,
   UserTypeExplain,
@@ -15,6 +15,7 @@ const Home = async () => {
   const {
     data: { data },
   } = await getHomeStatistics();
+  const { features, latestProjects, latestMedia } = await getHomeData();
   return (
     <MainLayout>
       <Banner
@@ -27,9 +28,9 @@ const Home = async () => {
         }
       />
       <UserTypeExplain />
-      <Features />
-      <LatestProjects />
-      <MediaSection />
+      <Features features={features} />
+      <LatestProjects latestProjects={latestProjects} />
+      <MediaSection latestMedia={latestMedia} />
       <VolunteersMap
         level_1={data.level_1}
         level_2={data.level_2}
