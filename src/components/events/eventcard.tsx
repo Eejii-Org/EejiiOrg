@@ -12,7 +12,7 @@ export const EventCard = ({ event }: { event: EventType }) => {
       <div className="relative h-48">
         <Image
           src={
-            event.images.find((img) => img.type == "hero")?.path ||
+            event.images.find((img) => img.type == "thumbnail")?.path ||
             "/assets/placeholder.svg"
           }
           fill

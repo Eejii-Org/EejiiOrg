@@ -72,7 +72,7 @@ export type ImageType = {
   "@id": string;
   id: number;
   path: string;
-  type: "hero" | "main";
+  type: "thumbnail" | "main";
 };
 
 export type AddressType = {
