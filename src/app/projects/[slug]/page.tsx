@@ -6,6 +6,22 @@ import Image from "next/image";
 const EventPage = async ({ params }: { params: { slug: string } }) => {
   const { data } = await getProject(params.slug);
   const projectData: any = data;
+  if (!projectData) {
+    return (
+      <MainLayout>
+        <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-row gap-16">
+          <div className="flex flex-1 flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row items-center gap-4">
+                <GoBack />
+                <h1 className="text-2xl font-semibold">Project Not Found</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-row gap-16">
@@ -138,7 +154,6 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
           </div>
           {/* Partner and register details */}
           <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
-            {projectData.roles}
             <div className="flex flex-col gap-2">
               <label className="font-medium">Хамтрагч байгууллага:</label>
               <div className="flex flex-row gap-2 items-center">

@@ -1,11 +1,17 @@
-import { getEvent } from "@/actions";
+import { getEvent, getEventUsers } from "@/actions";
 import { Button, GoBack, MainLayout, ShareButton } from "@/components";
 import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
 const EventPage = async ({ params }: { params: { slug: string } }) => {
-  const { data } = await getEvent(params.slug);
-  const eventData: any = data;
+  const eventData = await getEvent(params.slug);
+  const eventUsers = await getEventUsers(params.slug);
+  const eventPartners = eventUsers.filter(
+    (eventUser: any) => eventUser.userType == "partner"
+  );
+  const eventVolunteers = eventUsers.filter(
+    (eventUser: any) => eventUser.userType == "volunteer"
+  );
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-row gap-16">
@@ -39,12 +45,12 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
           {/* Content Categories */}
           {eventData.categories && (
             <div className="flex flex-row gap-6 flex-wrap">
-              {eventData.categories.map((category: string, ind: number) => (
+              {eventData.categories.map((category: any, ind: number) => (
                 <div
                   className=" px-3 py-[2px] rounded-full border border-primary text-primary"
                   key={ind}
                 >
-                  {category}
+                  {category.name}
                 </div>
               ))}
             </div>
@@ -143,24 +149,37 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
           </div>
           {/* Partner and register details */}
           <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
-            {eventData.roles}
-            <div className="flex flex-col gap-2">
-              <label className="font-medium">Хамтрагч байгууллага:</label>
-              <div className="flex flex-row gap-2 items-center">
-                <Image
-                  src={"/assets/placeholder.svg"}
-                  width={36}
-                  height={36}
-                  className="object-cover"
-                  alt={"OwnerProfile"}
-                />
-                <h3 className="text-lg font-semibold text-black/70">
-                  Mother Earth NGO
-                </h3>
-              </div>
-            </div>
-            <hr className="mt-2" />
-            {eventData.address && (
+            {eventPartners.length !== 0 && (
+              <>
+                <div className="flex flex-col gap-2">
+                  <label className="font-medium">Хамтрагч байгууллага:</label>
+                  {eventPartners.map(
+                    ({ owner }: { owner: any }, ind: number) => (
+                      <div
+                        className="flex flex-row gap-2 items-center"
+                        key={ind}
+                      >
+                        <Image
+                          src={
+                            owner.images?.[0]?.path || "/assets/placeholder.svg"
+                          }
+                          width={36}
+                          height={36}
+                          className="object-cover"
+                          alt={"OwnerProfile"}
+                        />
+                        <h3 className="text-lg font-semibold text-black/70">
+                          {owner.username}
+                        </h3>
+                      </div>
+                    )
+                  )}
+                </div>
+                <hr className="mt-2" />
+              </>
+            )}
+
+            {eventData.address?.address && (
               <>
                 <div className="flex gap-2 flex-row">
                   <h5 className="text-black/70 font-semibold">

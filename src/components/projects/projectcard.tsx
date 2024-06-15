@@ -1,9 +1,8 @@
-import { formatPrice, toDateString } from "@/utils";
+import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 
 export const ProjectCard = ({ project }: { project: any }) => {
-  console.log(project);
   return (
     <Link
       className="flex-1 rounded-xl overflow-hidden drop-shadow-sm bg-white shadow-teal-500 flex flex-col"

@@ -15,7 +15,6 @@ const MediaPage = async (props: any) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media/${mediaId}`
   );
-  console.log(data);
   // const [data, setData] = useState<any>(null);
   // useEffect(() => {
   //   const getMedia = async () => {

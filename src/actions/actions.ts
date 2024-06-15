@@ -149,9 +149,28 @@ export const getFeaturedEvents = async () => {
 
 export const getEvent = async (slug: string) => {
   "use server";
-  return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`
-  );
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`
+    );
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const getEventUsers = async (slug: string) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}/eventUsers`
+    );
+    return res.data?.["hydra:member"];
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 };
 
 /* 
@@ -178,7 +197,13 @@ export const getFeaturedProjects = async () => {
 
 export const getProject = async (slug: string) => {
   "use server";
-  return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects/${slug}`
-  );
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects/${slug}`
+    );
+    return res;
+  } catch (e) {
+    console.error(e);
+    return { data: null };
+  }
 };
