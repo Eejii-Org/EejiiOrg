@@ -1,4 +1,4 @@
-import { getFeaturedProjects, getProjects } from "@/actions";
+import { getCategories, getFeaturedProjects, getProjects } from "@/actions";
 import { MainLayout } from "@/components";
 import { ProjectBody } from "@/components/projects";
 import { EventType } from "@/types";
@@ -11,11 +11,13 @@ const ProjectPage = async ({
     page: number;
     q: string;
     t: "fundraising" | "grant_fundraising";
+    category: string;
   };
 }) => {
-  const { page = 1, q = "", t = "fundraising" } = searchParams;
-  const { data: eventsData } = await getProjects(page, q, t);
+  const { page = 1, q = "", t = "fundraising", category = "" } = searchParams;
+  const { data: eventsData } = await getProjects(page, q, t, category);
   const { data: featuredProjectsData } = await getFeaturedProjects();
+  const cateogories = await getCategories();
   const events: EventType[] = eventsData?.["hydra:member"];
   const featuredProjects: EventType[] = featuredProjectsData?.["hydra:member"];
   const lastPageIndex = eventsData?.["hydra:meta"].pagination.last;
@@ -35,9 +37,11 @@ const ProjectPage = async ({
             pageIndex={page}
             lastPageIndex={lastPageIndex}
             projects={events}
+            categories={cateogories}
             featuredProjects={featuredProjects}
             t={t}
             q={q}
+            category={category}
           />
         </div>
       </div>

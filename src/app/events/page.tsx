@@ -1,4 +1,4 @@
-import { getEvents, getFeaturedEvents } from "@/actions";
+import { getCategories, getEvents, getFeaturedEvents } from "@/actions";
 import { EventsBody, MainLayout } from "@/components";
 import { EventType } from "@/types";
 import Image from "next/image";
@@ -6,11 +6,12 @@ import Image from "next/image";
 const EventsPage = async ({
   searchParams,
 }: {
-  searchParams: { page: number; q: string; t: string };
+  searchParams: { page: number; q: string; t: string; category: string };
 }) => {
-  const { page = 1, q = "", t = "event" } = searchParams;
-  const { data: eventsData } = await getEvents(page, q, t);
+  const { page = 1, q = "", t = "event", category = "" } = searchParams;
+  const { data: eventsData } = await getEvents(page, q, t, category);
   const { data: featuredEventsData } = await getFeaturedEvents();
+  const categories = await getCategories();
   const events: EventType[] = eventsData?.["hydra:member"];
   const featuredEvents: EventType[] = featuredEventsData?.["hydra:member"];
   const lastPageIndex = eventsData?.["hydra:meta"].pagination.last;
@@ -33,6 +34,8 @@ const EventsPage = async ({
             featuredEvents={featuredEvents}
             t={t}
             q={q}
+            categories={categories}
+            category={category}
           />
         </div>
       </div>

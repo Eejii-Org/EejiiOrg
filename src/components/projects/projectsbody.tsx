@@ -12,16 +12,20 @@ export const ProjectBody = ({
   lastPageIndex,
   projects,
   pageIndex,
+  categories,
   featuredProjects,
   t,
   q,
+  category,
 }: {
   lastPageIndex: number;
   projects: any[];
   pageIndex: number;
   featuredProjects: any[];
+  categories: any[];
   t: string;
   q: string;
+  category: string;
 }) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -30,7 +34,9 @@ export const ProjectBody = ({
       if (search == "" && q == "") {
         return;
       }
-      router.push(`/projects?page=1&t=${t}&q=${search}`);
+      router.push(
+        `/projects?page=1&t=${t}&categories.slug=${category}&q=${search}`
+      );
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
@@ -64,30 +70,49 @@ export const ProjectBody = ({
           Ad Space
         </div>
       </div>
-      <div className="flex flex-row w-full">
-        <div
-          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
-            t == "fundraising"
-              ? "border-primary text-primary"
-              : "border-transparent text-black/30"
-          }`}
-          onClick={() => {
-            router.push(`/projects?page=1&q=${q}&t=fundraising`);
-          }}
-        >
-          Хандив өгөх
+      <div className="flex flex-row w-full justify-between">
+        <div className="flex flex-row">
+          <div
+            className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
+              t == "fundraising"
+                ? "border-primary text-primary"
+                : "border-transparent text-black/30"
+            }`}
+            onClick={() => {
+              router.push(`/projects?page=1&q=${q}&t=fundraising`);
+            }}
+          >
+            Хандив өгөх
+          </div>
+          <div
+            className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
+              t == "grant_fundraising"
+                ? "border-primary text-primary"
+                : "border-transparent text-black/30"
+            }`}
+            onClick={() => {
+              router.push(`/projects?page=1&q=${q}&t=grant_fundraising`);
+            }}
+          >
+            Хандив авах
+          </div>
         </div>
-        <div
-          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
-            t == "grant_fundraising"
-              ? "border-primary text-primary"
-              : "border-transparent text-black/30"
-          }`}
-          onClick={() => {
-            router.push(`/projects?page=1&q=${q}&t=grant_fundraising`);
-          }}
-        >
-          Хандив авах
+        <div>
+          <select
+            className="border border-[#FCF0DE] rounded-full py-2 px-4 text-center text-black/50 appearance-none"
+            onChange={(e) => {
+              router.push(
+                `/projects?page=1&q=${q}&t=${t}&category=${e.target.value}`
+              );
+            }}
+          >
+            <option value={""}>Бүх Ангилал</option>
+            {categories.map((category, index) => (
+              <option value={category.slug} key={index}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="flex flex-row">

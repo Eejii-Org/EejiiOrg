@@ -15,6 +15,8 @@ export const EventsBody = ({
   featuredEvents,
   t,
   q,
+  categories,
+  category,
 }: {
   lastPageIndex: number;
   events: EventType[];
@@ -22,6 +24,8 @@ export const EventsBody = ({
   featuredEvents: EventType[];
   t: string;
   q: string;
+  categories: any[];
+  category: string;
 }) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -30,7 +34,9 @@ export const EventsBody = ({
       if (search == "" && q == "") {
         return;
       }
-      router.push(`/events?page=1&t=${t}&q=${search}`);
+      router.push(
+        `/events?page=1&t=${t}&categories.slug=${category}&q=${search}`
+      );
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
@@ -62,31 +68,50 @@ export const EventsBody = ({
           Ad Space
         </div>
       </div>
-      <div className="flex flex-row w-full">
-        <Link
-          href={`/events?page=1&q=${q}&t=event`}
-          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
-            t == "event"
-              ? "border-primary text-primary"
-              : "border-transparent text-black/30"
-          }`}
-          shallow
-          passHref
-        >
-          Арга хэмжээ
-        </Link>
-        <Link
-          href={`/events?page=1&q=${q}&t=volunteering_event`}
-          className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
-            t == "volunteering_event"
-              ? "border-primary text-primary"
-              : "border-transparent text-black/30"
-          }`}
-          shallow
-          passHref
-        >
-          Сайн дурын арга хэмжээ
-        </Link>
+      <div className="flex flex-row w-full justify-between items-center">
+        <div className="flex flex-row">
+          <Link
+            href={`/events?page=1&q=${q}&t=event`}
+            className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
+              t == "event"
+                ? "border-primary text-primary"
+                : "border-transparent text-black/30"
+            }`}
+            shallow
+            passHref
+          >
+            Арга хэмжээ
+          </Link>
+          <Link
+            href={`/events?page=1&q=${q}&t=volunteering_event`}
+            className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary ${
+              t == "volunteering_event"
+                ? "border-primary text-primary"
+                : "border-transparent text-black/30"
+            }`}
+            shallow
+            passHref
+          >
+            Сайн дурын арга хэмжээ
+          </Link>
+        </div>
+        <div>
+          <select
+            className="border border-[#FCF0DE] rounded-full py-2 px-4 text-center text-black/50 appearance-none"
+            onChange={(e) => {
+              router.push(
+                `/events?page=1&t=${t}&category=${e.target.value}&q=${q}`
+              );
+            }}
+          >
+            <option value={""}>Бүх Ангилал</option>
+            {categories.map((category, index) => (
+              <option value={category.slug} key={index}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="flex flex-row">
         <div className="flex-1 grid grid-cols-4 gap-8">

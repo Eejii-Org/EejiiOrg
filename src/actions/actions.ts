@@ -111,6 +111,22 @@ export const getHomeData = async () => {
 };
 
 /* 
+  Categories
+*/
+export const getCategories = async () => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`
+    );
+    return res.data["hydra:member"];
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+/* 
   Media
 */
 
@@ -129,14 +145,19 @@ export const getMedias = async (page: number, q: string) => {
   Events
 */
 
-export const getEvents = async (page: number, q: string, t: string) => {
+export const getEvents = async (
+  page: number,
+  q: string,
+  t: string,
+  category: string
+) => {
   "use server";
   return await axios.get(
     `${
       process.env.NEXT_PUBLIC_BACKEND_URL
     }/api/events?state=new&order[startTime]=asc&type=${t}&isEnabled=true&limit=12&page=${page}${
-      q ? "&title=" + q : ""
-    }`
+      category ? "&categories.slug=" + category : ""
+    }${q ? "&title=" + q : ""}`
   );
 };
 
@@ -177,14 +198,19 @@ export const getEventUsers = async (slug: string) => {
   Events
 */
 
-export const getProjects = async (page: number, q: string, t: string) => {
+export const getProjects = async (
+  page: number,
+  q: string,
+  t: string,
+  category: string
+) => {
   "use server";
   return await axios.get(
     `${
       process.env.NEXT_PUBLIC_BACKEND_URL
     }/api/projects?state=new&isEnabled=true&order[startTime]=asc&type=${t}&limit=12&page=${page}${
       q ? "&title=" + q : ""
-    }`
+    }${category ? "&categories.slug=" + category : ""}`
   );
 };
 
