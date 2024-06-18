@@ -14,5 +14,6 @@ export * from "./skeleton";
 export * from "./goback";
 export * from "./featuredcarousel";
 export * from "./sharebutton";
+export * from "./ad";
 
 export * from "./main-layout";

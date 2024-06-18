@@ -1,5 +1,5 @@
 import { getEvent, getEventUsers } from "@/actions";
-import { Button, GoBack, MainLayout, ShareButton } from "@/components";
+import { Ad, Button, GoBack, MainLayout, ShareButton } from "@/components";
 import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
@@ -200,8 +200,8 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
               </h5>
             </div>
           </div>
-          <div className="min-h-[512px] bg-primary rounded-2xl flex items-center justify-center text-white font-bold">
-            Ad Space
+          <div className="min-h-[512px] bg-white rounded-2xl flex overflow-hidden">
+            <Ad position="ad_event_detail_3x2" />
           </div>
         </div>
       </div>

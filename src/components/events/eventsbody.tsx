@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, Search } from "../icons";
 import Image from "next/image";
 import { Button } from "../button";
+import { Ad } from "../ad";
 
 export const EventsBody = ({
   lastPageIndex,
@@ -64,8 +65,8 @@ export const EventsBody = ({
           {/* Featured Events */}
           <FeaturedCarousel featured={featuredEvents} />
         </div>
-        <div className="min-w-80 bg-primary rounded-2xl flex items-center justify-center text-white font-bold">
-          Ad Space
+        <div className="min-w-80 bg-white rounded-2xl flex overflow-hidden">
+          <Ad position="ad_event_list_3x2" />
         </div>
       </div>
       <div className="flex flex-row w-full justify-between items-center">

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, Search } from "../icons";
 import Image from "next/image";
 import { Button } from "../button";
+import { Ad } from "../ad";
 
 export const ProjectBody = ({
   lastPageIndex,
@@ -66,8 +67,8 @@ export const ProjectBody = ({
           {/* Featured Projects */}
           <FeaturedCarousel featured={featuredProjects} />
         </div>
-        <div className="min-w-80 bg-primary rounded-2xl flex items-center justify-center text-white font-bold">
-          Ad Space
+        <div className="min-w-80 bg-white rounded-2xl flex overflow-hidden">
+          <Ad position="ad_project_list_3x2" />
         </div>
       </div>
       <div className="flex flex-row w-full justify-between">
@@ -107,7 +108,7 @@ export const ProjectBody = ({
             }}
           >
             <option value={""}>Бүх Ангилал</option>
-            {categories.map((category, index) => (
+            {categories?.map((category, index) => (
               <option value={category.slug} key={index}>
                 {category.name}
               </option>

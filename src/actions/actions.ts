@@ -1,5 +1,6 @@
 "use server";
 
+import { BannerPositionType } from "@/components/ad";
 import { UserType } from "@/types";
 import axios from "axios";
 
@@ -118,6 +119,22 @@ export const getCategories = async () => {
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`
+    );
+    return res.data?.["hydra:member"];
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+/* 
+  Advertisement
+*/
+export const getAdvertisement = async (position: BannerPositionType) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/banners?bannerPosition.code=${position}`
     );
     return res.data["hydra:member"];
   } catch (e) {
