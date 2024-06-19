@@ -23,3 +23,4 @@ export * from "./facebook-colored";
 export * from "./instagram-colored";
 export * from "./x-colored";
 export * from "./gmail-colored";
+export * from "./verified";

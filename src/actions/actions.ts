@@ -250,3 +250,31 @@ export const getProject = async (slug: string) => {
     return { data: null };
   }
 };
+
+/* 
+  Partners
+*/
+export const getPartners = async () => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners?state=accepted`
+    );
+    return res.data?.["hydra:member"];
+  } catch (e) {
+    console.error(e);
+    return { data: null };
+  }
+};
+export const getPartner = async (id: string) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners/${id}`
+    );
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return { data: null };
+  }
+};
