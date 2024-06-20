@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const ProjectCard = ({ project }: { project: any }) => {
+  console.log(project);
   return (
     <Link
-      className="flex-1 rounded-xl overflow-hidden drop-shadow-sm bg-white shadow-teal-500 flex flex-col"
+      className="flex-1 rounded-xl overflow-hidden drop-shadow bg-white shadow-teal-500 flex flex-col"
       href={`/projects/${project.slug}`}
     >
       <div className="relative h-48">
@@ -47,7 +48,9 @@ export const ProjectCard = ({ project }: { project: any }) => {
                     width:
                       Math.min(
                         Math.floor(
-                          (project.currentAmount / project.goalAmount) * 100
+                          (Number(project.currentAmount) /
+                            Number(project.goalAmount)) *
+                            100
                         ),
                         100
                       ) + "%",
@@ -57,7 +60,9 @@ export const ProjectCard = ({ project }: { project: any }) => {
               <span className="text-md">
                 {Math.min(
                   Math.floor(
-                    (project.currentAmount / project.goalAmount) * 100
+                    (Number(project.currentAmount) /
+                      Number(project.goalAmount)) *
+                      100
                   ),
                   100
                 )}

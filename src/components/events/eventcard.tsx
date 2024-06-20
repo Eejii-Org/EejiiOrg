@@ -6,7 +6,7 @@ import Link from "next/link";
 export const EventCard = ({ event }: { event: EventType }) => {
   return (
     <Link
-      className="flex-1 rounded-xl overflow-hidden drop-shadow-sm bg-white shadow-teal-500"
+      className="flex-1 rounded-xl overflow-hidden drop-shadow bg-white shadow-teal-500"
       href={`/events/${event.slug}`}
     >
       <div className="relative h-48">

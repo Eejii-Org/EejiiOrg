@@ -158,6 +158,18 @@ export const getMedias = async (page: number, q: string) => {
   );
 };
 
+export const getMediaByPartner = async (partnerId: number, limit: number) => {
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media?order[startTime]=asc&limit=${limit}&owner.id=${partnerId}`
+    );
+    return res.data["hydra:member"];
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 /* 
   Events
 */

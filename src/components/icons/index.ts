@@ -24,3 +24,7 @@ export * from "./instagram-colored";
 export * from "./x-colored";
 export * from "./gmail-colored";
 export * from "./verified";
+export * from "./volunteering";
+export * from "./events";
+export * from "./charity";
+export * from "./fundraising";

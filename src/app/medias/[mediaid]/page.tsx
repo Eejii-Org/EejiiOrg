@@ -3,7 +3,7 @@
 // import { format } from 'date-fns';
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, MainLayout, Skeleton } from "@/components";
+import { ArrowLeft, GoBack, MainLayout, Skeleton } from "@/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toDateString } from "@/utils";
@@ -75,9 +75,7 @@ const MediaPage = async (props: any) => {
                 dangerouslySetInnerHTML={{ __html: data?.body }}
               />
               <div className="">
-                <Link className="flex gap-2" href={"/medias"}>
-                  <ArrowLeft color="black" /> Буцах
-                </Link>
+                <GoBack>Буцах</GoBack>
               </div>
             </>
           ) : (

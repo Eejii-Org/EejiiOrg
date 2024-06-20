@@ -1,5 +1,5 @@
 import { getPartner } from "@/actions";
-import { MainLayout } from "@/components";
+import { MainLayout, PartnerMedias, PartnerProjects } from "@/components";
 import Image from "next/image";
 const PartnerPage = async (props: any) => {
   const mediaId = props.params?.["partnerid"];
@@ -58,19 +58,25 @@ const PartnerPage = async (props: any) => {
         </div>
       </div>
       <div className="container flex flex-col gap-16 pt-12">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-8">
           <div className="flex items-center justify-center">
             <div
-              className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+              className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
             >
               Төсөл хөтөлбөрүүд
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-8 drop-shadow-md shadow-primary">
-            {/* {partners.map((partner: any, index: number) => (
-              <PartnerCard data={partner} key={index} />
-            ))} */}
+          <PartnerProjects partner={partner} />
+        </div>
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-center">
+            <div
+              className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+            >
+              Мэдээ мэдээлэл
+            </div>
           </div>
+          <PartnerMedias partner={partner} />
         </div>
       </div>
     </MainLayout>

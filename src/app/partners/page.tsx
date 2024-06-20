@@ -4,7 +4,6 @@ import Image from "next/image";
 
 const PartnersPage = async () => {
   const partners = await getPartners();
-  console.log(partners);
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] flex flex-col gap-16">
