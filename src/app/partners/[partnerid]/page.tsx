@@ -4,6 +4,7 @@ import Image from "next/image";
 const PartnerPage = async (props: any) => {
   const mediaId = props.params?.["partnerid"];
   const partner = await getPartner(mediaId);
+  const isBasic = partner.subscriptionCode !== "basic";
   const aboutImage =
     partner.images.find((img: any) => img.type == "about")?.path ||
     "/assets/placeholder.svg";
@@ -13,16 +14,34 @@ const PartnerPage = async (props: any) => {
   const coverImage =
     partner.images.find((img: any) => img.type == "cover")?.path ||
     "/assets/placeholder.svg";
+  const historyImages = partner.images
+    .filter((img: any) => img.type == "history")
+    .map((img: any) => img.path);
+  // "/assets/placeholder.svg"
+  // const historyImages = new Array(1).fill(
+  //   "https://d2mstmber8qwm7.cloudfront.net/uploads/67/b8/3216b5e9b1804c553b3e11652255.jpg"
+  // );
+  console.log(partner);
   return (
     <MainLayout>
+      <div className="h-[440px] relative">
+        <Image
+          src={coverImage}
+          fill
+          alt="PartnerCoverImage"
+          className="object-cover"
+        />
+      </div>
       <div
-        className="bg-white"
+        className={`bg-white ${
+          isBasic ? "" : "container rounded-2xl -mt-24 relative"
+        }`}
         style={{
           boxShadow: `0px 4px 8px rgba(60, 136, 141, 0.16)`,
         }}
       >
-        <div className="container max-md:mt-5 flex flex-col gap-16 ">
-          <div className="flex flex-row py-16 ">
+        <div className="container flex flex-col gap-16">
+          <div className={`flex flex-row ${isBasic ? "py-16" : "py-8"}`}>
             <div className="flex-1 pr-8 flex flex-col gap-6">
               <div className="flex flex-row items-center gap-4">
                 {/* Profile */}
@@ -44,20 +63,46 @@ const PartnerPage = async (props: any) => {
                   </h3>
                 </div>
               </div>
-              <p className="text-[18px]">{partner.bio}</p>
+              {isBasic && <p className="text-[18px]">{partner.bio}</p>}
             </div>
-            <div className="min-w-[480px] min-h-[400px] rounded-2xl overflow-hidden relative">
-              <Image
-                src={aboutImage}
-                alt="AboutImage"
-                fill
-                className="object-cover"
-              />
-            </div>
+            {isBasic && (
+              <div className="min-w-[480px] min-h-[400px] rounded-2xl overflow-hidden relative">
+                <Image
+                  src={aboutImage}
+                  alt="AboutImage"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="container flex flex-col gap-16 pt-12">
+      <div className="container flex flex-col gap-16 pt-12 pb-24">
+        {!isBasic && (
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center justify-center">
+              <div
+                className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+              >
+                Бидний тухай
+              </div>
+            </div>
+            <div className="flex flex-row gap-8">
+              <div className="flex-1 rounded-2xl overflow-hidden relative max-w-[480px] min-h-[400px]">
+                <Image
+                  src={aboutImage}
+                  alt="AboutImage"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-[18px]">{partner.bio}</p>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex flex-col gap-8">
           <div className="flex items-center justify-center">
             <div
@@ -78,6 +123,47 @@ const PartnerPage = async (props: any) => {
           </div>
           <PartnerMedias partner={partner} />
         </div>
+        {!isBasic && partner.historyDescription && (
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center justify-center">
+              <div
+                className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+              >
+                Бидний түүх
+              </div>
+            </div>
+            <div className="flex flex-row gap-8">
+              <div className="flex-1">
+                <p className="text-[18px]">{partner.historyDescription}</p>
+              </div>
+              {historyImages.length !== 0 && (
+                <div
+                  className={`flex-1 grid ${
+                    historyImages.length > 4
+                      ? "grid-cols-3"
+                      : historyImages.length == 1
+                      ? "grid-cols-1"
+                      : "grid-cols-2"
+                  } gap-4 justify-center`}
+                >
+                  {historyImages.map((image: string, index: number) => (
+                    <div
+                      key={index}
+                      className="rounded-2xl overflow-hidden relative aspect-square"
+                    >
+                      <Image
+                        src={image}
+                        alt="AboutImage"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </MainLayout>
   );
