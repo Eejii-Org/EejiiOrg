@@ -1,4 +1,8 @@
-import { getHomeData, getHomeStatistics } from "@/actions";
+import {
+  getHomeData,
+  getHomeStatistics,
+  getVolunteersCountry,
+} from "@/actions";
 import {
   Banner,
   UserTypeExplain,
@@ -15,6 +19,7 @@ const Home = async () => {
   const {
     data: { data },
   } = await getHomeStatistics();
+  const volunteersbyCountry = await getVolunteersCountry();
   const { features, latestProjects, latestMedia } = await getHomeData();
   return (
     <MainLayout>
@@ -32,11 +37,27 @@ const Home = async () => {
       <LatestProjects latestProjects={latestProjects} />
       <MediaSection latestMedia={latestMedia} />
       <VolunteersMap
-        level_1={data.level_1}
-        level_2={data.level_2}
-        level_3={data.level_3}
-        level_4={data.level_4}
-        countries={data?.countries}
+        level_1={
+          volunteersbyCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 1
+          )?.total
+        }
+        level_2={
+          volunteersbyCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 2
+          )?.total
+        }
+        level_3={
+          volunteersbyCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 3
+          )?.total
+        }
+        level_4={
+          volunteersbyCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 4
+          )?.total
+        }
+        countries={volunteersbyCountry?.totalVolunteersByCountry || []}
       />
       <PartnersHome />
       <EmailCta />
