@@ -290,3 +290,40 @@ export const getPartner = async (id: string) => {
     return { data: null };
   }
 };
+
+/* 
+  Volunteers
+*/
+export const getVolunteers = async (q: string, level: string, page: number) => {
+  "use server";
+
+  try {
+    const res = await axios.get(
+      `${
+        process.env.NEXT_PUBLIC_BACKEND_URL
+      }/api/volunteers?order[level]=desc&state=accepted&search=${q}&${
+        level ? "level=" + level : ""
+      }&page=${page || 1}`
+    );
+    return {
+      pageLast: res.data?.["hydra:meta"].pagination.last,
+      data: res.data?.["hydra:member"],
+    };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const getVolunteersCountry = async () => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/volunteersByCountry`
+    );
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};

@@ -1,5 +1,6 @@
 export type GenderType = "m" | "f";
 export type UserType = {
+  id: string;
   email: string;
   plainPassword: string;
   phoneNumber: string;
@@ -11,6 +12,9 @@ export type UserType = {
   registerNumber: string;
   birthday: string;
   address: AddressType;
+  images: ImageType[];
+  level: number;
+  xp: number;
 };
 export type OwnerType = {
   "@id": string;

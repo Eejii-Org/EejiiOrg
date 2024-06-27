@@ -15,9 +15,11 @@ export const PartnerCard = ({ data }: { data: any }) => {
       </div>
       <h3 className="font-semibold">
         {data.username}
-        <span className="inline-block h-4 pt-[2px] pl-1">
-          <Verified />
-        </span>
+        {data.subscriptionCode !== "basic" && (
+          <span className="inline-block h-4 pt-[2px] pl-1">
+            <Verified />
+          </span>
+        )}
       </h3>
 
       <p className="max-line-2 text-black/60">{data.introduction}</p>

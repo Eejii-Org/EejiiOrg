@@ -4,7 +4,7 @@ import Image from "next/image";
 const PartnerPage = async (props: any) => {
   const mediaId = props.params?.["partnerid"];
   const partner = await getPartner(mediaId);
-  const isBasic = partner.subscriptionCode !== "basic";
+  const isBasic = partner.subscriptionCode === "basic";
   const aboutImage =
     partner.images.find((img: any) => img.type == "about")?.path ||
     "/assets/placeholder.svg";
@@ -21,17 +21,19 @@ const PartnerPage = async (props: any) => {
   // const historyImages = new Array(1).fill(
   //   "https://d2mstmber8qwm7.cloudfront.net/uploads/67/b8/3216b5e9b1804c553b3e11652255.jpg"
   // );
-  console.log(partner);
   return (
     <MainLayout>
-      <div className="h-[440px] relative">
-        <Image
-          src={coverImage}
-          fill
-          alt="PartnerCoverImage"
-          className="object-cover"
-        />
-      </div>
+      {!isBasic && (
+        <div className="h-[440px] relative">
+          <Image
+            src={coverImage}
+            fill
+            alt="PartnerCoverImage"
+            className="object-cover"
+          />
+        </div>
+      )}
+
       <div
         className={`bg-white ${
           isBasic ? "" : "container rounded-2xl -mt-24 relative"

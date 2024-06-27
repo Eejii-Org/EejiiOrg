@@ -41,14 +41,15 @@ const MapChart = ({ countries }: { countries?: any[] }) => {
     });
 
     const countriesData = countries?.map((country) => ({
-      id: country?.code,
-      name: country?.name,
-      value: country?.volunteers ?? 0,
+      id: country?.countryCode,
+      name: country?.countryCode,
+      value: country?.total ?? 0,
       polygonSettings: {
         fill: am5.Color.fromString("#3c888d"),
       },
     }));
     polygonSeries.data.setAll(countriesData ?? []);
+    console.log(countriesData);
     // polygonSeries.data.setAll([
     //   {
     //     id: "FR",

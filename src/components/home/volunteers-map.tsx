@@ -1,3 +1,4 @@
+"use client";
 // import type { Country } from '@/lib/db/types';
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -65,9 +66,15 @@ export default function VolunteersMap({
           </div>
         </div>
       </div>
-      <div className="text-2xl md:text-4xl pt-16 md:pt-0 text-black/80 font-bold">
+      <div className="text-2xl md:text-3xl pt-16 md:pt-0 text-black font-medium uppercase border-b-4 border-b-primary pb-4">
         Дэлхийн өнцөг булан бүрдэх манай сайн дурынхан
       </div>
+      <p className="text-center max-w-[1090px] text-xl">
+        Сайн дурын ажилтнууд маань бидний бахархал, нийгмийн сайн үйлсийн элч
+        билээ. Та хилийн дээсээр хязгаарлагдахгүй, Дэлхийн аль ч бүсээс манай
+        санд нэгдэж, сайн дурын ажилтнаар элсэх боломжтой. Зүрх сэтгэлээ бусдад
+        зориулж, туршлага хуримтлуулаарай
+      </p>
       <MapChart countries={countries} />
     </div>
   );
