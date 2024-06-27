@@ -48,6 +48,18 @@ export const LatestProjects = ({
               />
             </div>
           ))}
+          {latestProjects.length < 3 && (
+            <>
+              {new Array(3 - latestProjects.length)
+                .fill(null)
+                .map((_, index) => (
+                  <div
+                    className="max-md:min-w-[90vw] flex-1 flex max-md:snap-always max-md:snap-center"
+                    key={"prop" + index}
+                  />
+                ))}
+            </>
+          )}
         </div>
       </div>
     </div>

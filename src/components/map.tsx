@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5maps from "@amcharts/amcharts5/map";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -7,7 +7,26 @@ import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
 // import type { Country } from '@/lib/db/types';
 
 const MapChart = ({ countries }: { countries?: any[] }) => {
+  const [countriesData, setCountriesData] = useState<any[]>([]);
   useEffect(() => {
+    if (countries) {
+      if (countriesData.length == 0) {
+        setCountriesData([
+          ...countries.map((country) => ({
+            id: country?.countryCode,
+            name: country?.countryCode,
+            value: country?.total ?? 0,
+            polygonSettings: {
+              fill: am5.Color.fromString("#3c888d"),
+            },
+          })),
+        ]);
+      }
+    }
+  }, [countries]);
+  console.log(countries);
+  useEffect(() => {
+    if (!countries) return;
     // Apply themes
     const root = am5.Root.new("chartdiv");
     root.setThemes([am5themes_Animated.new(root)]);
@@ -40,16 +59,7 @@ const MapChart = ({ countries }: { countries?: any[] }) => {
       tooltipPosition: "fixed",
     });
 
-    const countriesData = countries?.map((country) => ({
-      id: country?.countryCode,
-      name: country?.countryCode,
-      value: country?.total ?? 0,
-      polygonSettings: {
-        fill: am5.Color.fromString("#3c888d"),
-      },
-    }));
-    polygonSeries.data.setAll(countriesData ?? []);
-    console.log(countriesData);
+    polygonSeries.data.setAll([...countriesData]);
     // polygonSeries.data.setAll([
     //   {
     //     id: "FR",
@@ -153,7 +163,7 @@ const MapChart = ({ countries }: { countries?: any[] }) => {
     return () => {
       root.dispose();
     };
-  }, []);
+  }, [countriesData]);
 
   return <div id="chartdiv" className="w-full h-96 md:h-[576px]" />;
 };

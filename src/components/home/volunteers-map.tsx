@@ -32,7 +32,7 @@ export default function VolunteersMap({
               src="/assets/volunteer/level_4.png"
               alt="levelIMG"
             />
-            <div className="md:text-2xl font-medium">{level_4} Volunteers</div>
+            <div className="md:text-2xl font-medium">{level_1} Volunteers</div>
           </div>
           <div className="flex flex-col gap-2 items-center">
             <Image
@@ -42,7 +42,7 @@ export default function VolunteersMap({
               src="/assets/volunteer/level_3.png"
               alt="levelIMG"
             />
-            <div className="md:text-2xl font-medium">{level_3} Volunteers</div>
+            <div className="md:text-2xl font-medium">{level_2} Volunteers</div>
           </div>
           <div className="flex flex-col gap-2 items-center">
             <Image
@@ -52,7 +52,7 @@ export default function VolunteersMap({
               src="/assets/volunteer/level_2.png"
               alt="levelIMG"
             />
-            <div className="md:text-2xl font-medium">{level_2} Volunteers</div>
+            <div className="md:text-2xl font-medium">{level_3} Volunteers</div>
           </div>
           <div className="flex flex-col gap-2 items-center">
             <Image
@@ -62,7 +62,7 @@ export default function VolunteersMap({
               src="/assets/volunteer/level_1.png"
               alt="levelIMG"
             />
-            <div className="md:text-2xl font-medium">{level_1} Volunteers</div>
+            <div className="md:text-2xl font-medium">{level_4} Volunteers</div>
           </div>
         </div>
       </div>

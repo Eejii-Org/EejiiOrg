@@ -41,7 +41,6 @@ const VolunteersPage = () => {
   useEffect(() => {
     const getVolunteersSearchData = async () => {
       setVolunteersLoading(true);
-      console.log(page);
       const { data, pageLast }: any = await getVolunteers(
         searchValue,
         searchLevel,
@@ -84,10 +83,26 @@ const VolunteersPage = () => {
         </div>
       </div>
       <VolunteersMap
-        level_1={0}
-        level_2={0}
-        level_3={0}
-        level_4={0}
+        level_1={
+          volunteersByCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 1
+          )?.total
+        }
+        level_2={
+          volunteersByCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 2
+          )?.total
+        }
+        level_3={
+          volunteersByCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 3
+          )?.total
+        }
+        level_4={
+          volunteersByCountry?.totalVolunteersByLevel.find(
+            ({ level }: { level: number }) => level == 4
+          )?.total
+        }
         countries={volunteersByCountry?.totalVolunteersByCountry || []}
       />
       <div className="container md:py-16 flex flex-col md:gap-16 items-center">
