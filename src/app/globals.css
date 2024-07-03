@@ -90,3 +90,11 @@ body {
   line-clamp: 4;
   -webkit-box-orient: vertical;
 }
+.circle {
+  width: 128px;
+  height: 128px;
+  /* border: 1px solid black; */
+  position: absolute;
+  border-radius: 64px;
+  /* background-color: red; */
+}

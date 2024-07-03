@@ -2,6 +2,7 @@ export * from "./home";
 export * from "./auth";
 export * from "./events";
 export * from "./partners";
+export * from "./supporters";
 
 export * from "./icons";
 

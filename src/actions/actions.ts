@@ -327,3 +327,42 @@ export const getVolunteersCountry = async () => {
     return null;
   }
 };
+
+/* 
+  Supporters
+*/
+
+export const getSupporters = async (q: string, page: number) => {
+  "use server";
+
+  try {
+    const res = await axios.get(
+      `${
+        process.env.NEXT_PUBLIC_BACKEND_URL
+      }/api/supporters?order[level]=desc&state=accepted&search=${q}&page=${
+        page || 1
+      }`
+    );
+    return {
+      pageLast: res.data?.["hydra:meta"].pagination.last,
+      data: res.data?.["hydra:member"],
+    };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const getSupporterData = async (id: string) => {
+  "use server";
+
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${id}/activities`
+    );
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
