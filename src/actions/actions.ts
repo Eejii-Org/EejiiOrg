@@ -111,6 +111,22 @@ export const getHomeData = async () => {
   }
 };
 
+export const registerCustomer = async (email: string) => {
+  "use server";
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/new`,
+      {
+        email,
+      }
+    );
+    return res;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 /* 
   Categories
 */

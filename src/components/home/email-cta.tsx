@@ -1,4 +1,28 @@
+"use client";
+
+import { registerCustomer } from "@/actions";
+import { useState } from "react";
+
 export const EmailCta = () => {
+  const [success, setSuccess] = useState<string | null>(null);
+  const [mail, setMail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const submit = () => {
+    if (!mail) {
+      setSuccess("error");
+      return;
+    }
+    setLoading(true);
+    try {
+      registerCustomer(mail);
+      setSuccess("success");
+      setLoading(false);
+    } catch (e) {
+      console.error(e);
+      setSuccess("error");
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-[#d5e4e5] py-9">
       <div className="container flex flex-col items-center justify-center gap-6">
@@ -11,16 +35,33 @@ export const EmailCta = () => {
           алдалгүй, тогтмол авахыг хүсвэл дараах хэсэгт мэйл хаягаа бүртгүүлэхэд
           хангалттай.
         </div>
-        <div className="flex flex-col md:flex-row gap-3">
+        <form
+          className="flex flex-col md:flex-row gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+        >
           <input
             type="email"
             placeholder="Email address"
             className="rounded-full px-6 max-md:py-3 w-80 outline-none "
+            onChange={(e) => setMail(e.target.value)}
           />
-          <button className="py-4 px-10 rounded-full bg-primary text-white font-semibold">
-            Мэдээлэл авах
+          <button
+            className="py-4 px-10 rounded-full bg-primary text-white font-semibold"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Мэдээлэл авах"}
           </button>
-        </div>
+        </form>
+        {success &&
+          (success == "success" ? (
+            <p className="text-[#BFE88C]">Амжилттай бүртгэлээ</p>
+          ) : (
+            <p className="text-[#FF0000]">Алдаа заалаа</p>
+          ))}
       </div>
     </div>
   );

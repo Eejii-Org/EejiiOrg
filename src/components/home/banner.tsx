@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowCirlceUpRight } from "../icons";
 import { formatPrice } from "@/utils";
+import Link from "next/link";
 
 export const Banner = ({
   totalProjects,
@@ -61,14 +62,17 @@ export const Banner = ({
                   </p>
                 </div>
 
-                <button className="w-full flex flex-row -scale-x-100 items-center justify-center md:justify-between p-3 md:p-2 bg-black/15 rounded-full">
+                <Link
+                  href={"/auth"}
+                  className="w-full flex flex-row -scale-x-100 items-center justify-center md:justify-between p-3 md:p-2 bg-black/15 rounded-full"
+                >
                   <div className="font-medium md:pl-5 text-md text-white">
                     Бидэнтэй нэгдэх
                   </div>
                   <div className="hidden md:inline">
                     <ArrowCirlceUpRight color="#BFE88C" />
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
             <div className="p-3 bg-[#1B2B2C] rounded-[32px] py-8 items-center hidden md:flex">
@@ -147,12 +151,15 @@ export const Banner = ({
                   Энэ сард нийт {thisMonthProjectsAndEvents} төсөл шинээр
                   нэмэгдлээ
                 </p>
-                <button className="flex flex-row text-white md:text-black w-full items-center justify-center md:justify-between p-3 md:p-2 bg-black/15 rounded-full">
+                <Link
+                  href={"/projects"}
+                  className="flex flex-row text-white md:text-black w-full items-center justify-center md:justify-between p-3 md:p-2 bg-black/15 rounded-full"
+                >
                   <div className="font-medium md:pl-5 text-md">Дэлгэрэнгүй</div>
                   <div className="hidden md:inline">
                     <ArrowCirlceUpRight />
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
 
