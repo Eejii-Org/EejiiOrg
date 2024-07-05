@@ -3,7 +3,7 @@ import { Button, MainLayout, SupportersTable } from "@/components";
 import Image from "next/image";
 
 const Supporters = async () => {
-  const { data, pageLast }: any = await getSupporters("", 1);
+  const data = await getSupporters("");
   return (
     <MainLayout>
       <div className="h-[440px] relative flex items-center justify-center">

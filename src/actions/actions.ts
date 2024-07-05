@@ -365,21 +365,14 @@ export const getVolunteersCountry = async () => {
   Supporters
 */
 
-export const getSupporters = async (q: string, page: number) => {
+export const getSupporters = async (q: string) => {
   "use server";
 
   try {
     const res = await axios.get(
-      `${
-        process.env.NEXT_PUBLIC_BACKEND_URL
-      }/api/supporters?order[level]=desc&state=accepted&search=${q}&page=${
-        page || 1
-      }`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/supporters?order[totalActivityCount]=desc&totalActivityCount[gt]=0&search=${q}`
     );
-    return {
-      pageLast: res.data?.["hydra:meta"].pagination.last,
-      data: res.data?.["hydra:member"],
-    };
+    return res.data?.["hydra:member"];
   } catch (e) {
     console.error(e);
     return null;

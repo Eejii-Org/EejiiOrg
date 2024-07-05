@@ -10,7 +10,6 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
   const [supporterDetails, setSupporterDetails] = useState<any>(null);
   const getSupporterDetails = async () => {
     const res = await getSupporterData(supporters[supporterIndex].id);
-    console.log(res);
     setSupporterDetails(res);
   };
   useEffect(() => {
