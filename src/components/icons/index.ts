@@ -28,3 +28,5 @@ export * from "./volunteering";
 export * from "./events";
 export * from "./charity";
 export * from "./fundraising";
+export * from "./phone";
+export * from "./mail";

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { SupporterGraph } from "./supportergraph";
 import { getSupporterData } from "@/actions";
+import { MailIcon, PhoneIcon } from "../icons";
 
 export const SupportersTable = ({ supporters }: { supporters: any }) => {
+  console.log(supporters);
   const [supporterIndex, setSupporterIndex] = useState(0);
   const [supporterDetails, setSupporterDetails] = useState<any>(null);
   const getSupporterDetails = async () => {
@@ -166,9 +168,53 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
         </div>
         <div className="flex-1 bg-white rounded-2xl drop-shadow-card border p-6 h-fit">
           <div>
-            <div>Username: {supporters[supporterIndex]?.username}</div>
-            <div>PhoneNumber: {supporters[supporterIndex]?.phoneNumber}</div>
-            <div>Email: {supporters[supporterIndex]?.email}</div>
+            <div className="flex flex-row">
+              <div className="min-w-80 h-60 relative">
+                <Image
+                  fill
+                  src={
+                    supporters[supporterIndex]?.images.find(
+                      (img: any) => img.type == "main"
+                    ).path || "/assets/placeholder.svg"
+                  }
+                  alt="profile"
+                  className="object-contain"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <h1 className="font-semibold text-2xl">
+                  {supporters[supporterIndex]?.username}
+                </h1>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: supporters[supporterIndex]?.bio,
+                  }}
+                />
+                <div className="flex flex-row gap-4 text-black/70 font-medium">
+                  {supporters[supporterIndex]?.phoneNumber && (
+                    <a
+                      className="flex flex-row gap-2"
+                      href={`tel: ${supporters[supporterIndex]?.phoneNumber}`}
+                    >
+                      <PhoneIcon color="#555555" />
+                      {supporters[supporterIndex]?.phoneNumber}
+                    </a>
+                  )}
+                  {supporters[supporterIndex]?.phoneNumber &&
+                    supporters[supporterIndex]?.email &&
+                    "|"}
+                  {supporters[supporterIndex]?.email && (
+                    <a
+                      className="flex flex-row gap-2"
+                      href={`mailto: ${supporters[supporterIndex]?.email}`}
+                    >
+                      <MailIcon color="#555555" />
+                      {supporters[supporterIndex]?.email}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           {supporterDetails && (
             <div className="flex flex-row gap-4 py-4">
