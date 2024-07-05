@@ -5,12 +5,13 @@ export type UserType = {
   plainPassword: string;
   phoneNumber: string;
   username: string;
-  firstName: string;
-  lastName: string;
-  gender: GenderType;
+  firstName?: string;
+  lastName?: string;
+  gender?: GenderType;
   bio: string;
-  registerNumber: string;
-  birthday: string;
+  registerNumber?: string;
+  organizationType?: string;
+  birthday?: string;
   address: AddressType;
   images?: ImageType[];
   level?: number;

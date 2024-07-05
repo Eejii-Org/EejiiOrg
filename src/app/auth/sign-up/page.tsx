@@ -3,6 +3,8 @@
 import { signUp } from "@/actions";
 import {
   Button,
+  SupporterStep1,
+  SupporterStep2,
   UserTypeSelect,
   VolunteerStep1,
   VolunteerStep2,
@@ -87,71 +89,145 @@ const Comp = () => {
               event.preventDefault();
               const formData = new FormData(event.target as HTMLFormElement);
               setErrorMessage("");
-              if (step == 1) {
-                const email = formData.get("email") as string;
-                const plainPassword = formData.get("plainPassword") as string;
-                const phoneNumber = formData.get("phoneNumber") as string;
-                const username = formData.get("username") as string;
-                setUserDetail({
-                  ...userDetail,
-                  email,
-                  plainPassword,
-                  phoneNumber,
-                  username,
-                });
-                setStep(step + 1);
-                return;
-              } else if (step == 2) {
-                const firstName = formData.get("firstName") as string;
-                const lastName = formData.get("lastName") as string;
-                const birthday = formData.get("birthday") as string;
-                const gender = formData.get("gender") as GenderType;
-                const registerNumber = formData.get("registerNumber") as string;
-                setUserDetail({
-                  ...userDetail,
-                  firstName,
-                  lastName,
-                  gender,
-                  registerNumber,
-                  birthday,
-                });
-                setStep(step + 1);
-              } else if (step == 3) {
-                const region = formData.get("region") as string;
-                const address = formData.get("address") as string;
-                setUserDetail({
-                  ...userDetail,
-                  address: {
-                    ...userDetail.address,
-                    region,
-                    address,
-                  },
-                });
-                setStep(step + 1);
-              } else {
-                setSignUpLoading(true);
-                const bio = formData.get("bio") as string;
-                const newUser = { ...userDetail, bio };
-                setUserDetail(newUser);
-                try {
+              if (userType == "volunteer") {
+                if (step == 1) {
+                  const email = formData.get("email") as string;
+                  const plainPassword = formData.get("plainPassword") as string;
+                  const phoneNumber = formData.get("phoneNumber") as string;
+                  const username = formData.get("username") as string;
+                  setUserDetail({
+                    ...userDetail,
+                    email,
+                    plainPassword,
+                    phoneNumber,
+                    username,
+                  });
+                  setStep(step + 1);
+                  return;
+                } else if (step == 2) {
+                  const firstName = formData.get("firstName") as string;
+                  const lastName = formData.get("lastName") as string;
+                  const birthday = formData.get("birthday") as string;
+                  const gender = formData.get("gender") as GenderType;
+                  const registerNumber = formData.get(
+                    "registerNumber"
+                  ) as string;
+                  setUserDetail({
+                    ...userDetail,
+                    firstName,
+                    lastName,
+                    gender,
+                    registerNumber,
+                    birthday,
+                  });
+                  setStep(step + 1);
+                } else if (step == 3) {
+                  const region = formData.get("region") as string;
+                  const address = formData.get("address") as string;
+                  setUserDetail({
+                    ...userDetail,
+                    address: {
+                      ...userDetail.address,
+                      region,
+                      address,
+                    },
+                  });
+                  setStep(step + 1);
+                } else {
+                  setSignUpLoading(true);
+                  const bio = formData.get("bio") as string;
+                  const newUser = { ...userDetail, bio };
+                  setUserDetail(newUser);
                   try {
-                    const res = await axios.post(
-                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
-                      {
-                        ...newUser,
-                      }
+                    try {
+                      const res = await axios.post(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
+                        {
+                          ...newUser,
+                        }
+                      );
+                    } catch (error: any) {
+                      throw error?.response?.data;
+                    }
+                    setSignUpLoading(false);
+                    router.push("/auth/sign-up/success");
+                  } catch (e) {
+                    console.log(e);
+                    setSignUpLoading(false);
+                    setErrorMessage(
+                      "Имэйл бүртгэлтэй байна. Та дараа дахин оролдоно уу."
                     );
-                  } catch (error: any) {
-                    throw error?.response?.data;
                   }
-                  setSignUpLoading(false);
-                  router.push("/auth/sign-up/success");
-                } catch (e) {
-                  console.log(e);
-                  setSignUpLoading(false);
-                  setErrorMessage(
-                    "Имэйл бүртгэлтэй байна. Та дараа дахин оролдоно уу."
-                  );
+                }
+              } else {
+                if (step == 1) {
+                  const organizationType = formData.get(
+                    "organizationType"
+                  ) as string;
+                  setUserDetail({
+                    ...userDetail,
+                    organizationType,
+                  });
+                  setStep(step + 1);
+                } else if (step == 2) {
+                  const email = formData.get("email") as string;
+                  const plainPassword = formData.get("plainPassword") as string;
+                  const phoneNumber = formData.get("phoneNumber") as string;
+                  const username = formData.get("username") as string;
+                  setUserDetail({
+                    ...userDetail,
+                    email,
+                    plainPassword,
+                    phoneNumber,
+                    username,
+                  });
+                  setStep(step + 1);
+                } else if (step == 3) {
+                  const region = formData.get("region") as string;
+                  const address = formData.get("address") as string;
+                  setUserDetail({
+                    ...userDetail,
+                    address: {
+                      ...userDetail.address,
+                      region,
+                      address,
+                    },
+                  });
+                  setStep(step + 1);
+                } else {
+                  setSignUpLoading(true);
+                  const bio = formData.get("bio") as string;
+                  const newUser = {
+                    email: userDetail.email,
+                    plainPassword: userDetail.plainPassword,
+                    phoneNumber: userDetail.phoneNumber,
+                    username: userDetail.username,
+                    bio: bio,
+                    address: userDetail.address,
+                    organizationType: userDetail.organizationType,
+                  };
+                  setUserDetail(newUser);
+                  try {
+                    try {
+                      const res = await axios.post(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/supporter`,
+                        {
+                          ...newUser,
+                        }
+                      );
+                      console.log(res);
+                    } catch (error: any) {
+                      throw error?.response?.data;
+                    }
+                    setSignUpLoading(false);
+                    router.push("/auth/sign-up/success");
+                  } catch (e) {
+                    console.log(e);
+                    setSignUpLoading(false);
+                    setErrorMessage(
+                      "Имэйл бүртгэлтэй байна. Та дараа дахин оролдоно уу."
+                    );
+                  }
                 }
               }
             }}
@@ -209,7 +285,17 @@ const Comp = () => {
                   )}
                 </>
               ) : (
-                <p>Supporter</p>
+                <>
+                  {step == 1 ? (
+                    <SupporterStep1 userDetail={userDetail} />
+                  ) : step == 2 ? (
+                    <SupporterStep2 userDetail={userDetail} />
+                  ) : step == 3 ? (
+                    <VolunteerStep3 userDetail={userDetail} />
+                  ) : (
+                    <VolunteerStep4 userDetail={userDetail} />
+                  )}
+                </>
               )}
             </div>
             <div className="flex flex-col gap-2">
@@ -474,13 +560,13 @@ const inputs = {
   ],
   supporter: [
     {
-      label: "Холбоо барих",
+      label: "Нөхцөл",
     },
     {
       label: "Хувийн мэдээлэл",
     },
     {
-      label: "Гэрийн хаяг",
+      label: "Хаяг",
     },
     {
       label: "Танилцуулга",
