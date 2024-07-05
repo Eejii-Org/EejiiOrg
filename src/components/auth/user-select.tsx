@@ -7,7 +7,7 @@ export const UserSelect = () => {
       icon: <PersonIcon />,
       type: "Дэмжигч",
       href: "/auth/sign-in?user=supporter",
-      disabled: true,
+      disabled: false,
     },
     {
       icon: <PartnerIcon />,

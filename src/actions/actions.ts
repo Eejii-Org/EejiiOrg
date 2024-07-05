@@ -127,6 +127,23 @@ export const registerCustomer = async (email: string) => {
   }
 };
 
+// export const donateMoney = async (email: string | null, amount: number) => {
+//   try {
+//     const res = await axios.post(
+//       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donate`,
+//       {
+//         amount,
+//         method: "qpay",
+//         email,
+//       }
+//     );
+//     return res;
+//   } catch (e) {
+//     console.error(e);
+//     return null;
+//   }
+// };
+
 /* 
   Categories
 */

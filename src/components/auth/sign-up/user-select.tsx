@@ -15,7 +15,7 @@ export const UserTypeSelect = ({
       icon: <PersonIcon />,
       label: "Дэмжигч",
       type: "supporter",
-      disabled: true,
+      disabled: false,
     },
     {
       icon: <PartnerIcon />,

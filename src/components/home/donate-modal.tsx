@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "../button";
 import { Input } from "../input";
+import axios from "axios";
 
 export const DonateModal = () => {
   const [donateOpen, setDonateOpen] = useState(false);
@@ -12,6 +13,26 @@ export const DonateModal = () => {
   const [selectedPyament, setSelectedPayment] = useState<"monthly" | "onetime">(
     "onetime"
   );
+  const [paymentData, setPaymentData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const donate = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donate`,
+        {
+          amount: value,
+          method: "qpay",
+          email: email == "" ? null : email,
+        }
+      );
+      // console.log(res.data.data);
+      setPaymentData(res.data.data);
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
+  };
   return (
     <>
       <button
@@ -57,7 +78,13 @@ export const DonateModal = () => {
             <h2 className="font-semibold">Бидэнд хандив өргөсөнд баярлалаа!</h2>
           </div>
         </div>
-        <div className="p-8 rounded-2xl min-w-[400px] flex-1 flex flex-col justify-between gap-8 bg-white">
+        <form
+          className="p-8 rounded-2xl min-w-[400px] flex-1 flex flex-col justify-between gap-8 bg-white"
+          onSubmit={(e) => {
+            e.preventDefault();
+            donate();
+          }}
+        >
           <div className="flex items-center justify-center">
             <Image
               src="/assets/logo.png"
@@ -67,8 +94,27 @@ export const DonateModal = () => {
               width={168}
             />
           </div>
-          <div className="flex flex-col flex-1 gap-4">
-            <div className="flex flex-row border rounded-xl box-border mb-8">
+          {paymentData ? (
+            <div className="flex-1 flex flex-col justify-between">
+              <div className="flex items-center justify-center flex-1">
+                <Image
+                  src={"data:image/png;base64, " + paymentData.details.qr_image}
+                  alt="PaymentQR"
+                  width={300}
+                  height={300}
+                />
+              </div>
+              <Button
+                className="py-4 w-full !text-[18px]"
+                onClick={() => setDonateOpen(false)}
+              >
+                Дуусгах
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col flex-1 gap-4">
+                {/* <div className="flex flex-row border rounded-xl box-border mb-8">
               <button
                 onClick={() => setSelectedPayment("onetime")}
                 className={`flex-1 py-3 box-border ${
@@ -90,45 +136,54 @@ export const DonateModal = () => {
                 <HeartIcon />
                 Сар бүр
               </button>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {[5000, 10000, 20000, 50000, 100000, 500000].map(
-                (tugrug, index) => (
-                  <button
-                    onClick={() => setValue(tugrug)}
-                    className="py-[10px] rounded-lg border border-[#CCCCCC] flex items-center justify-center hover:bg-[#CCCCCC] transition-all"
-                    key={index}
-                  >
-                    ₮{tugrug}
-                  </button>
-                )
-              )}
-            </div>
-            <div className="flex flex-row gap-2 items-center rounded-2xl border border-[#CCCCCC] px-4">
-              <div className="text-xl  text-black/70">₮</div>
-              <input
-                className={`outline-none w-full py-[14px] text-2xl text-primary font-bold`}
-                value={value}
-                type="number"
-                onChange={(e) => {
-                  if (e.target.value == "") {
-                    setValue("");
-                  } else {
-                    setValue(Number(e.target.value));
-                  }
-                }}
-              />
-            </div>
-            <Input
-              label="Имэйл"
-              placeholder="email@domain.com"
-              type="text"
-              defaultValue={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <Button className="py-4 w-full !text-[18px]">Хандив өгөх</Button>
-        </div>
+            </div> */}
+                <div className="grid grid-cols-3 gap-4">
+                  {[5000, 10000, 20000, 50000, 100000, 500000].map(
+                    (tugrug, index) => (
+                      <button
+                        onClick={() => setValue(tugrug)}
+                        className="py-[10px] rounded-lg border border-[#CCCCCC] flex items-center justify-center hover:bg-[#CCCCCC] transition-all"
+                        key={index}
+                      >
+                        ₮{tugrug}
+                      </button>
+                    )
+                  )}
+                </div>
+                <div className="flex flex-row gap-2 items-center rounded-2xl border border-[#CCCCCC] px-4">
+                  <div className="text-xl  text-black/70">₮</div>
+                  <input
+                    required
+                    className={`outline-none w-full py-[14px] text-2xl text-primary font-bold`}
+                    value={value}
+                    type="number"
+                    onChange={(e) => {
+                      if (e.target.value == "") {
+                        setValue("");
+                      } else {
+                        setValue(Number(e.target.value));
+                      }
+                    }}
+                  />
+                </div>
+                <Input
+                  label="Имэйл"
+                  placeholder="email@domain.com"
+                  type="email"
+                  defaultValue={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <Button
+                className="py-4 w-full !text-[18px]"
+                disabled={loading}
+                type="submit"
+              >
+                {loading ? "Loading..." : "Хандив өгөх"}
+              </Button>
+            </>
+          )}
+        </form>
       </div>
       <div
         className={`w-screen h-screen fixed top-0 left-0 ${
