@@ -75,7 +75,7 @@ export const Footer = () => {
         <div className="grid text-black/70 md:grid-cols-2 lg:grid-cols-4 gap-[24px] md:gap-[84px] text-center md:text-left">
           <div className="mx-auto md:m-0">
             <Image
-              src="/assets/logo-rounded.png"
+              src="/assets/eejii-logo.webp"
               width={179}
               height={179}
               alt="mainLogo"
