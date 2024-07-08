@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import { CaretDown, Close, Menu } from "./icons";
 import { DonateModal } from "./home";
+import { AuthContext, useAuth } from "@/providers";
 
 const links = [
   {
@@ -35,6 +36,7 @@ const links = [
 ];
 
 export const Header = () => {
+  const { user } = useAuth();
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [isNavOpened, setIsNavOpened] = useState(false);
 
@@ -100,12 +102,21 @@ export const Header = () => {
 
               if (link.label === "Donate") {
                 return <DonateModal key={link.label} />;
-              } else
-                return (
-                  <NavLink href={link.link} key={index}>
-                    {link.label}
-                  </NavLink>
-                );
+              }
+              if (link.link == "/auth") {
+                if (user) {
+                  return (
+                    <NavLink href={"/profile"} key={index}>
+                      Профайл
+                    </NavLink>
+                  );
+                }
+              }
+              return (
+                <NavLink href={link.link} key={index}>
+                  {link.label}
+                </NavLink>
+              );
             })}
           </div>
         </div>

@@ -155,7 +155,9 @@ export const Banner = ({
                   href={"/projects"}
                   className="flex flex-row text-white md:text-black w-full items-center justify-center md:justify-between p-3 md:p-2 bg-black/15 rounded-full"
                 >
-                  <div className="font-medium md:pl-5 text-md">Дэлгэрэнгүй</div>
+                  <div className="font-medium md:pl-2 lg:pl-5 text-md">
+                    Дэлгэрэнгүй
+                  </div>
                   <div className="hidden md:inline">
                     <ArrowCirlceUpRight />
                   </div>

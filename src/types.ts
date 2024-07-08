@@ -2,6 +2,7 @@ export type GenderType = "m" | "f";
 export type UserType = {
   id?: string;
   email: string;
+  type?: string;
   plainPassword: string;
   phoneNumber: string;
   username: string;
