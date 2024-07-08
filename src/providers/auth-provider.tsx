@@ -22,11 +22,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         );
         console.log(data);
+        setUser(data as any);
       } catch (e) {}
     };
     getUser();
   }, []);
-  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

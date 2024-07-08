@@ -24,7 +24,6 @@ const MapChart = ({ countries }: { countries?: any[] }) => {
       }
     }
   }, [countries]);
-  console.log(countries);
   useEffect(() => {
     if (!countries) return;
     // Apply themes
