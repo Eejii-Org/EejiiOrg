@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "../button";
 import { Input } from "../input";
 import axios from "axios";
@@ -10,7 +10,7 @@ export const DonateModal = () => {
   const [donateOpen, setDonateOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [value, setValue] = useState<number | string>(10000);
-  const [selectedPyament, setSelectedPayment] = useState<"monthly" | "onetime">(
+  const [selectedPayment, setSelectedPayment] = useState<"monthly" | "onetime">(
     "onetime"
   );
   const [paymentData, setPaymentData] = useState<any | null>(null);
@@ -36,50 +36,61 @@ export const DonateModal = () => {
   return (
     <>
       <button
-        onClick={() => setDonateOpen(true)}
-        className="px-[24px] py-[12px] text-base text-white font-semibold md:hover:bg-[#87B7BF] rounded-xl transition-all bg-primary"
+        onClick={() => {
+          setDonateOpen(true);
+        }}
+        className="px-[24px] py-[12px] m-4 mt-0 md:m-0 text-base text-white font-semibold md:hover:bg-[#87B7BF] rounded-xl transition-all bg-primary"
       >
         Donate
       </button>
       <div
         className={`fixed top-1/2 left-1/2 ${
-          donateOpen ? "fixed flex" : "hidden"
-        } z-10 gap-6 w-full md:w-[1080px] -translate-x-1/2 -translate-y-1/2`}
+          donateOpen ? "fixed flex flex-col p-8 md:flex-row" : "hidden"
+        } z-10 gap-6 w-full ${
+          !paymentData ? "md:w-[1080px]" : "w-[400px]"
+        } -translate-x-1/2 -translate-y-1/2`}
       >
-        <div className="rounded-2xl bg-white overflow-hidden flex flex-col gap-8">
-          <div className="relative h-80">
-            <Image
-              src="/assets/home/donatebanner.webp"
-              alt="Donatebanner"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          <div className="p-4 flex flex-col gap-6">
-            <Image
-              src="/assets/logo.png"
-              alt="EejiiIcon"
-              className="object-contain"
-              height={42}
-              width={168}
-            />
-            <div className="flex flex-col gap-4">
-              <h1 className="text-xl font-semibold">
-                Бидний үйл ажиллагаанд хандив өргөснөөр
-              </h1>
-              <p>
-                Cүүлийн жилүүдэд сайн дурын ажил хийх хүсэл сонирхолтой
-                хүмүүсийн тоо эрчимтэй өсөж байгаа нь гайхалтай билээ. Энэ нь
-                бид бусдын төлөө сэтгэлтэй болж өсөж, хүмүүжиж байгаагийн
-                илэрхийлэл юм.{" "}
-              </p>
+        {!paymentData && (
+          <div className="rounded-2xl bg-white overflow-hidden flex flex-col gap-8">
+            <div className="relative h-80 hidden md:flex">
+              <Image
+                src="/assets/home/donatebanner.webp"
+                alt="Donatebanner"
+                fill
+                className="object-cover"
+              />
             </div>
-            <h2 className="font-semibold">Бидэнд хандив өргөсөнд баярлалаа!</h2>
+
+            <div className="p-4 flex flex-col items-center md:items-start gap-6">
+              <Image
+                src="/assets/logo.png"
+                alt="EejiiIcon"
+                className="object-contain"
+                height={42}
+                width={168}
+              />
+              <div className="flex-col gap-4 hidden md:flex">
+                <h1 className="text-xl font-semibold">
+                  Бидний үйл ажиллагаанд хандив өргөснөөр
+                </h1>
+                <p>
+                  Cүүлийн жилүүдэд сайн дурын ажил хийх хүсэл сонирхолтой
+                  хүмүүсийн тоо эрчимтэй өсөж байгаа нь гайхалтай билээ. Энэ нь
+                  бид бусдын төлөө сэтгэлтэй болж өсөж, хүмүүжиж байгаагийн
+                  илэрхийлэл юм.{" "}
+                </p>
+              </div>
+              <h2 className="font-semibold">
+                Бидэнд хандив өргөсөнд баярлалаа!
+              </h2>
+            </div>
           </div>
-        </div>
+        )}
+
         <form
-          className="p-8 rounded-2xl min-w-[400px] flex-1 flex flex-col justify-between gap-8 bg-white"
+          className={`p-4 md:p-8 rounded-2xl ${
+            !paymentData ? "md:min-w-[400px]" : ""
+          } flex-1 flex flex-col justify-between gap-8 bg-white`}
           onSubmit={(e) => {
             e.preventDefault();
             donate();
@@ -95,7 +106,7 @@ export const DonateModal = () => {
             />
           </div>
           {paymentData ? (
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex-1 flex flex-col justify-between items-center">
               <div className="flex items-center justify-center flex-1">
                 <Image
                   src={"data:image/png;base64, " + paymentData.details.qr_image}
@@ -105,8 +116,11 @@ export const DonateModal = () => {
                 />
               </div>
               <Button
-                className="py-4 w-full !text-[18px]"
-                onClick={() => setDonateOpen(false)}
+                className="py-4 max-w-[400px] w-full !text-[18px]"
+                onClick={() => {
+                  setPaymentData(null);
+                  setDonateOpen(false);
+                }}
               >
                 Дуусгах
               </Button>
@@ -137,7 +151,7 @@ export const DonateModal = () => {
                 Сар бүр
               </button>
             </div> */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="hidden md:grid grid-cols-3 gap-4">
                   {[5000, 10000, 20000, 50000, 100000, 500000].map(
                     (tugrug, index) => (
                       <button
@@ -154,7 +168,7 @@ export const DonateModal = () => {
                   <div className="text-xl  text-black/70">₮</div>
                   <input
                     required
-                    className={`outline-none w-full py-[14px] text-2xl text-primary font-bold`}
+                    className={`outline-none w-full py-3 md:py-[14px] text-xl md:text-2xl text-primary font-bold`}
                     value={value}
                     type="number"
                     onChange={(e) => {
@@ -175,7 +189,7 @@ export const DonateModal = () => {
                 />
               </div>
               <Button
-                className="py-4 w-full !text-[18px]"
+                className="md:py-4 w-full md:!text-[18px]"
                 disabled={loading}
                 type="submit"
               >

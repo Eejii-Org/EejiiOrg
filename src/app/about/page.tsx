@@ -91,7 +91,7 @@ const About = () => {
         {/* second section */}
         <section className="w-full bg-gradient-to-r from-[#F7F7F7] to-[#FFF8EE] py-16">
           <div className="container">
-            <p className="text-center font-semibold text-3xl mb-5">
+            <p className="text-center font-semibold text-2xl md:text-3xl mb-5">
               Яагаад хураамж төлөх ёстой вэ?
             </p>
             <p className="font-medium text-center text-lg md:w-2/3 mx-auto">
@@ -209,7 +209,7 @@ const About = () => {
                   <span className="text-white text-xl font-extrabold mb-2">
                     Coming soon...
                   </span>
-                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center">
+                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center relative">
                     <div>
                       <img
                         src="/assets/about/woman.png"
@@ -236,7 +236,7 @@ const About = () => {
                   <span className="text-white text-xl font-extrabold mb-2">
                     Coming soon...
                   </span>
-                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center">
+                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center relative">
                     <div>
                       <img
                         src="/assets/about/woman.png"
@@ -258,7 +258,7 @@ const About = () => {
                   <span className="text-white text-xl font-extrabold mb-2">
                     Coming soon...
                   </span>
-                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center">
+                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center relative">
                     <div>
                       <img
                         src="/assets/about/woman.png"
@@ -280,7 +280,7 @@ const About = () => {
                   <span className="text-white text-xl font-extrabold mb-2">
                     Coming soon...
                   </span>
-                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center">
+                  <ul className="text-md h-[106px] text-gray-200 mb-2 flex justify-center relative">
                     <div>
                       <img
                         src="/assets/about/woman.png"

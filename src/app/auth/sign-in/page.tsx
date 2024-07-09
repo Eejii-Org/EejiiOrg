@@ -7,8 +7,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { setCookie } from "cookies-next";
+import { useAuth } from "@/providers";
 const SignIn = () => {
   const ref = useRef<HTMLFormElement>(null);
+  const { getUser } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   return (
@@ -30,6 +32,7 @@ const SignIn = () => {
                 }
               );
               setCookie("token", data.token);
+              getUser();
               router.push("/");
             } catch (e: any) {
               setErrorMessage(
