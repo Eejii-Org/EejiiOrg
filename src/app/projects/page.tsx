@@ -25,7 +25,7 @@ const ProjectPage = async ({
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
         <div className="flex max-md:flex-col gap-5 md:gap-9">
-          <div className="absolute top-0 left-0 h-80 w-screen">
+          <div className="absolute top-0 left-0 h-48 md:h-80 w-screen">
             <Image
               src="/assets/event/banner.webp"
               fill

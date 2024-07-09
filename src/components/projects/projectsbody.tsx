@@ -42,16 +42,16 @@ export const ProjectBody = ({
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
   return (
-    <div className="flex flex-1 w-full flex-col items-center gap-8 z-10 mt-36">
+    <div className="flex flex-1 w-full flex-col items-center gap-8 z-10 mt-20 md:mt-36">
       <div className="flex flex-row w-full gap-6">
         <div className="flex flex-col gap-6 w-full">
           {/* Projects Search */}
-          <div className="flex flex-col p-6 bg-white w-full gap-6 drop-shadow rounded-2xl">
-            <h1 className="text-2xl font-semibold">
+          <div className="flex flex-col p-4 md:p-6 bg-white w-full gap-6 drop-shadow rounded-2xl">
+            <h1 className="tex-xl md:text-2xl font-semibold">
               Та ямар төсөл дэмжихийг хүсч байна вэ?
             </h1>
             <div className="flex flex-row gap-6 flex-1">
-              <div className="flex-1 flex justify-between px-4 py-5 md:py-5 md:px-6 bg-white rounded-full border">
+              <div className="flex-1 flex justify-between px-4 py-3 md:py-5 md:px-6 bg-white rounded-full border">
                 <input
                   className="w-full outline-none text-lg"
                   placeholder="Хайх"
@@ -67,11 +67,11 @@ export const ProjectBody = ({
           {/* Featured Projects */}
           <FeaturedCarousel featured={featuredProjects} />
         </div>
-        <div className="min-w-80 bg-white rounded-2xl flex overflow-hidden">
+        <div className="min-w-80 bg-white rounded-2xl hidden overflow-hidden md:flex">
           <Ad position="ad_project_list_3x2" />
         </div>
       </div>
-      <div className="flex flex-row w-full justify-between">
+      <div className="flex flex-col-reverse gap-4 md:flex-row w-full justify-between">
         <div className="flex flex-row">
           <div
             className={`cursor-pointer text-lg font-bold px-4 py-[14px] border-b-2  ${
@@ -100,7 +100,7 @@ export const ProjectBody = ({
         </div>
         <div>
           <select
-            className="border border-[#FCF0DE] rounded-full py-2 px-4 text-center text-black/50 appearance-none"
+            className="border border-[#FCF0DE] rounded-full max-w-[142px] overflow-hidden overflow-ellipsis py-2 px-4 text-center text-black/50 appearance-none"
             onChange={(e) => {
               router.push(
                 `/projects?page=1&q=${q}&t=${t}&category=${e.target.value}`
@@ -117,7 +117,7 @@ export const ProjectBody = ({
         </div>
       </div>
       <div className="flex flex-row">
-        <div className="flex-1 grid grid-cols-4 gap-8">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {projects.map((project, index) => (
             <ProjectCard project={project} key={index} />
           ))}
@@ -276,15 +276,18 @@ const FeaturedCarousel = ({ featured }: { featured: EventType[] }) => {
             className="object-cover"
             alt={"Picture-" + event.title}
           />
-          <h3 className="relative z-10 font-medium text-white">
-            {event.title}
+          <h3 className="relative z-10 font-medium text-md md:text-xl text-white text-center">
+            {event.owner.username}
           </h3>
-          <h2 className="relative z-10 font-medium text-3xl text-white">
+          <h2 className="relative z-10 font-medium text-xl md:text-3xl text-white text-center">
             {event.title}
           </h2>
-          <Button className="relative mt-8 !py-4 !px-6 !rounded">
+          <Link
+            className=" bg-primary text-white text-lg font-bold tracking-wider hover:bg-[#8AB8BB] transition-all relative mt-8 py-3 md:!py-4 !px-6 rounded"
+            href={"/projects/" + event.slug}
+          >
             Хандив өгөх
-          </Button>
+          </Link>
         </div>
       ))}
     </div>
