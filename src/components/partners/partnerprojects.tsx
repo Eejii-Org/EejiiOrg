@@ -147,9 +147,9 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
   }, [tab]);
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <div className="flex flex-row bg-[#F0F4F8] rounded-xl relative">
+      <div className="flex flex-row bg-[#F0F4F8] rounded-xl relative text-sm md:text-xl">
         <div
-          className="absolute w-1/4 h-full p-2 flex transition-all ease-in-out"
+          className="absolute w-1/4 h-full p-1 md:p-2 flex transition-all ease-in-out"
           style={{
             left:
               tab == "volunteeringEvents"
@@ -164,7 +164,7 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           <div className="bg-primary flex-1 rounded-lg" />
         </div>
         <button
-          className={`flex-1 py-5 flex flex-row gap-2 items-center justify-center ${
+          className={`flex-1 py-5 flex flex-col md:flex-row gap-2 items-center justify-center ${
             tab == "volunteeringEvents" ? "text-white" : "text-[#8E8E93]"
           } relative z-10`}
           onClick={() => setTab("volunteeringEvents")}
@@ -175,7 +175,7 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           Сайн дурын арга хэмжээ
         </button>
         <button
-          className={`flex-1 py-5 flex flex-row gap-2 items-center justify-center ${
+          className={`flex-1 py-5 flex flex-col md:flex-row gap-2 items-center justify-center ${
             tab == "events" ? "text-white" : "text-[#8E8E93]"
           } relative z-10`}
           onClick={() => setTab("events")}
@@ -184,7 +184,7 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           Арга хэмжээ
         </button>
         <button
-          className={`flex-1 py-5 flex flex-row gap-2 items-center justify-center ${
+          className={`flex-1 py-5 flex flex-col md:flex-row gap-2 items-center justify-center ${
             tab == "fundraise" ? "text-white" : "text-[#8E8E93]"
           } relative z-10`}
           onClick={() => setTab("fundraise")}
@@ -193,7 +193,7 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           Хандив авах төслүүд
         </button>
         <button
-          className={`flex-1 py-5 flex flex-row gap-2 items-center justify-center ${
+          className={`flex-1 py-5 flex flex-col md:flex-row gap-2 items-center justify-center ${
             tab == "charity" ? "text-white" : "text-[#8E8E93]"
           } relative z-10`}
           onClick={() => setTab("charity")}
@@ -202,7 +202,7 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           Хандив өгөх төслүүд
         </button>
       </div>
-      <div className="flex-1 grid grid-cols-4 gap-8 min-h-[386px]">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols2 lg:grid-cols-4 gap-8 min-h-[386px]">
         {loading ? (
           <div className="w-full h-full flex items-center justify-center col-span-4 text-black/50 font-medium">
             Уншиж байна

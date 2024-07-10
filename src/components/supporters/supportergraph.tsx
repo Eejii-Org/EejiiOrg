@@ -157,7 +157,7 @@ export const SupporterGraph = ({
     };
   }, [supporterDetails]);
   return (
-    <div className="h-[600px] relative" ref={containerRef}>
+    <div className="h-[600px] hidden sm:block relative" ref={containerRef}>
       <canvas ref={canvasRef} className=" rounded-xl"></canvas>
       <div
         id="overlay"

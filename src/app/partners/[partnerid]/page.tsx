@@ -24,7 +24,7 @@ const PartnerPage = async (props: any) => {
   return (
     <MainLayout>
       {!isBasic && (
-        <div className="h-[440px] relative">
+        <div className="h-64 md:h-[440px] relative">
           <Image
             src={coverImage}
             fill
@@ -36,14 +36,18 @@ const PartnerPage = async (props: any) => {
 
       <div
         className={`bg-white ${
-          isBasic ? "" : "container rounded-2xl -mt-24 relative"
+          isBasic ? "" : "md:container rounded-2xl -mt-24 relative"
         }`}
         style={{
           boxShadow: `0px 4px 8px rgba(60, 136, 141, 0.16)`,
         }}
       >
         <div className="container flex flex-col gap-16">
-          <div className={`flex flex-row ${isBasic ? "py-16" : "py-8"}`}>
+          <div
+            className={`flex flex-row ${
+              isBasic ? "py-4 md:py-16" : "py-0 md:py-8"
+            }`}
+          >
             <div className="flex-1 pr-8 flex flex-col gap-6">
               <div className="flex flex-row items-center gap-4">
                 {/* Profile */}
@@ -55,20 +59,24 @@ const PartnerPage = async (props: any) => {
                     className="object-contain"
                   />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h1 className="text-3xl font-semibold pb-4">
+                <div className="flex flex-col md:gap-2">
+                  <h1 className="text-lg md:text-2xl lg:text-3xl font-semibold md:pb-4">
                     {partner.username}
                   </h1>
-                  <h2 className="text-black/50">{partner.organizationType}</h2>
-                  <h3 className="text-black/50 font-semibold">
+                  <h2 className="text-black/50 text-sm md:text-lg">
+                    {partner.organizationType}
+                  </h2>
+                  <h3 className="text-black/50 font-semibold text-sm md:text-xl">
                     {partner.address.address}
                   </h3>
                 </div>
               </div>
-              {isBasic && <p className="text-[18px]">{partner.bio}</p>}
+              {isBasic && (
+                <p className="text-md md:text-[18px]">{partner.bio}</p>
+              )}
             </div>
             {isBasic && (
-              <div className="min-w-[480px] min-h-[400px] rounded-2xl overflow-hidden relative">
+              <div className="min-w-[480px] min-h-[400px] rounded-2xl overflow-hidden relative max-md:hidden">
                 <Image
                   src={aboutImage}
                   alt="AboutImage"
@@ -80,18 +88,18 @@ const PartnerPage = async (props: any) => {
           </div>
         </div>
       </div>
-      <div className="container flex flex-col gap-16 pt-12 pb-24">
+      <div className="container flex flex-col gap-16 max-md:px-2 pt-12 pb-24">
         {!isBasic && (
           <div className="flex flex-col gap-8">
             <div className="flex items-center justify-center">
               <div
-                className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+                className={`cursor-pointer text-lg md:text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
               >
                 Бидний тухай
               </div>
             </div>
-            <div className="flex flex-row gap-8">
-              <div className="flex-1 rounded-2xl overflow-hidden relative max-w-[480px] min-h-[400px]">
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex-1 rounded-2xl overflow-hidden relative min-h-56 md:max-w-[480px] md:min-h-[400px]">
                 <Image
                   src={aboutImage}
                   alt="AboutImage"
@@ -100,7 +108,7 @@ const PartnerPage = async (props: any) => {
                 />
               </div>
               <div className="flex-1">
-                <p className="text-[18px]">{partner.bio}</p>
+                <p className="text-md md:text-[18px]">{partner.bio}</p>
               </div>
             </div>
           </div>
@@ -108,7 +116,7 @@ const PartnerPage = async (props: any) => {
         <div className="flex flex-col gap-8">
           <div className="flex items-center justify-center">
             <div
-              className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+              className={`cursor-pointer text-lg md:text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
             >
               Төсөл хөтөлбөрүүд
             </div>
@@ -118,7 +126,7 @@ const PartnerPage = async (props: any) => {
         <div className="flex flex-col gap-8">
           <div className="flex items-center justify-center">
             <div
-              className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+              className={`cursor-pointer text-lg md:text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
             >
               Мэдээ мэдээлэл
             </div>
@@ -129,7 +137,7 @@ const PartnerPage = async (props: any) => {
           <div className="flex flex-col gap-8">
             <div className="flex items-center justify-center">
               <div
-                className={`cursor-pointer text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
+                className={`cursor-pointer text-lg md:text-xl font-bold px-4 py-[14px] border-b-2 border-primary uppercase`}
               >
                 Бидний түүх
               </div>

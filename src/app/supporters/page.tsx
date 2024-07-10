@@ -14,7 +14,9 @@ const Supporters = async () => {
           className="object-cover absolute"
         />
         <div className="flex flex-col gap-5 z-10 text-white text-center items-center">
-          <h1 className="text-5xl font-semibold">Eejii volunteers</h1>
+          <h1 className="text-3xl lg:text-5xl font-semibold">
+            Eejii volunteers
+          </h1>
           <h2 className="font-medium text-xl">
             Let’s create an earth full of love together
           </h2>

@@ -29,16 +29,17 @@ const MediaPage = async (props: any) => {
   //   process.env.NEXT_PUBLIC_AWS_PATH + '/' + media?.Images?.[0]?.path;
   return (
     <MainLayout>
-      <Image
-        // src={image}
-        src={"/assets/home/backGroundImg.png"}
-        width={1200}
-        height={329}
-        className="md:rounded-[20px] w-full h-[329px] object-cover"
-        alt="Media Background IMG"
-      />
+      <div className="relative overflow-hidden md:rounded-[20px] w-full h-36 md:h-[329px]">
+        <Image
+          src={"/assets/home/backGroundImg.png"}
+          alt="Media Background IMG"
+          className="object-cover"
+          fill
+        />
+      </div>
+
       <div className="w-full mx-auto mb-24">
-        <div className="container px-10 py-7 sm:px-[64px] sm:py-[48px] bg-white relative mx-auto shadow-sm rounded-2xl xl:max-w-[800px] 2xl:max-w-[1096px] xs:-mt-28 md:-mt-44">
+        <div className="container px-3 md:px-10 py-7 sm:px-[64px] sm:py-[48px] bg-white relative mx-auto shadow-sm rounded-2xl xl:max-w-[800px] 2xl:max-w-[1096px] xs:-mt-28 md:-mt-44">
           {data ? (
             <>
               <header className="flex flex-col gap-1 mb-6">
@@ -52,7 +53,8 @@ const MediaPage = async (props: any) => {
                         width={25}
                         height={25}
                         src={
-                          data.owner.images[0].path || "/assets/placeholder.svg"
+                          data.owner.images?.[0]?.path ||
+                          "/assets/placeholder.svg"
                         }
                         alt="publisher's avatar"
                       />
@@ -71,7 +73,7 @@ const MediaPage = async (props: any) => {
                 </div>
               </header>
               <p
-                className=" text-[18px] mb-9"
+                className="text-md md:text-[18px] break-words mb-9"
                 dangerouslySetInnerHTML={{ __html: data?.body }}
               />
               <div className="">

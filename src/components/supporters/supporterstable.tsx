@@ -7,7 +7,6 @@ import { getSupporterData } from "@/actions";
 import { MailIcon, PhoneIcon } from "../icons";
 
 export const SupportersTable = ({ supporters }: { supporters: any }) => {
-  console.log(supporters);
   const [supporterIndex, setSupporterIndex] = useState(0);
   const [supporterDetails, setSupporterDetails] = useState<any>(null);
   const getSupporterDetails = async () => {
@@ -18,14 +17,14 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
     getSupporterDetails();
   }, [supporterIndex]);
   return (
-    <div className="container md:py-16 flex flex-col md:gap-16 items-center">
+    <div className="container md:py-16 flex flex-col gap-4 md:gap-16 items-center">
       <h1 className="text-2xl md:text-3xl pt-16 md:pt-0 text-black font-medium uppercase border-b-4 border-b-primary pb-4">
         Биднийг Дэмжигчид
       </h1>
-      <div className="flex flex-row w-full gap-5">
-        <div className="w-96 bg-white rounded-2xl drop-shadow-card border p-6 h-fit">
+      <div className="flex flex-col lg:flex-row w-full gap-5 mb-8">
+        <div className="w-full lg:w-96 bg-white rounded-2xl drop-shadow-card border p-6 h-fit">
           <div
-            className="max-h-screen overflow-scroll"
+            className="max-h-80 lg:max-h-screen overflow-scroll"
             onScroll={(e: any) => {
               // if (volunteersLoading) return;
               // if (
@@ -168,8 +167,8 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
         </div>
         <div className="flex-1 bg-white rounded-2xl drop-shadow-card border p-6 h-fit">
           <div>
-            <div className="flex flex-row">
-              <div className="min-w-80 h-60 relative">
+            <div className="flex flex-col lg:flex-row">
+              <div className="min-w-36 h-36 lg:min-w-80 lg:h-60 relative">
                 <Image
                   fill
                   src={
@@ -182,18 +181,19 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold text-2xl">
+                <h1 className="font-semibold text-xl lg:text-2xl">
                   {supporters[supporterIndex]?.username}
                 </h1>
                 <div
+                  className="text-md lg:text-lg"
                   dangerouslySetInnerHTML={{
                     __html: supporters[supporterIndex]?.bio,
                   }}
                 />
-                <div className="flex flex-row gap-4 text-black/70 font-medium">
+                <div className="flex flex-row gap-4 text-black/70 text-sm lg:text-lg font-medium">
                   {supporters[supporterIndex]?.phoneNumber && (
                     <a
-                      className="flex flex-row gap-2"
+                      className="flex flex-row items-center gap-2"
                       href={`tel: ${supporters[supporterIndex]?.phoneNumber}`}
                     >
                       <PhoneIcon color="#555555" />
@@ -205,7 +205,7 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
                     "|"}
                   {supporters[supporterIndex]?.email && (
                     <a
-                      className="flex flex-row gap-2"
+                      className="flex flex-row items-center gap-2"
                       href={`mailto: ${supporters[supporterIndex]?.email}`}
                     >
                       <MailIcon color="#555555" />
@@ -217,10 +217,10 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
             </div>
           </div>
           {supporterDetails && (
-            <div className="flex flex-row gap-4 py-4">
+            <div className="grid grid-cols-2 md:flex md:flex-row gap-4 py-4">
               {Object.keys(supporterDetails).map((k) => (
                 <div
-                  className="flex flex-1 items-center justify-center gap-1 border py-4 rounded-xl capitalize"
+                  className="flex flex-1 items-center justify-center gap-1 border py-2 md:py-4 rounded-xl capitalize text-sm lg:text-lg"
                   key={k}
                 >
                   {k}:<div>{(supporterDetails[k] as any[]).length}</div>
