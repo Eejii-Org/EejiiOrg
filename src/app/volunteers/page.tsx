@@ -73,7 +73,9 @@ const VolunteersPage = () => {
           className="object-cover absolute"
         />
         <div className="flex flex-col gap-5 z-10 text-white text-center items-center">
-          <h1 className="text-5xl font-semibold">Eejii volunteers</h1>
+          <h1 className="text-3xl lg:text-5xl font-semibold">
+            Eejii volunteers
+          </h1>
           <h2 className="font-medium text-xl">
             Let’s create an earth full of love together
           </h2>
@@ -105,13 +107,13 @@ const VolunteersPage = () => {
         }
         countries={volunteersByCountry?.totalVolunteersByCountry || []}
       />
-      <div className="container md:py-16 flex flex-col md:gap-16 items-center">
-        <h1 className="text-2xl md:text-3xl pt-16 md:pt-0 text-black font-medium uppercase border-b-4 border-b-primary pb-4">
+      <div className="container pb-8 md:pb-16 md:py-16 flex flex-col gap-4 md:gap-16 items-center">
+        <h1 className="text-xl md:text-3xl pt-16 md:pt-0 text-black font-medium uppercase border-b-4 border-b-primary pb-4">
           МАНАЙ САЙН ДУРЫН АЖИЛЧИД
         </h1>
-        <div className="flex flex-row w-full gap-5">
+        <div className="flex flex-col lg:flex-row w-full gap-5">
           <div className="flex-1 bg-white rounded-2xl drop-shadow-card border p-6  h-fit">
-            <div className="flex flex-row justify-between pb-4">
+            <div className="flex max-lg:flex-col max-lg:gap-4 lg:flex-row justify-between pb-4">
               <div className="flex flex-row items-center bg-[#F5F5F5] py-2 pl-2 pr-4 gap-2 rounded-lg">
                 <Search />
                 <input
@@ -144,7 +146,7 @@ const VolunteersPage = () => {
               </select>
             </div>
             <div
-              className="max-h-screen overflow-scroll"
+              className="max-h-80 lg:max-h-screen overflow-scroll"
               onScroll={(e: any) => {
                 if (volunteersLoading) return;
                 if (
@@ -162,7 +164,7 @@ const VolunteersPage = () => {
                 <thead>
                   <tr className="table-row">
                     <th className="text-left">Нэр</th>
-                    <th>Cертификат</th>
+                    <th className="max-lg:hidden">Cертификат</th>
                     <th>Түвшин</th>
                   </tr>
                 </thead>
@@ -187,9 +189,11 @@ const VolunteersPage = () => {
                           width={40}
                           className="max-h-10 max-w-10 object-cover"
                         />
-                        {volunteer.username}
+                        <div className="max-lg:max-w-32 text-ellipsis text-nowrap overflow-hidden">
+                          {volunteer.username}
+                        </div>
                       </td>
-                      <td className="">
+                      <td className="max-lg:hidden">
                         <div className="flex flex-row gap-2 w-full items-center justify-center">
                           Certificated
                           <Image
@@ -201,18 +205,20 @@ const VolunteersPage = () => {
                           />
                         </div>
                       </td>
-                      <td className="flex items-center justify-center">
-                        <Image
-                          src={
-                            selectedVolunteer?.level
-                              ? `/assets/volunteer/level_${selectedVolunteer?.level}.png`
-                              : "/assets/placeholder.svg"
-                          }
-                          alt="volunteerlevel"
-                          className="object-contain"
-                          height={40}
-                          width={40}
-                        />
+                      <td className="">
+                        <div className="flex items-center justify-center">
+                          <Image
+                            src={
+                              selectedVolunteer?.level
+                                ? `/assets/volunteer/level_${selectedVolunteer?.level}.png`
+                                : "/assets/placeholder.svg"
+                            }
+                            alt="volunteerlevel"
+                            className="object-contain"
+                            height={40}
+                            width={40}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -233,7 +239,7 @@ const VolunteersPage = () => {
                             />
                             <Skeleton className="w-24 h-5 rounded-md" />
                           </td>
-                          <td className="">
+                          <td className="max-lg:hidden">
                             <div className="flex flex-row gap-2 w-full items-center justify-center">
                               Certificated
                               <Image
@@ -245,14 +251,16 @@ const VolunteersPage = () => {
                               />
                             </div>
                           </td>
-                          <td className="flex items-center justify-center">
-                            <Image
-                              src={"/assets/placeholder.svg"}
-                              alt="volunteerlevel"
-                              className="object-contain"
-                              height={40}
-                              width={40}
-                            />
+                          <td className="">
+                            <div className="flex items-center justify-center">
+                              <Image
+                                src={"/assets/placeholder.svg"}
+                                alt="volunteerlevel"
+                                className="object-contain"
+                                height={40}
+                                width={40}
+                              />
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -263,7 +271,7 @@ const VolunteersPage = () => {
             </div>
           </div>
           <div
-            className={`w-96 bg-white rounded-3xl drop-shadow-card border p-6 flex flex-col gap-2 h-fit ${
+            className={`w-full lg:w-96 bg-white rounded-3xl drop-shadow-card border p-6 flex flex-col gap-2 h-fit ${
               !selectedVolunteer ? "opacity-0 h-9" : ""
             }`}
           >
