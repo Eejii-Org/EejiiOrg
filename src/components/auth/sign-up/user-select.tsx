@@ -32,7 +32,7 @@ export const UserTypeSelect = ({
   ];
   return (
     <section className="container flex flex-col flex-1 justify-center h-full">
-      <h2 className="text-2xl font-semibold text-black/65 text-center pb-16">
+      <h2 className="text-xl md:text-2xl font-semibold text-black/65 text-center pb-16">
         Та доорх хэрэглэгчдийн төрлөөс сонгон цааш үргэлжлүүлнэ үү.
       </h2>
       <div className="flex flex-col md:flex-row gap-4 md:gap-16 items-center justify-center">
