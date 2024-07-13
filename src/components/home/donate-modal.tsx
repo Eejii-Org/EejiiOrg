@@ -46,7 +46,7 @@ export const DonateModal = () => {
       <div
         className={`fixed top-1/2 left-1/2 ${
           donateOpen ? "fixed flex flex-col p-8 md:flex-row" : "hidden"
-        } z-10 gap-6 w-full ${
+        } z-30 gap-6 w-full ${
           !paymentData ? "md:w-[1080px]" : "w-[400px]"
         } -translate-x-1/2 -translate-y-1/2`}
       >
@@ -200,7 +200,7 @@ export const DonateModal = () => {
         </form>
       </div>
       <div
-        className={`w-screen h-screen fixed top-0 left-0 ${
+        className={`z-20 w-screen h-screen fixed top-0 left-0 ${
           donateOpen ? "fixed flex" : "hidden"
         } bg-black/40 items-center justify-center`}
         onClick={() => setDonateOpen(false)}

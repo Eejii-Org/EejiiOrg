@@ -1,5 +1,6 @@
 import { getProject } from "@/actions";
 import { Ad, Button, GoBack, MainLayout, ShareButton } from "@/components";
+import { DonateButton } from "@/components/projects";
 import { formatPrice, toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
@@ -150,10 +151,7 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
                   </div>
                 </>
               )}
-
-              <Button className={`w-full ${projectData?.owner ? "mt-4" : ""}`}>
-                ОРОЛЦОХ
-              </Button>
+              <DonateButton slug={params.slug} />
             </div>
             {/* Partner and register details */}
             <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">

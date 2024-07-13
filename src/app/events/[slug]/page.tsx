@@ -1,5 +1,12 @@
 import { getEvent, getEventUsers } from "@/actions";
-import { Ad, Button, GoBack, MainLayout, ShareButton } from "@/components";
+import {
+  Ad,
+  Button,
+  GoBack,
+  MainLayout,
+  ParticipateButton,
+  ShareButton,
+} from "@/components";
 import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
 
@@ -118,7 +125,7 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
         {/* Right Section for Event Detail */}
         <div className="md:w-[360px] flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row md:flex-col gap-4">
-            <div className="border border-primary rounded-full font-semibold text-center">
+            <div className="flex sm:hidden md:flex border border-primary items-center justify-center rounded-full font-semibold text-center h-min">
               {eventData.type == "volunteering_event"
                 ? "Сайн дурын арга хэмжээ"
                 : "Арга хэмжээ"}
@@ -146,9 +153,9 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
                 </>
               )}
 
-              <Button className={`w-full ${eventData?.owner ? "mt-4" : ""}`}>
-                ОРОЛЦОХ
-              </Button>
+              <div className={`w-full ${eventData?.owner ? "mt-4" : ""}`}>
+                <ParticipateButton slug={params.slug} />
+              </div>
             </div>
             {/* Partner and register details */}
             <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
