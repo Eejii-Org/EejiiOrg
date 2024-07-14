@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 const ProfilePage = () => {
   const { user, userLoading } = useAuth();
   const [certificateData, setCertificateData] = useState(null);
+  console.log(userLoading);
   useEffect(() => {
     const getCertificate = async () => {
       if (!user) return;
@@ -43,7 +44,7 @@ const ProfilePage = () => {
     if (userLoading) {
       return <div>Loading...</div>;
     }
-    return redirect("/");
+    return redirect("/auth");
   }
   return (
     <MainLayout>

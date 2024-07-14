@@ -1,6 +1,7 @@
 import { getSupporters } from "@/actions";
 import { Button, MainLayout, SupportersTable } from "@/components";
 import Image from "next/image";
+import Link from "next/link";
 
 const Supporters = async () => {
   const data = await getSupporters("");
@@ -20,7 +21,12 @@ const Supporters = async () => {
           <h2 className="font-medium text-xl">
             Let’s create an earth full of love together
           </h2>
-          <Button className="ripple !px-6">Дэмжигч Болох</Button>
+          <Link
+            href="/auth/sign-up"
+            className="bg-primary p-3 rounded-2xl text-white text-lg font-bold tracking-wider hover:bg-[#8AB8BB] transition-all ripple !px-6"
+          >
+            Дэмжигч Болох
+          </Link>
         </div>
       </div>
       <SupportersTable supporters={data} />

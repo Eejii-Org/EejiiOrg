@@ -172,7 +172,7 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
                 <Image
                   fill
                   src={
-                    supporters[supporterIndex]?.images.find(
+                    supporters?.[supporterIndex]?.images.find(
                       (img: any) => img.type == "main"
                     ).path || "/assets/placeholder.svg"
                   }
@@ -182,16 +182,16 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
               </div>
               <div className="flex flex-col gap-2">
                 <h1 className="font-semibold text-xl lg:text-2xl">
-                  {supporters[supporterIndex]?.username}
+                  {supporters?.[supporterIndex]?.username}
                 </h1>
                 <div
                   className="text-md lg:text-lg"
                   dangerouslySetInnerHTML={{
-                    __html: supporters[supporterIndex]?.bio,
+                    __html: supporters?.[supporterIndex]?.bio,
                   }}
                 />
                 <div className="flex flex-row gap-4 text-black/70 text-sm lg:text-lg font-medium">
-                  {supporters[supporterIndex]?.phoneNumber && (
+                  {supporters?.[supporterIndex]?.phoneNumber && (
                     <a
                       className="flex flex-row items-center gap-2"
                       href={`tel: ${supporters[supporterIndex]?.phoneNumber}`}
@@ -200,10 +200,10 @@ export const SupportersTable = ({ supporters }: { supporters: any }) => {
                       {supporters[supporterIndex]?.phoneNumber}
                     </a>
                   )}
-                  {supporters[supporterIndex]?.phoneNumber &&
-                    supporters[supporterIndex]?.email &&
+                  {supporters?.[supporterIndex]?.phoneNumber &&
+                    supporters?.[supporterIndex]?.email &&
                     "|"}
-                  {supporters[supporterIndex]?.email && (
+                  {supporters?.[supporterIndex]?.email && (
                     <a
                       className="flex flex-row items-center gap-2"
                       href={`mailto: ${supporters[supporterIndex]?.email}`}

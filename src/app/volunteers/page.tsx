@@ -6,6 +6,7 @@ import Image from "next/image";
 import VolunteersMap from "@/components/home/volunteers-map";
 import { UserType } from "@/types";
 import axios from "axios";
+import Link from "next/link";
 
 const VolunteersPage = () => {
   const [volunteers, setVolunteers] = useState<any[]>([]);
@@ -79,9 +80,12 @@ const VolunteersPage = () => {
           <h2 className="font-medium text-xl">
             Let’s create an earth full of love together
           </h2>
-          <Button className="!text-black w-fit !bg-[#FFB15C] ripple">
+          <Link
+            href="/auth/sign-up"
+            className="bg-primary p-3 rounded-2xl text-lg font-bold tracking-wider hover:bg-[#ffc280] transition-all ripple !px-6 !text-black w-fit !bg-[#FFB15C] ripple"
+          >
             Сайн дурын ажилтан болох
-          </Button>
+          </Link>
         </div>
       </div>
       <VolunteersMap

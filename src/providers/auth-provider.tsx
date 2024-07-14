@@ -22,7 +22,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const getUser = async () => {
     setUserLoading(true);
     const token = getCookie("token");
-    if (!token) return;
+    if (!token) {
+      setUserLoading(false);
+      return;
+    }
     try {
       const data = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/me`,
@@ -32,10 +35,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           },
         }
       );
-      console.log(data.data);
       setUser(data.data as any);
-    } catch (e) {}
-    setUserLoading(false);
+      setUserLoading(false);
+    } catch (e) {
+      setUserLoading(false);
+    }
   };
   useEffect(() => {
     getUser();
