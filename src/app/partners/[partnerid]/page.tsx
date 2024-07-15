@@ -72,7 +72,9 @@ const PartnerPage = async (props: any) => {
                 </div>
               </div>
               {isBasic && (
-                <p className="text-md md:text-[18px]">{partner.bio}</p>
+                <p className="text-md md:text-[18px] leading-normal">
+                  {partner.bio}
+                </p>
               )}
             </div>
             {isBasic && (
@@ -108,7 +110,9 @@ const PartnerPage = async (props: any) => {
                 />
               </div>
               <div className="flex-1">
-                <p className="text-md md:text-[18px]">{partner.bio}</p>
+                <p className="text-md md:text-[18px] leading-normal">
+                  {partner.bio}
+                </p>
               </div>
             </div>
           </div>

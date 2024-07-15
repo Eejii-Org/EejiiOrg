@@ -10,7 +10,7 @@ const SuccessPage = () => {
       <h1 className="text-xl md:text-3xl text-center font-medium text-[#1E1E1E]">
         Манай нийгэмлэгт нэгдсэнд баярлалаа!
       </h1>
-      <p className="text-md md:text-[18px] text-tertiary max-w-[640px] text-center">
+      <p className="text-md md:text-[18px] leading-normal text-tertiary max-w-[640px] text-center">
         Таны бүртгэл амжилттай болсон бөгөөд одоо та манай платформын санал
         болгож буй бүх зүйлийг судлахад бэлэн боллоо.
       </p>

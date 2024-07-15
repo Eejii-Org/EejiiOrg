@@ -73,7 +73,7 @@ const MediaPage = async (props: any) => {
                 </div>
               </header>
               <p
-                className="text-md md:text-[18px] break-words mb-9"
+                className="text-md md:text-[18px] leading-normal break-words mb-9"
                 dangerouslySetInnerHTML={{ __html: data?.body }}
               />
               <div className="">
