@@ -45,7 +45,7 @@ export const Footer = () => {
         href={link.link}
         target={link?.target}
         key={link.label}
-        className={`block leading-${link.leading}`}
+        className={`text-md lg:text-lg block leading-${link.leading}`}
       >
         {link.label}
       </Link>
@@ -58,10 +58,10 @@ export const Footer = () => {
           item.label == "Холбогдох" && "hidden md:block"
         }`}
       >
-        <h6 className="pb-4 md:text-[18px] font-bold uppercase text-black">
+        <h6 className="pb-4 text-lg md:text-[18px] font-bold uppercase text-black">
           {item.label}
         </h6>
-        {mapLinks}
+        <div className="flex flex-col gap-3">{mapLinks}</div>
         {item.label == "Шуурхай холбоос" && (
           <div className="border-b-2 border-black/2 w-[130px] mx-auto md:hidden pt-6"></div>
         )}
@@ -71,20 +71,17 @@ export const Footer = () => {
 
   return (
     <footer className="bg-[#F2F2F2]">
-      <div className="container pt-[24px] md:pt-[90px] pb-[65px] mx-auto">
+      <div className="container pt-[24px] md:pt-[90px] pb-4 md:pb-[65px] mx-auto">
         <div className="grid text-black/70 md:grid-cols-2 lg:grid-cols-4 gap-[24px] md:gap-[84px] text-center md:text-left">
           <div className="mx-auto md:m-0">
-            <Image
-              src="/assets/eejii-logo.webp"
-              width={179}
-              height={179}
-              alt="mainLogo"
-            />
+            <div className="w-32 h-32 md:w-44 md:h-44 relative">
+              <Image src="/assets/eejii-logo.webp" alt="mainLogo" fill />
+            </div>
           </div>
           {mapItems}
         </div>
         <div>
-          <div className="flex items-center justify-center pb-10 pt-20 md:pt-[170px] gap-4">
+          <div className="flex items-center justify-center pb-10 pt-10 md:pt-[170px] gap-4">
             <Link
               href="https://www.facebook.com/eejii.org"
               target="_blank"
@@ -102,7 +99,7 @@ export const Footer = () => {
           </div>
 
           <div className="text-center">
-            <p className="text-md text-black/50">
+            <p className="text-sm text-black/50">
               Энэхүү сан нь ❤ “ЭЭЖИЙ ЕРТӨНЦ” НҮТББ-ын өмч бөгөөд бүх эрх ©
               хуулиар хамгаалагдсан болно
             </p>
