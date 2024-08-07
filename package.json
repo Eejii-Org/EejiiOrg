@@ -12,6 +12,7 @@
     "@amcharts/amcharts5": "^5.9.10",
     "@amcharts/amcharts5-fonts": "^5.0.1",
     "@amcharts/amcharts5-geodata": "^5.1.2",
+    "antd": "^5.20.0",
     "axios": "^1.7.2",
     "cookies-next": "^4.2.1",
     "next": "14.2.3",
