@@ -5,6 +5,9 @@ import Image from "next/image";
 import { CaretDown, Close, Menu } from "./icons";
 import { DonateModal } from "./home";
 import { AuthContext, useAuth } from "@/providers";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Layout, Menu as AntdMenu } from "antd";
+const { Header: AntdHeader } = Layout;
 
 const links = [
   {
@@ -41,87 +44,99 @@ export const Header = () => {
   const [isNavOpened, setIsNavOpened] = useState(false);
 
   return (
-    <header className="bg-white fixed w-full z-50 shadow-sm">
-      <div className="container mx-auto flex flex-row justify-between py-[12px] items-center">
-        <Link href="/">
-          <div className="relative w-[168px] h-[42px]">
-            <Image
-              src="/assets/logo.png"
-              alt="foundation Logo"
-              fill
-              objectFit="contain"
-            />
-          </div>
-        </Link>
-        <button
-          onClick={() => setIsNavOpened((prevState) => !prevState)}
-          className="md:hidden transition-all"
-        >
-          {isNavOpened ? <Close /> : <Menu />}
-        </button>
-        <div className="absolute max-md:shadow-md right-0 top-[65px] w-full md:w-auto md:static">
-          <div
-            className={`bg-white flex-col gap-2 md:rounded border z-10 ${
-              isNavOpened ? "flex" : "hidden"
-            } md:flex md:flex-row md:static md:border-none md:w-auto`}
-          >
-            {links.map((link, index) => {
-              if (link.label == "Платформ") {
-                return (
-                  <button
-                    onClick={() =>
-                      setIsDropdownOpened((prevState) => !prevState)
-                    }
-                    className="transition all duration-500 ease-out pl-6 pr-4 py-3 text-base font-semibold md:hover:bg-black/5 rounded-xl relative flex flex-col gap-1 text-left"
-                    key={index}
-                  >
-                    <div className="flex flex-row items-center">
-                      {link.label}
-                      <div
-                        className={`inline transition-all ${
-                          isDropdownOpened && "rotate-180"
-                        }`}
-                      >
-                        <CaretDown />
-                      </div>
-                    </div>
-                    <div
-                      className={`md:absolute bottom-0 pt-2 md:-bottom-3 md:p-5 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[384px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
-                        isDropdownOpened ? "grid sm:grid-cols-2" : "hidden"
-                      } md:border`}
-                    >
-                      {link.links?.map((l, i) => (
-                        <NavLink href={l.link} key={i}>
-                          {l.label}
-                        </NavLink>
-                      ))}
-                    </div>
-                  </button>
-                );
-              }
+    <div>
+      {/* <AntdHeader></AntdHeader> */}
 
-              if (link.label === "Donate") {
-                return <DonateModal key={link.label} />;
-              }
-              if (link.link == "/auth") {
-                if (user) {
+      <header className="bg-white fixed w-full z-50 shadow-sm">
+        <div className="container mx-auto flex flex-row justify-between py-[12px] items-center">
+          <Link href="/">
+            <div className="relative w-[168px] h-[42px]">
+              <Image
+                src="/assets/logo.png"
+                alt="foundation Logo"
+                fill
+                objectFit="contain"
+              />
+            </div>
+          </Link>
+          <button
+            onClick={() => setIsNavOpened((prevState) => !prevState)}
+            className="md:hidden transition-all"
+          >
+            {isNavOpened ? <Close /> : <Menu />}
+          </button>
+          <div className="absolute max-md:shadow-md right-0 top-[65px] w-full md:w-auto md:static">
+            <div
+              className={`bg-white flex-col gap-2 md:rounded border z-10 ${
+                isNavOpened ? "flex" : "hidden"
+              } md:flex md:flex-row md:static md:border-none md:w-auto`}
+            >
+              {links.map((link, index) => {
+                if (link.label == "Платформ") {
                   return (
-                    <NavLink href={"/profile"} key={index}>
-                      Профайл
-                    </NavLink>
+                    <button
+                      onClick={() =>
+                        setIsDropdownOpened((prevState) => !prevState)
+                      }
+                      className="transition all duration-500 ease-out pl-6 pr-4 py-3 text-base font-semibold md:hover:bg-black/5 rounded-xl relative flex flex-col gap-1 text-left"
+                      key={index}
+                    >
+                      <div className="flex flex-row items-center">
+                        {link.label}
+                        <div
+                          className={`inline transition-all ${
+                            isDropdownOpened && "rotate-180"
+                          }`}
+                        >
+                          <CaretDown />
+                        </div>
+                      </div>
+                      <div
+                        className={`md:absolute bottom-0 pt-2 md:-bottom-3 md:p-5 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[384px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
+                          isDropdownOpened ? "grid sm:grid-cols-2" : "hidden"
+                        } md:border`}
+                      >
+                        {link.links?.map((l, i) => (
+                          <NavLink href={l.link} key={i}>
+                            {l.label}
+                          </NavLink>
+                        ))}
+                      </div>
+                    </button>
                   );
                 }
-              }
-              return (
-                <NavLink href={link.link} key={index}>
-                  {link.label}
-                </NavLink>
-              );
-            })}
+
+                if (link.label === "Donate") {
+                  return <DonateModal key={link.label} />;
+                }
+
+                {
+                  console.log("link", link);
+                }
+                if (link.link == "/auth") {
+                  if (user) {
+                    return (
+                      <div>
+                        <NavLink href={"/profile"} key={index}>
+                          Профайл
+                        </NavLink>
+                        {/* TODO: ADD ant header and layout */}
+                        {/* <Avatar size={28} icon={<UserOutlined />} /> */}
+                      </div>
+                    );
+                  }
+                }
+                return (
+                  <NavLink href={link.link} key={index}>
+                    {link.label}
+                  </NavLink>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 };
 

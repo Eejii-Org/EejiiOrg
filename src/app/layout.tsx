@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/providers";
+import { themeConfig } from "@/utils";
+import { ConfigProvider } from 'antd';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +21,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <main className="bg-background min-h-screen flex flex-col">
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <ConfigProvider  
+              theme={themeConfig}>
+              {children}
+            </ConfigProvider>
+          </AuthProvider>
         </main>
       </body>
     </html>
