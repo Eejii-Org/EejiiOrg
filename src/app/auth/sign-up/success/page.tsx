@@ -1,5 +1,6 @@
 import { ThankYouIllustration } from "@/components";
 import Link from "next/link";
+import { Button, Result } from "antd";
 
 const SuccessPage = () => {
   return (
@@ -8,14 +9,15 @@ const SuccessPage = () => {
         <ThankYouIllustration />
       </div>
       <h1 className="text-xl md:text-3xl text-center font-medium text-[#1E1E1E]">
-        Манай нийгэмлэгт нэгдсэнд баярлалаа!
+        Имэйлээ баталгаажуулна уу!
       </h1>
       <p className="text-md md:text-[18px] leading-normal text-tertiary max-w-[640px] text-center">
-        Таны бүртгэл амжилттай болсон бөгөөд одоо та манай платформын санал
-        болгож буй бүх зүйлийг судлахад бэлэн боллоо.
+        Манай нийгэмлэгт нэгдсэнд баярлалаа! Таны бүртгэл амжилттай болсон
+        бөгөөд бид таны бүртгүүлсэн имэйл хаяг уруу баталгаажуулах холбоос
+        илгээлээ.
       </p>
       <Link href="/" className="underline text-primary font-medium">
-        Нүүр хуудас руу шилжих
+        Дахин илгээх
       </Link>
     </section>
   );

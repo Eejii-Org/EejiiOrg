@@ -1,155 +1,174 @@
 "use client";
 
 import { signUp } from "@/actions";
-import {
-  // Button,
-  SupporterStep1,
-  SupporterStep2,
-  UserTypeSelect,
-  VolunteerStep1,
-  VolunteerStep2,
-  VolunteerStep3,
-  VolunteerStep4,
-} from "@/components";
-import { GenderType, UserType } from "@/types";
+import { UserType } from "@/types";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 // Antd
 import type { FormProps } from "antd";
-import { Row, Col, Form, Input, Button, Select, Divider } from "antd";
-
-type UserTypes = "supporter" | "partner" | "volunteer";
-
-const Fallback = () => {
-  return <>placeholder</>;
-};
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  Select,
+  Divider,
+  Typography,
+  Space,
+  message,
+} from "antd";
+const { Title } = Typography;
 
 const SignUp = () => {
-  return (
-    <Suspense fallback={<Fallback />}>
-      <Comp />
-    </Suspense>
-  );
-};
-
-const Comp = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [errorMessage, setErrorMessage] = useState("");
-  const [signUpLoading, setSignUpLoading] = useState(false);
-  const [userDetail, setUserDetail] = useState<UserType>({
-    email: "",
-    plainPassword: "",
-    phoneNumber: "",
-    username: "",
-    firstName: "",
-    lastName: "",
-    gender: "m",
-    bio: "",
-    registerNumber: "",
-    birthday: "",
-    address: {
-      country: "Mongolia",
-      countryCode: "MN",
-      region: "УБ — Баянзүрх",
-      regionCode: "UB-BZD",
-      address: "",
-    },
-  });
-  const [userType, setUserType] = useState<
-    "supporter" | "partner" | "volunteer" | null
-  >(null);
-  const [step, setStep] = useState<number>(-1);
-  const steps = useMemo(() => {
-    if (!userType) return 3;
-    return inputs[userType].length;
-  }, [userType]);
-  useEffect(() => {
-    if (userType) return;
-    const uType = searchParams.get("user");
-    if (uType) {
-      setUserType(uType as UserTypes);
-      setStep(1);
-    } else {
-      setStep(0);
-    }
-  }, [searchParams, userType]);
+  const [form] = Form.useForm();
+  const [isActiveForm, setIsActiveForm] = useState<boolean>(true);
+  const [selectedUserType, setSelectedUserType] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Handle user type
+  const handleUserType = (val: string) => {
+    if (!val) return;
+    setIsActiveForm(false);
+    setSelectedUserType(val);
+  };
 
   // Handle Submit Registration
+  const onFinish: FormProps<UserType>["onFinish"] = async (values) => {
+    const updatedValues = {
+      ...values,
+      type: selectedUserType,
+    };
 
-  const handleSubmit = (val) => {};
+    setLoading(true);
+
+    const result = await signUp(updatedValues);
+
+    if (!result.success) {
+      message.error(result.message.data);
+    } else {
+      router.push(`/auth/sign-up/success?email=${values.email}`);
+      message.success("Бүртгэл амжилттай");
+    }
+
+    console.log("result", result);
+
+    setLoading(false);
+  };
+
   return (
-    <div>
-      <Row
-        gutter={10}
-        justify="center" // Center align horizontally
-        align="middle" // Center align vertically (optional, depending on your needs)
-      >
-        <Col span={6}>
-          <Form layout="vertical">
-            <Form.Item
-              label="Та хэрэглэгчдийн төрөл!"
-              rules={[
-                {
-                  required: true,
-                  message: "Та хэрэглэгчдийн төрлөөс сонгоно уу",
-                },
-              ]}
-            >
-              <Select placeholder="Та хэрэглэгчдийн төрлөөс сонгоно уу">
-                <Select.Option value="volunteer">
-                  Сайн дурын ажилтан
-                </Select.Option>
-                <Select.Option value="supporter">Дэмжигч</Select.Option>
-                <Select.Option value="partner">Хамтрагч</Select.Option>
-              </Select>
-            </Form.Item>
+    <Row gutter={10}>
+      <Col span={6} offset={9}>
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Title level={5}>Та эхлээд хэрэглэгчдийн төрлөө сонгоно уу!</Title>
+          <Select
+            onChange={handleUserType}
+            placeholder="Сонгох"
+            style={{ width: "100%" }}
+          >
+            <Select.Option value="volunteer">Сайн дурын ажилтан</Select.Option>
+            <Select.Option value="supporter">Дэмжигч</Select.Option>
+            <Select.Option value="partner">Хамтрагч</Select.Option>
+          </Select>
+        </Space>
 
-            <Divider />
+        <Divider />
+        <Form
+          form={form}
+          layout="vertical"
+          disabled={isActiveForm}
+          onFinish={onFinish}
+        >
+          <Row gutter={15}>
+            <Col span={12}>
+              <Form.Item label="Овог:" name="lastname">
+                <Input placeholder="Овогоо оруулна уу..." />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Нэр:" name="firstName">
+                <Input placeholder="Нэрээ оруулна уу..." />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {selectedUserType !== "volunteer" && (
             <Row gutter={15}>
               <Col span={12}>
-                <Form.Item
-                  label="Овог:"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Input placeholder="Овогоо оруулна уу..." />
+                <Form.Item name="organization" label="Байгууллагын нэр:">
+                  <Input placeholder="Та байгууллагын нэрээ оруулна уу..." />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Нэр:">
-                  <Input placeholder="Нэрээ оруулна уу..." />
+                <Form.Item name="organizationType" label="Байгууллагын төрөл:">
+                  <Input placeholder="Та Байгууллагын төрөлөө оруулна уу..." />
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="Имэйл:">
-              <Input placeholder="Таны имэйл хаяг..." />
-            </Form.Item>
-            <Form.Item label="Утас:">
-              <Input placeholder="Таны утасны дугаар..." />
-            </Form.Item>
-            <Form.Item label="Нууц үг:">
-              <Input placeholder="Нууц үгээ оруулна уу..." />
-            </Form.Item>
-            <Form.Item label="Нууц үг давтах:">
-              <Input placeholder="Нууц үгээ давтана уу..." />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block size="large">
-                Бүртгүүлэх
-              </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-      </Row>
+          )}
 
-      {/* TODO: Remove after new implementation */}
-      {/* <section className="container flex flex-col flex-1 h-full pb-16">
+          <Form.Item
+            name="email"
+            label="Имэйл:"
+            rules={[
+              {
+                required: true,
+                message: "имэйл хаягаа заавал оруулна уу!",
+              },
+            ]}
+          >
+            <Input placeholder="Таны имэйл хаяг..." />
+          </Form.Item>
+          <Form.Item name="phoneNumber" label="Утас:">
+            <Input placeholder="Таны утасны дугаар..." />
+          </Form.Item>
+          <Form.Item
+            name="plainPassword"
+            label="Нууц үг:"
+            rules={[
+              {
+                required: true,
+                message: "Нууц үг оруулна уу!",
+              },
+            ]}
+          >
+            <Input placeholder="Нууц үгээ оруулна уу..." />
+          </Form.Item>
+          <Form.Item
+            label="Нууц үг давтах:"
+            rules={[
+              {
+                required: true,
+                message: "Нууц үгээ давтан оруулна уу!",
+              },
+            ]}
+          >
+            <Input placeholder="Нууц үгээ давтана уу..." />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              size="large"
+              loading={loading}
+            >
+              Бүртгүүлэх
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
+  );
+};
+
+{
+  /* TODO: Remove after new implementation */
+}
+{
+  /* <section className="container flex flex-col flex-1 h-full pb-16">
         <div className="flex items-center justify-center">
           {step == 0 ? (
             <UserTypeSelect
@@ -412,261 +431,7 @@ const Comp = () => {
         >
           <p className="text-white font-medium text-lg">Loading...</p>
         </div>
-      </section> */}
-    </div>
-  );
-};
+      </section> */
+}
 
 export default SignUp;
-
-/* 
-  Volunteer Register
-*/
-
-// {
-//   "email": "tsolmondark@gmail.com",
-//   "plainPassword": "sunshine",
-//   "phoneNumber": "88548411",
-//   "username": "Tsolmoxn",
-//   "firstName": "tsomo",
-//   "lastName": "horloo",
-//   "gender": "m",
-//   "bio": "My name is tsolmon",
-//   "registerNumber": "UP00223344",
-//   "address": {
-//     "country": "Mongolia",
-//     "city": "Ulanbator",
-//     "countryCode": "MN",
-//     "province": "Bayanzurh",
-//     "provinceCode": "UB-BZD",
-//     "state": "Tov",
-//     "street": "string",
-//     "description": "string",
-//     "district": "string"
-//   }
-// //   "skills": [
-// //     {}
-// //   ]
-// }
-
-/* 
-  Partner Register
-*/
-// {
-//   "email": "bgnj.mn@gmail.com",
-//   "plainPassword": "sunshine",
-//   "phoneNumber": "80267299",
-//   "username": "Quizzy",
-//   "bio": "Hi this is quizzy",
-//   "organizationType": "non-profit",
-//   "address": {
-//     "country": "Mongolia",
-//     "city": "Ulanbator",
-//     "countryCode": "MN",
-//     "province": "Bayanzurh",
-//     "provinceCode": "UB-BZD",
-//     "state": "string",
-//     "street": "string",
-//     "description": "string",
-//     "district": "string"
-//   }
-// }
-
-// const inputs = {
-// supporter: [
-//   {
-//     label: "Таны нөхцөл байдал",
-//     type: "select",
-//     info: [
-//       {
-//         icon: <PersonIcon />,
-//         label: "Хувь хүн",
-//         type: "person",
-//       },
-//       {
-//         icon: <PartnerIcon />,
-//         label: "ТББ & ОУ байгууллагын салбар байгууллага",
-//         type: "company",
-//       },
-//     ],
-//   },
-//   {
-//     label: "Хувийн мэдээлэл",
-//     type: "inputs",
-//     info: [
-//       {
-//         label: "Нэр",
-//         type: "text",
-//         key: "username"
-//       },
-//       {
-//         label: "Хаяг",
-//         type: "email",
-//         key: "email",
-//       },
-//       {
-//         label: "Утасны дугаар",
-//         type: "number",
-//         key: "phoneNumber"
-//       },
-//     ],
-//   },
-//   ,
-//   {
-//     label: "Танилцуулга",
-//     type: "textarea",
-//     info: [
-//       {
-//         label: "Танилцуулга",
-//         type: "textarea",
-//         key: "bio"
-//       },
-//     ],
-//   },
-// ],
-
-//   supporter: [
-//     {
-//       label: "Таны нөхцөл байдал",
-//       type: "select",
-//       info: [
-//         {
-//           icon: <PersonIcon />,
-//           label: "Хувь хүн",
-//           type: "person",
-//         },
-//         {
-//           icon: <PartnerIcon />,
-//           label: "ТББ & ОУ байгууллагын салбар байгууллага",
-//           type: "company",
-//         },
-//       ],
-//     },
-//   ],
-//   volunteer: [
-//     {
-//       label: "Холбоо барих",
-//       type: "inputs",
-//       info: [
-//         {
-//           label: "Дуудах нэр",
-//           type: "text",
-//           key: "username",
-//         },
-//         {
-//           label: "Имэйл",
-//           type: "email",
-//           key: "email",
-//         },
-//         {
-//           label: "Утасны дугаар",
-//           type: "number",
-//           key: "phoneNumber",
-//         },
-//       ],
-//     },
-//     {
-//       label: "Хувийн мэдээлэл",
-//       type: "inputs",
-//       info: [
-//         {
-//           label: "Овог",
-//           type: "text",
-//           key: "lastName",
-//         },
-//         {
-//           label: "Нэр",
-//           type: "text",
-//           key: "firstname",
-//         },
-//         {
-//           label: "Төрсөн өдөр",
-//           type: "date",
-//           key: "birthDate",
-//         },
-//         {
-//           label: "Хүйс",
-//           type: "gender",
-//           key: "gender",
-//         },
-//         {
-//           label: "Регистрийн дугаар",
-//           type: "register",
-//           key: "registerNumber",
-//         },
-//       ],
-//     },
-//     {
-//       label: "Гэрийн хаяг",
-//       type: "inputs",
-//       info: [
-//         {
-//           label: "Бүс нутаг",
-//           type: "select",
-//           key: "area",
-//         },
-//         {
-//           label: "Гэрийн хаяг",
-//           type: "text",
-//           key: "address",
-//         },
-//       ],
-//     },
-//     {
-//       label: "Танилцуулга",
-//       type: "inputs",
-//       info: [
-//         {
-//           label: "Танилцуулга",
-//           type: "textarea",
-//           key: "bio",
-//         },
-//       ],
-//     },
-//   ],
-// };
-
-const inputs = {
-  volunteer: [
-    {
-      label: "Холбоо барих",
-    },
-    {
-      label: "Хувийн мэдээлэл",
-    },
-    {
-      label: "Гэрийн хаяг",
-    },
-    {
-      label: "Танилцуулга",
-    },
-  ],
-  supporter: [
-    {
-      label: "Нөхцөл",
-    },
-    {
-      label: "Хувийн мэдээлэл",
-    },
-    {
-      label: "Хаяг",
-    },
-    {
-      label: "Танилцуулга",
-    },
-  ],
-  partner: [
-    {
-      label: "Холбоо барих",
-    },
-    {
-      label: "Хувийн мэдээлэл",
-    },
-    {
-      label: "Гэрийн хаяг",
-    },
-    {
-      label: "Танилцуулга",
-    },
-  ],
-};

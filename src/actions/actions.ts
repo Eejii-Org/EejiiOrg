@@ -28,15 +28,22 @@ export const signIn = async (formData: FormData) => {
 
 export const signUp = async (userData: UserType) => {
   "use server";
+
+  console.log('userData', userData)
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/volunteer`,
+    const {data} = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register`,
       {
         ...userData,
       }
     );
+
+    return data;
   } catch (error: any) {
-    throw error?.response?.data;
+    return {
+      success: false,
+      message: error?.response?.data
+    }
   }
 };
 
