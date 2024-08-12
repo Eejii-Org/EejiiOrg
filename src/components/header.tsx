@@ -32,7 +32,7 @@ const links = [
   },
   { link: "/about", label: "Бидний тухай" },
   {
-    link: "/auth",
+    link: "/auth/sign-in",
     label: "Нэвтрэх",
   },
   { link: "/projects", label: "Donate" },
@@ -42,6 +42,8 @@ export const Header = () => {
   const { user } = useAuth();
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [isNavOpened, setIsNavOpened] = useState(false);
+
+  console.log("user", user);
 
   return (
     <div>

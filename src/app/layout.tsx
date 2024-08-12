@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/providers";
 import { themeConfig } from "@/utils";
-import { ConfigProvider } from 'antd';
+import { ConfigProvider } from "antd";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="bg-background min-h-screen flex flex-col">
+        <main className="bg-background flex flex-col">
           <AuthProvider>
-            <ConfigProvider  
-              theme={themeConfig}>
-              {children}
-            </ConfigProvider>
+            <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
           </AuthProvider>
         </main>
       </body>

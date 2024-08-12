@@ -1,8 +1,26 @@
+"use client";
+import { useState } from "react";
 import { ThankYouIllustration } from "@/components";
-import Link from "next/link";
-import { Button, Result } from "antd";
+import { getVerifyEmail } from "@/actions";
+import { Button, message } from "antd";
+import { useSearchParams } from "next/navigation";
 
 const SuccessPage = () => {
+  const searchParams = useSearchParams();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Handle Submit Resend email
+  const resend = async () => {
+    const email = searchParams.get("email");
+
+    setLoading(true);
+    if (!email) return;
+
+    await getVerifyEmail(email);
+    message.success("Амжилттай илгээгдлээ!");
+    setLoading(false);
+  };
+
   return (
     <section className="flex items-center justify-center flex-col gap-4 px-4">
       <div className="w-[256px] md:w-[384px]">
@@ -16,9 +34,9 @@ const SuccessPage = () => {
         бөгөөд бид таны бүртгүүлсэн имэйл хаяг уруу баталгаажуулах холбоос
         илгээлээ.
       </p>
-      <Link href="/" className="underline text-primary font-medium">
+      <Button onClick={resend} loading={loading}>
         Дахин илгээх
-      </Link>
+      </Button>
     </section>
   );
 };

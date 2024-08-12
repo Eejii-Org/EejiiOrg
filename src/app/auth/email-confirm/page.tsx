@@ -1,28 +1,66 @@
 "use client";
 import axios from "axios";
+import { verifyEmail } from "@/actions";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  Select,
+  Divider,
+  Typography,
+  message,
+  Checkbox,
+  Result,
+} from "antd";
+const { Title } = Typography;
 
 const Fallback = () => {
   return <>placeholder</>;
 };
 
-const VerifyEmail = () => {
+const Success = () => {
   return (
-    <Suspense fallback={<Fallback />}>
-      <Comp />
-    </Suspense>
+    <Result
+      status="success"
+      title="Таны бүртгэл амжилттай баталгаажлаа!"
+      subTitle="Манай нийгэмлэгт нэгдсэнд баярлалаа! Таны бүртгэл амжилттай болсон бөгөөд манай платформын санал болгож буй бүх зүйлийг судлахад бэлэн боллоо.."
+      extra={[
+        <Link href="/auth/sign-in">
+          <Button type="primary" key="console">
+            Нэвтрэх
+          </Button>
+        </Link>,
+      ]}
+    />
   );
 };
 
-const Comp = () => {
+const VerifyEmail = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const token = searchParams.get("token");
+
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(true);
   const [requestLoading, setRequestLoading] = useState(false);
   const [requestSuccess, setRequestSuccess] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkEmailApproval = async () => {
+      const result = await verifyEmail(email, token);
+
+      console.log("result", result);
+    };
+
+    checkEmailApproval();
+  }, [searchParams]);
+
+  // Old
   const requestNewVerification = async () => {
     setRequestLoading(true);
     try {
@@ -43,6 +81,11 @@ const Comp = () => {
     if (!email || !token) return null;
     return { email, token };
   }, [email, token]);
+
+  console.log("combined", combined);
+
+  console.log("success", success);
+
   useEffect(() => {
     const verify = async () => {
       if (!combined) return;
@@ -65,8 +108,12 @@ const Comp = () => {
       verify();
     }
   }, [combined]);
-  return (
-    <section className="flex flex-col gap-4 items-center justify-center">
+
+  return <Success />;
+};
+
+{
+  /* <section className="flex flex-col gap-4 items-center justify-center">
       {loading ? (
         <p>Loading...</p>
       ) : success ? (
@@ -91,8 +138,7 @@ const Comp = () => {
           )}
         </>
       )}
-    </section>
-  );
-};
+    </section> */
+}
 
 export default VerifyEmail;

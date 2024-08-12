@@ -8,28 +8,24 @@ import axios from "axios";
   Authentication
 */
 
-export const signIn = async (formData: FormData) => {
-  "use server";
-  const email = formData.get("email");
-  const password = formData.get("password");
+export const signIn = async (userData: UserType) => {
   try {
-    const data = await axios.post(
+    const {data} = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth`,
       {
-        email,
-        password,
+        ...userData
       }
     );
+
     return data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    return error.response?.data;
   }
 };
 
 export const signUp = async (userData: UserType) => {
   "use server";
 
-  console.log('userData', userData)
   try {
     const {data} = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register`,
@@ -40,32 +36,43 @@ export const signUp = async (userData: UserType) => {
 
     return data;
   } catch (error: any) {
+    return error?.response?.data
+  }
+};
+
+export const verifyEmail = async (email: string, token: string) => {
+  try {
+    const {data} = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
+    {
+      email,
+      token,
+    }
+    );
+
+    return data;
+  } catch (error: any) {
+    return error?.response?.data
+  }
+};
+
+export const getVerifyEmail = async (email: string) => {
+  "use server";
+
+  try {
+    const {data} = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
+      {
+        email,
+      }
+    );
+    return data;
+  } catch (error: any) {
     return {
       success: false,
       message: error?.response?.data
     }
   }
-};
-
-export const verifyEmail = async (email: string, token: string) => {
-  "use server";
-  return await axios.post(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
-    {
-      email,
-      token,
-    }
-  );
-};
-
-export const getVerifyEmail = async (email: string) => {
-  "use server";
-  return await axios.post(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
-    {
-      email,
-    }
-  );
 };
 
 /* 
