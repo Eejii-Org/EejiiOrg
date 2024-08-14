@@ -52,11 +52,9 @@ const ForgotPassword = () => {
           },
         ]}
       >
-        <Input type="email" />
+        <Input type="email" placeholder="Имэйл хаягаа оруулна уу" />
       </Form.Item>
-      <Form.Item name="callbackUri" hidden>
-        <Input value="wwww" />
-      </Form.Item>
+
       <Form.Item>
         <Button type="primary" htmlType="submit" block loading={loading}>
           Илгээх
@@ -64,7 +62,9 @@ const ForgotPassword = () => {
       </Form.Item>
 
       <Link href="/auth/sign-in">
-        <Button block>Буцах</Button>
+        <Button block type="primary" ghost>
+          Буцах
+        </Button>
       </Link>
     </Form>
   );
