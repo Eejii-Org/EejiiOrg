@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { ThankYouIllustration } from "@/components";
 import { getVerifyEmail } from "@/actions";
 import { Button, message } from "antd";
 import { useSearchParams } from "next/navigation";
 
-const SuccessPage = () => {
+const Comp = () => {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -38,6 +38,14 @@ const SuccessPage = () => {
         Дахин илгээх
       </Button>
     </section>
+  );
+};
+
+const SuccessPage = () => {
+  return (
+    <Suspense fallback="loading">
+      <Comp />
+    </Suspense>
   );
 };
 

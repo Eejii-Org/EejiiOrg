@@ -43,8 +43,6 @@ export const Header = () => {
   const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [isNavOpened, setIsNavOpened] = useState(false);
 
-  console.log("user", user);
-
   return (
     <div>
       {/* <AntdHeader></AntdHeader> */}
@@ -99,7 +97,7 @@ export const Header = () => {
                         } md:border`}
                       >
                         {link.links?.map((l, i) => (
-                          <NavLink href={l.link} key={i}>
+                          <NavLink href={l.link} key={`dropdown-link-${i}`}>
                             {l.label}
                           </NavLink>
                         ))}
@@ -112,19 +110,12 @@ export const Header = () => {
                   return <DonateModal key={link.label} />;
                 }
 
-                {
-                  console.log("link", link);
-                }
                 if (link.link == "/auth") {
                   if (user) {
                     return (
-                      <div>
-                        <NavLink href={"/profile"} key={index}>
-                          Профайл
-                        </NavLink>
-                        {/* TODO: ADD ant header and layout */}
-                        {/* <Avatar size={28} icon={<UserOutlined />} /> */}
-                      </div>
+                      <NavLink href={"/profile"} key={index}>
+                        Профайл
+                      </NavLink>
                     );
                   }
                 }

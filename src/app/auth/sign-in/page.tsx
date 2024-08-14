@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { setCookie } from "cookies-next";
 import { useAuth } from "@/providers";
-import { signIn } from "@/actions";
+import { signIn, getVerifyEmail } from "@/actions";
 
 // Antd
 import type { FormProps } from "antd";
@@ -19,6 +19,7 @@ const SignIn = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>();
 
   // Handle Submit Registration
   const onFinish: FormProps<UserType>["onFinish"] = async (values) => {
@@ -26,19 +27,36 @@ const SignIn = () => {
     const result = await signIn(values);
 
     if (!result.token) {
+      if (result.code === 401) {
+        router.push(`/auth/resend-email?email=${email}`);
+      }
+
       message.error(result.message);
-    } else {
-      message.success("Амжилттай нэвтэрлээ...");
-      setCookie("token", result.token);
-      getUser();
-      router.push("/");
+      setLoading(false);
+      return;
     }
+
+    message.success("Амжилттай нэвтэрлээ...");
+    setCookie("token", result.token);
+    getUser();
+    router.push("/");
 
     setLoading(false);
   };
 
+  const onValuesChange = (values: any, allValues: any) => {
+    const { email } = allValues;
+    setEmail(email);
+  };
+
   return (
-    <Form form={form} name="login" layout="vertical" onFinish={onFinish}>
+    <Form
+      form={form}
+      name="login"
+      layout="vertical"
+      onFinish={onFinish}
+      onValuesChange={onValuesChange}
+    >
       <Title level={4}>Хэрэглэгч нэвтрэх</Title>
       <Divider />
       <Form.Item
@@ -71,7 +89,7 @@ const SignIn = () => {
         />
       </Form.Item>
       <Form.Item>
-        <Link href="#">Нууц үгээ мартсан!</Link>
+        <Link href="/auth/forgot-password">Нууц үгээ мартсан!</Link>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" block loading={loading}>

@@ -1,144 +1,104 @@
 "use client";
-import axios from "axios";
+import { useEffect, useState, Suspense } from "react";
 import { verifyEmail } from "@/actions";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Button,
-  Select,
-  Divider,
-  Typography,
-  message,
-  Checkbox,
-  Result,
-} from "antd";
-const { Title } = Typography;
+import { Button, Skeleton, Result } from "antd";
 
-const Fallback = () => {
-  return <>placeholder</>;
-};
+interface SuccessProps {
+  countdown: number; // or string if countdown is a string
+}
 
-const Success = () => {
+const Success = ({ countdown }: SuccessProps) => {
   return (
     <Result
       status="success"
       title="Таны бүртгэл амжилттай баталгаажлаа!"
-      subTitle="Манай нийгэмлэгт нэгдсэнд баярлалаа! Таны бүртгэл амжилттай болсон бөгөөд манай платформын санал болгож буй бүх зүйлийг судлахад бэлэн боллоо.."
+      subTitle={`Та ${countdown} секундын дараа автоматаар нэвртэх хэсэглүү илгээгдэх болно. Хэрэв удах юумуу ямар нэг алдаа гарсан тохиолдолд та доорх товчлуур дээр дарж нэвтэрнэ үү!`}
       extra={[
-        <Link href="/auth/sign-in">
-          <Button type="primary" key="console">
-            Нэвтрэх
-          </Button>
+        <Link href="/auth/sign-in" key="success">
+          <Button type="primary">Нэвтрэх</Button>
         </Link>,
       ]}
     />
   );
 };
 
-const VerifyEmail = () => {
+const Failed = () => {
+  return (
+    <Result
+      status="warning"
+      title="Имэйл баталгаажуулах хугацаа дууссан байна!"
+      subTitle="Имэйлийн баталгаажуулах хугацаа илгээгдсэнээс хойш 10 минут байдаг бөгөөд та уг хугацаанд амжиж имэйлээ баталгаажуулах хэрэгтэйг анхаарна уу!"
+      extra={[
+        <Link href="/auth/sign-in" key="failed">
+          <Button type="primary">Шинээр холбоос авах</Button>
+        </Link>,
+      ]}
+    />
+  );
+};
+
+const Comp = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const token = searchParams.get("token");
-
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(true);
-  const [requestLoading, setRequestLoading] = useState(false);
-  const [requestSuccess, setRequestSuccess] = useState<boolean | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {
     const checkEmailApproval = async () => {
+      if (!email || !token) {
+        setLoading(false);
+        return;
+      }
+
       const result = await verifyEmail(email, token);
 
-      console.log("result", result);
+      if (result.success) {
+        setSuccess(true);
+      } else if (result?.message?.code === 2006) {
+        router.push("/auth/sign-in");
+        return;
+      }
+
+      setLoading(false);
     };
 
     checkEmailApproval();
-  }, [searchParams]);
-
-  // Old
-  const requestNewVerification = async () => {
-    setRequestLoading(true);
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
-        {
-          email,
-        }
-      );
-      setRequestLoading(false);
-      setRequestSuccess(true);
-    } catch (e) {
-      setRequestLoading(false);
-      setRequestSuccess(false);
-    }
-  };
-  const combined = useMemo(() => {
-    if (!email || !token) return null;
-    return { email, token };
-  }, [email, token]);
-
-  console.log("combined", combined);
-
-  console.log("success", success);
+  }, [email, token, router]);
 
   useEffect(() => {
-    const verify = async () => {
-      if (!combined) return;
-      try {
-        const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
-          {
-            email: combined.email,
-            token: combined.token,
-          }
-        );
-        setSuccess(true);
-        setLoading(false);
-      } catch (e) {
-        setSuccess(false);
-        setLoading(false);
-      }
-    };
-    if (combined) {
-      verify();
-    }
-  }, [combined]);
+    if (success) {
+      const timer = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
 
-  return <Success />;
+      const redirectTimeout = setTimeout(() => {
+        router.push("/auth/sign-in");
+      }, 10000);
+
+      return () => {
+        clearInterval(timer);
+        clearTimeout(redirectTimeout);
+      };
+    }
+  }, [success, router]);
+
+  if (loading) return <Skeleton />;
+
+  return success ? <Success countdown={countdown} /> : <Failed />;
 };
 
-{
-  /* <section className="flex flex-col gap-4 items-center justify-center">
-      {loading ? (
-        <p>Loading...</p>
-      ) : success ? (
-        <p>Амжилттай баталгаажлаа</p>
-      ) : (
-        <p>Баталгаажуулахад алдаа гарлаа. Дахин оролдоно уу</p>
-      )}
-      {requestLoading ? (
-        <p>Loading...</p>
-      ) : requestSuccess ? (
-        <p>Амжилттай баталгаажуулах имэйл явууллаа.</p>
-      ) : (
-        <>
-          {requestSuccess == false && <p>Алдаа гарлаа. Дахин оролдоно уу</p>}
-          {!success && (
-            <button
-              className="text-primary underline"
-              onClick={requestNewVerification}
-            >
-              Шинээр баталгаажуулах имэйл авах
-            </button>
-          )}
-        </>
-      )}
-    </section> */
-}
+const VerifyEmail = () => {
+  return (
+    <Suspense fallback="loading">
+      <Comp />
+    </Suspense>
+  );
+};
 
 export default VerifyEmail;

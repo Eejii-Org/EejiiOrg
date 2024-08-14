@@ -105,6 +105,19 @@ export type RoleType = {
   eventUsers: EventUserType[];
 };
 
+export type ForgotPasswordType = {
+  email: string;
+  callbackUri: string;
+  sendResetCodeAgain: boolean;
+  resetCode: string;
+};
+
+export type ChangePasswordType = {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 export type CategoryType = {};
 
 export type MediaType = {};

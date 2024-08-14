@@ -9,7 +9,7 @@ export const VolunteerStep3 = ({ userDetail }: { userDetail: UserType }) => {
         <select
           className="w-full rounded-2xl py-[14px] px-4 border border-[#CCCCCC] outline-primary"
           name="region"
-          defaultValue={userDetail.address.region}
+          defaultValue={userDetail.address?.region ?? ""}
         >
           {regions.map((region, index) => (
             <option value={region} key={index}>

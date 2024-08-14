@@ -1,7 +1,7 @@
 "use server";
 
 import { BannerPositionType } from "@/components/ad";
-import { UserType } from "@/types";
+import { UserType, ForgotPasswordType, ChangePasswordType } from "@/types";
 import axios from "axios";
 
 /* 
@@ -10,10 +10,10 @@ import axios from "axios";
 
 export const signIn = async (userData: UserType) => {
   try {
-    const {data} = await axios.post(
+    const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth`,
       {
-        ...userData
+        ...userData,
       }
     );
 
@@ -27,7 +27,7 @@ export const signUp = async (userData: UserType) => {
   "use server";
 
   try {
-    const {data} = await axios.post(
+    const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register`,
       {
         ...userData,
@@ -36,23 +36,30 @@ export const signUp = async (userData: UserType) => {
 
     return data;
   } catch (error: any) {
-    return error?.response?.data
+    return error?.response?.data;
   }
 };
 
 export const verifyEmail = async (email: string, token: string) => {
+  "use server";
   try {
-    const {data} = await axios.post(
+    const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
-    {
-      email,
-      token,
-    }
+      {
+        email,
+        token,
+      }
     );
 
-    return data;
+    return {
+      success: true,
+      data: data,
+    };
   } catch (error: any) {
-    return error?.response?.data
+    return {
+      success: false,
+      message: error?.response?.data,
+    };
   }
 };
 
@@ -60,7 +67,7 @@ export const getVerifyEmail = async (email: string) => {
   "use server";
 
   try {
-    const {data} = await axios.post(
+    const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
       {
         email,
@@ -70,8 +77,78 @@ export const getVerifyEmail = async (email: string) => {
   } catch (error: any) {
     return {
       success: false,
-      message: error?.response?.data
-    }
+      message: error?.response?.data,
+    };
+  }
+};
+
+export const forgotPassword = async (forgotData: ForgotPasswordType) => {
+  "use server";
+
+  console.log("forgotData", forgotData);
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/forgotPassword`,
+      {
+        ...forgotData,
+      }
+    );
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data,
+    };
+  }
+};
+
+export const verifyResetCode = async (email: string, resetCode: string) => {
+  "use server";
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyResetCode`,
+      {
+        email,
+        resetCode,
+      }
+    );
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data,
+    };
+  }
+};
+
+export const changePassword = async (resetData: ChangePasswordType) => {
+  "use server";
+  console.log("resetData", resetData);
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/changePassword`,
+      {
+        ...resetData,
+      }
+    );
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data,
+    };
   }
 };
 
