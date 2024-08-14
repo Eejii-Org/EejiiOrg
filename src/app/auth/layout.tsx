@@ -9,9 +9,8 @@ const AuthLayout = ({
   return (
     <>
       <AuthHeader />
-
-      <Row>
-        <Col span={6} offset={9}>
+      <Row justify="space-around">
+        <Col flex="480px">
           <div className="border p-8 rounded-xl bg-white">{children}</div>
         </Col>
       </Row>
