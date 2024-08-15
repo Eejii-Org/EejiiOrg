@@ -27,7 +27,6 @@ const SignIn = () => {
     const result = await signIn(values);
 
     if (!result.token) {
-      // TODO: remove message condition after backend implement
       if (result.code === 3001) {
         router.push(`/auth/resend-email?email=${email}`);
         message.error(result.data);
