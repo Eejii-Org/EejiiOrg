@@ -12,7 +12,7 @@ const HeartSvg = () => (
 
 const HeartIcon = () => <Icon component={HeartSvg} />;
 
-const UserGreeting = ({ user, full }) => {
+const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
   const items = [
     {
       label: <Link href="/profile">Миний профайл</Link>,
@@ -40,7 +40,7 @@ const UserGreeting = ({ user, full }) => {
 
   const donateBtn = () => {
     return (
-      <Link href="/donate">
+      <Link href="#">
         <Button type="primary" ghost icon={<HeartIcon />} block>
           Хандив илгээх
         </Button>

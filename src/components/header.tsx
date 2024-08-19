@@ -79,7 +79,7 @@ export const Header = () => {
                   <Link
                     href={link?.link}
                     key={index}
-                    className="px-4 text-base font-semibold"
+                    className="px-4 text-lg font-semibold"
                   >
                     {link.label}
                   </Link>
@@ -87,7 +87,7 @@ export const Header = () => {
               })}
 
               <Dropdown menu={{ items }} placement="bottomRight" arrow>
-                <a href="#" className="px-4 text-base font-semibold">
+                <a href="#" className="px-4 text-lg font-semibold">
                   Бид
                   <DownOutlined style={{ fontSize: "10px", paddingLeft: 5 }} />
                 </a>
@@ -99,7 +99,7 @@ export const Header = () => {
             {userLoading ? (
               <Skeleton.Input active />
             ) : (
-              <UserGreeting user={user} full={null} />
+              <UserGreeting user={user} />
             )}
           </Col>
 
