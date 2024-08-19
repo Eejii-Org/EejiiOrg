@@ -42,7 +42,7 @@ const SignIn = () => {
     message.success("Амжилттай нэвтэрлээ...");
     setCookie("token", result.token);
     getUser();
-    router.push("/");
+    router.push("/profile");
 
     setLoading(false);
   };

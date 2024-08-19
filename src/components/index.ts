@@ -18,4 +18,7 @@ export * from "./featuredcarousel";
 export * from "./sharebutton";
 export * from "./ad";
 
+// Header
+export * from "./greeting";
+
 export * from "./main-layout";

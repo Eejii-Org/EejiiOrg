@@ -20,8 +20,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
 
-  console.log("user", user);
-
   const getUser = async () => {
     setUserLoading(true);
     const token = getCookie("token");
@@ -45,6 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUserLoading(false);
     }
   };
+
   useEffect(() => {
     getUser();
   }, []);

@@ -1,153 +1,132 @@
 "use client";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import UserGreeting from "@/components/greeting";
 import Image from "next/image";
-import { CaretDown, Close, Menu } from "./icons";
-import { DonateModal } from "./home";
-import { AuthContext, useAuth } from "@/providers";
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Layout, Menu as AntdMenu } from "antd";
+import { CaretDown } from "./icons";
+import { MenuOutlined, UserOutlined, DownOutlined } from "@ant-design/icons";
+import { useAuth } from "@/providers";
+import {
+  Row,
+  Col,
+  Layout,
+  Skeleton,
+  Space,
+  Button,
+  Dropdown,
+  Drawer,
+  List,
+  Typography,
+  Divider,
+} from "antd";
 const { Header: AntdHeader } = Layout;
+const { Text } = Typography;
 
 const links = [
   {
-    link: "#1",
-    label: "Платформ",
-    links: [
-      { link: "/projects", label: "Projects", icon: <></> },
-      { link: "/events?page=1&t=event", label: "Events", icon: <></> },
-      {
-        link: "/events?page=1&t=volunteering_event",
-        label: "Volunteering",
-        icon: <></>,
-      },
-      { link: "/supporters", label: "Supporters", icon: <></> },
-      { link: "/partners", label: "Partners", icon: <></> },
-      { link: "/volunteers", label: "Volunteers", icon: <></> },
-    ],
+    link: "/projects",
+    label: "Төсөл",
   },
+  {
+    link: "/events?page=1&t=event",
+    label: "Сайн дурын ажил",
+  },
+
   {
     link: "/medias",
-    label: "Медиа",
+    label: "Мэдээ",
   },
-  { link: "/about", label: "Бидний тухай" },
-  {
-    link: "/auth/sign-in",
-    label: "Нэвтрэх",
-  },
-  { link: "/projects", label: "Donate" },
+  { link: "/about", label: "Зорилго" },
+];
+
+const items = [
+  { link: "/supporters", key: "supporters", label: "Дэмжигчид" },
+  { link: "/partners", key: "partners", label: "Хамтрагчид" },
+  { link: "/volunteers", key: "volunteers", label: "Сайн дурынхан" },
 ];
 
 export const Header = () => {
-  const { user } = useAuth();
-  const [isDropdownOpened, setIsDropdownOpened] = useState(false);
-  const [isNavOpened, setIsNavOpened] = useState(false);
+  const { user, userLoading } = useAuth();
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
-      {/* <AntdHeader></AntdHeader> */}
-
-      <header className="bg-white fixed w-full z-50 shadow-sm">
-        <div className="container mx-auto flex flex-row justify-between py-[12px] items-center">
-          <Link href="/">
-            <div className="relative w-[168px] h-[42px]">
-              <Image
-                src="/assets/logo.png"
-                alt="foundation Logo"
-                fill
-                objectFit="contain"
-              />
-            </div>
-          </Link>
-          <button
-            onClick={() => setIsNavOpened((prevState) => !prevState)}
-            className="md:hidden transition-all"
-          >
-            {isNavOpened ? <Close /> : <Menu />}
-          </button>
-          <div className="absolute max-md:shadow-md right-0 top-[65px] w-full md:w-auto md:static">
-            <div
-              className={`bg-white flex-col gap-2 md:rounded border z-10 ${
-                isNavOpened ? "flex" : "hidden"
-              } md:flex md:flex-row md:static md:border-none md:w-auto`}
-            >
+    <AntdHeader className="shadow-sm p-0 z-50 fixed w-full bg-white">
+      <div className="container">
+        <Row justify="space-between" align="middle">
+          <Col>
+            <Link href="/profile">
+              <div className="relative w-[168px] h-[42px]">
+                <Image
+                  src="/assets/logo.png"
+                  alt="foundation Logo"
+                  fill
+                  objectFit="contain"
+                />
+              </div>
+            </Link>
+          </Col>
+          <Col className="hidden md:block">
+            <Space>
               {links.map((link, index) => {
-                if (link.label == "Платформ") {
-                  return (
-                    <button
-                      onClick={() =>
-                        setIsDropdownOpened((prevState) => !prevState)
-                      }
-                      className="transition all duration-500 ease-out pl-6 pr-4 py-3 text-base font-semibold md:hover:bg-black/5 rounded-xl relative flex flex-col gap-1 text-left"
-                      key={index}
-                    >
-                      <div className="flex flex-row items-center">
-                        {link.label}
-                        <div
-                          className={`inline transition-all ${
-                            isDropdownOpened && "rotate-180"
-                          }`}
-                        >
-                          <CaretDown />
-                        </div>
-                      </div>
-                      <div
-                        className={`md:absolute bottom-0 pt-2 md:-bottom-3 md:p-5 md:left-1/2 md:translate-y-full transition-all duration-500 ease-out w-full md:w-[384px] md:-translate-x-1/2 rounded-xl border-none z-10 md:shadow md:bg-white ${
-                          isDropdownOpened ? "grid sm:grid-cols-2" : "hidden"
-                        } md:border`}
-                      >
-                        {link.links?.map((l, i) => (
-                          <NavLink href={l.link} key={`dropdown-link-${i}`}>
-                            {l.label}
-                          </NavLink>
-                        ))}
-                      </div>
-                    </button>
-                  );
-                }
-
-                if (link.label === "Donate") {
-                  return <DonateModal key={link.label} />;
-                }
-
-                if (link.link == "/auth") {
-                  if (user) {
-                    return (
-                      <NavLink href={"/profile"} key={index}>
-                        Профайл
-                      </NavLink>
-                    );
-                  }
-                }
                 return (
-                  <NavLink href={link.link} key={index}>
+                  <Link
+                    href={link?.link}
+                    key={index}
+                    className="px-4 text-base font-semibold"
+                  >
                     {link.label}
-                  </NavLink>
+                  </Link>
                 );
               })}
-            </div>
-          </div>
-        </div>
-      </header>
-    </div>
-  );
-};
 
-type NavLinkType = {
-  href: string;
-  children: React.ReactNode;
-  icon?: React.ReactNode;
-};
+              <Dropdown menu={{ items }} placement="bottomRight" arrow>
+                <a href="#" className="px-4 text-base font-semibold">
+                  Бид
+                  <DownOutlined style={{ fontSize: "10px", paddingLeft: 5 }} />
+                </a>
+              </Dropdown>
+            </Space>
+          </Col>
 
-const NavLink = ({ children, href, icon }: NavLinkType) => {
-  return (
-    <Link
-      href={href}
-      className="px-6 py-3 text-base font-semibold md:hover:bg-black/5 rounded-xl transition-all flex flex-row items-center"
-    >
-      {icon && <div className="border p-2 rounded-xl">{icon}</div>}
+          <Col className="hidden md:block">
+            {userLoading ? (
+              <Skeleton.Input active />
+            ) : (
+              <UserGreeting user={user} full={null} />
+            )}
+          </Col>
 
-      {children}
-    </Link>
+          <Col className="md:hidden sm:block">
+            <Button onClick={showDrawer}>
+              <MenuOutlined />
+            </Button>
+          </Col>
+        </Row>
+      </div>
+
+      <Drawer title="Үндсэн цэс" open={open} onClose={onClose} width={350}>
+        {userLoading ? (
+          <Skeleton.Input active />
+        ) : (
+          <UserGreeting user={user} full />
+        )}
+
+        <List
+          dataSource={links}
+          renderItem={(item) => (
+            <List.Item>
+              <Link href={item.link}>{item.label}</Link>
+            </List.Item>
+          )}
+        />
+      </Drawer>
+    </AntdHeader>
   );
 };

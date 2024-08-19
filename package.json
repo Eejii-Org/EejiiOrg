@@ -12,12 +12,15 @@
     "@amcharts/amcharts5": "^5.9.10",
     "@amcharts/amcharts5-fonts": "^5.0.1",
     "@amcharts/amcharts5-geodata": "^5.1.2",
+    "@react-pdf/renderer": "^3.4.4",
     "antd": "^5.20.0",
     "axios": "^1.7.2",
     "cookies-next": "^4.2.1",
+    "jspdf": "^2.5.1",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-pdf-html": "^2.1.2",
     "react-share": "^5.1.0"
   },
   "devDependencies": {

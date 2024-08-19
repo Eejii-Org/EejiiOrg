@@ -6,6 +6,7 @@ export const themeConfig = {
   components: {
     Layout: {
       headerBg: "#fff",
+      headerHeight: 74,
       // other tokens
     },
   },
