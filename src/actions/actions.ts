@@ -347,9 +347,70 @@ export const getEventUsers = async (slug: string) => {
   }
 };
 
+export const myEvents = async (token: string) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&myJoined=true`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 /* 
   Events
 */
+
+// Certification
+
+export const getCertificate = async (token: string) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/certificates`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("res", res);
+
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const myCertificate = async (id: string, token: string) => {
+  "use server";
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/certificates/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
 
 export const getProjects = async (
   page: number,

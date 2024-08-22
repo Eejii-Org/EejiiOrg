@@ -20,11 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="bg-background flex flex-col">
-          <AuthProvider>
-            <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
-          </AuthProvider>
-        </main>
+        <AuthProvider>
+          <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -10,6 +10,7 @@ import {
 } from "@react-pdf/renderer";
 import { MainLayout } from "@/components";
 import { Html } from "react-pdf-html";
+import { Table } from "antd";
 
 function Certification() {
   const [isClient, setIsClient] = useState(false);
@@ -19,70 +20,46 @@ function Certification() {
     setIsClient(true);
   }, []);
 
-  const htmlContent = `
-
-
-  <style>
-      .cert-body {
-      background: green;
-      }
-    </style>
-
-
-    <div class="cert-body">
-      <h1>Certificate!</h1>
-      
-     
-    </div>
-  `;
-
-  // Create styles
-  const styles = StyleSheet.create({
-    page: {
-      flexDirection: "row",
-      backgroundColor: "#fff7e8",
-      width: "1500px",
+  const dataSource = [
+    {
+      key: "1",
+      id: "1",
+      date: 2024,
+      cert: "unique number goes here",
     },
-    section: {
-      margin: 10,
-      padding: 10,
-      flexGrow: 1,
-      width: "1500px",
+    {
+      key: "2",
+      id: "2",
+      date: 2024,
+      cert: "date goes here",
     },
-  });
+  ];
 
-  const withHTML = () => {
-    return (
-      <div style={{ height: "100vh" }}>
-        {isClient && (
-          <PDFViewer style={{ width: "100%", height: "100%" }}>
-            <Document title="title goes here">
-              <Page>
-                <Html>{htmlContent}</Html>
-              </Page>
-            </Document>
-          </PDFViewer>
-        )}
+  const columns = [
+    {
+      title: "Дугаар",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Огноо",
+      dataIndex: "date",
+      key: "date",
+    },
+    {
+      title: "Cert",
+      dataIndex: "cert",
+      key: "Cert",
+    },
+  ];
+
+  return (
+    <MainLayout>
+      <div className="container">
+        <Table dataSource={dataSource} columns={columns} />
       </div>
-    );
-  };
-
-  const native = () => {
-    return (
-      <Document>
-        <Page style={styles.page}>
-          <View style={styles.section}>
-            <Text>Certificate</Text>
-          </View>
-          <View style={styles.section}>
-            <Text>Section #2</Text>
-          </View>
-        </Page>
-      </Document>
-    );
-  };
-
-  return <MainLayout>{withHTML()}</MainLayout>;
+    </MainLayout>
+  );
 }
 
 export default Certification;

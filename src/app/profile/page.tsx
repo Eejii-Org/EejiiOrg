@@ -7,159 +7,289 @@ import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { myEvents, getCertificate } from "@/actions";
+import dayjs from "dayjs";
+
+import {
+  PictureOutlined,
+  CheckCircleOutlined,
+  EditOutlined,
+  CloudDownloadOutlined,
+  FilePdfOutlined,
+  CalendarOutlined,
+  DollarOutlined,
+} from "@ant-design/icons";
+import {
+  Row,
+  Col,
+  Tabs,
+  Divider,
+  Typography,
+  Avatar,
+  Button,
+  Tag,
+  Tooltip,
+  Space,
+  Table,
+  Flex,
+} from "antd";
+
+const { Text, Title } = Typography;
+
+// certification columns
+
+const certColumns = [
+  {
+    title: "#",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Санаачлагч",
+    key: "organizationName",
+    dataIndex: "organizationName",
+  },
+  {
+    title: "Нэр",
+    key: "title",
+    render: (text, record) => record.event.title,
+  },
+  {
+    title: "Оноо",
+    dataIndex: "grade",
+    key: "grade",
+    render: (text, record) => <Tag color="green">+{text}</Tag>,
+  },
+
+  {
+    title: "Үргэлжлэх хугацаа",
+    key: "dateRange",
+    render: (text, record) => {
+      const startDate = dayjs(record.event.startTime);
+      const endDate = dayjs(record.event.endTime);
+
+      return (
+        <div>
+          {startDate.format("YYYY/MM/DD")} - {endDate.format("YYYY/MM/DD")}
+        </div>
+      );
+    },
+  },
+  {
+    title: "Зарцуулсан цаг",
+    dataIndex: "volunteeringHours",
+    key: "volunteeringHours",
+    render: (text, record) => {
+      const hours = record.event.volunteeringHours;
+      if (!hours) return "N/A";
+
+      return record.event.volunteeringHours;
+    },
+  },
+  {
+    title: "Батламж",
+    dataIndex: "",
+    key: "download",
+    render: (text, record) => (
+      <Link
+        href={`/profile/certification/${record.template.id}`}
+        target="_blank"
+      >
+        <Button icon={<CloudDownloadOutlined />} type="primary" size="small">
+          татах
+        </Button>
+      </Link>
+    ),
+  },
+];
 
 const ProfilePage = () => {
   const { user, userLoading } = useAuth();
-  const [certificateData, setCertificateData] = useState(null);
-  console.log(userLoading);
+  const [certificateData, setCertificateData] = useState([]);
+
   useEffect(() => {
-    const getCertificate = async () => {
+    const fetchCertificateData = async () => {
       if (!user) return;
       const token = getCookie("token");
       if (!token) return;
-      try {
-        console.log(user.id);
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/certificates`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(res.data);
-        if (res.data.code == 0) {
-          setCertificateData(null);
-        } else {
-          setCertificateData(res.data);
-        }
-      } catch (e) {
-        console.error(e);
-        setCertificateData(null);
+
+      const result = await getCertificate(token);
+
+      if (result?.["hydra:member"] as any) {
+        setCertificateData(result?.["hydra:member"]);
       }
     };
-    getCertificate();
+
+    fetchCertificateData();
   }, [user]);
+
   if (!user) {
     if (userLoading) {
       return <div>Loading...</div>;
     }
     return redirect("/auth");
   }
+
+  const tabItems = [
+    {
+      key: "2",
+      label: (
+        <Space>
+          <FilePdfOutlined /> Миний арга хэмжээнүүд
+        </Space>
+      ),
+      children: (
+        <Table
+          bordered
+          dataSource={certificateData}
+          columns={certColumns}
+          className="bg-white p-4 rounded-b-md -mt-4"
+        />
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <Space>
+          <FilePdfOutlined /> Тодорхойлолт
+        </Space>
+      ),
+      children: <Table className="bg-white p-4 rounded-b-md -mt-4" />,
+    },
+    {
+      key: "4",
+      label: (
+        <Space>
+          <DollarOutlined /> Хандив
+        </Space>
+      ),
+      children: (
+        <div>
+          <Table className="bg-white p-4 rounded-b-md -mt-4" />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <MainLayout>
-      <div className="bg-primary  text-white h-40  md:h-64 text-xl md:text-3xl lg:text-5xl font-semibold">
-        <div className="container flex items-center h-full leading-normal">
-          Welcome {user.username}!
-          <br />
-          Let&apos;s create an earth full of love together
+      <div>
+        <div
+          className="w-full rounded-t-md h-72 relative"
+          style={{
+            background: "url(/assets/profile/profile-bg.jpg)",
+            backgroundSize: "cover",
+          }}
+        >
+          <Tooltip title="Зураг шинчлэх" placement="left">
+            <Button
+              ghost
+              className="absolute bottom-6 right-6"
+              shape="circle"
+              icon={<PictureOutlined />}
+            />
+          </Tooltip>
         </div>
-      </div>
-      <div className="container flex flex-row gap-4 -mt-8">
-        <div className=" min-h-32 min-w-32 lg:min-w-44 lg:min-h-44 rounded-full relative overflow-hidden border-[4px] border-white">
-          <Image
-            src={
-              user.images?.find((img) => img.type == "main")?.path ||
-              "/assets/placeholder.svg"
-            }
-            fill
-            alt="userProfile"
-          />
-        </div>
-        <div className="flex flex-col capitalize justify-center gap-3">
-          <div className="text-xl lg:text-3xl font-medium">
-            {user.firstName} {user.lastName}
-          </div>
-          <div className="text-lg lg:text-xl">{user.type}</div>
-        </div>
-      </div>
-      <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-col md:flex-row gap-8">
-        {/* Left Section for Event Detail */}
-        <div className="w-full md:w-[360px] flex flex-row lg:flex-col gap-4 lg:items-center bg-white p-4 lg:p-8 border rounded-2xl">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-16 h-16 lg:w-24 lg:h-24 relative">
-              <Image
-                src={
-                  user?.level
-                    ? `/assets/volunteer/level_${user?.level}.png`
-                    : "/assets/placeholder.svg"
-                }
-                alt="volunteerlevel"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div
-              className={`uppercase py-[2px] px-3 lg:px-7 whitespace-nowrap max-md:text-sm rounded-full text-white font-medium ${
-                user?.level == 1
-                  ? "bg-[#1F276F]"
-                  : user?.level == 2
-                  ? "bg-[#FEC01E]"
-                  : user?.level == 3
-                  ? "#FD3716"
-                  : "#000"
-              }`}
-            >
-              Level {user?.level}
-            </div>
-          </div>
-          <div className="w-full flex flex-col gap-3">
-            <div className="border-b w-full font-semibold pb-1 border-black/20">
-              Био
-            </div>
-            <div className="text-md lg:text-lg">{user.bio}</div>
-          </div>
-        </div>
-        {/* Right Section for Event Detail */}
-        <div className="flex flex-1 flex-col gap-6 bg-white p-4 lg:p-8 border rounded-2xl">
-          <div className="font-semibold text-lg lg:text-2xl">Сертификат</div>
-          <div className="flex-1 flex items-center justify-center flex-col gap-4">
-            {!certificateData ? (
-              <>
-                <div className="text-center font-medium">
-                  Одоогоор сертификат аваагүй байна.
-                  <br />
-                  Арга хэмжээнд оролцсоныхоо дараа энэ хэсгээс сертификат болон
-                  тодорхойлолтоо аваарай
-                </div>
-                <Image
-                  src={"/assets/profile/certificate-not-found.webp"}
-                  width={169}
-                  height={149}
-                  alt="Certificate Not Found"
+
+        <div className="bg-white h-16 rounded-b-md shadow-sm" />
+
+        <div className="container -mt-20 px-4">
+          <Row align="middle" justify="space-between" gutter={15}>
+            <Col>
+              <Space>
+                <Avatar
+                  size={{
+                    xs: 24,
+                    sm: 32,
+                    md: 40,
+                    lg: 64,
+                    xl: 80,
+                    xxl: 100,
+                  }}
+                  src={
+                    user.images?.find((img) => img.type == "main")?.path ||
+                    "/assets/placeholder.svg"
+                  }
+                  className="border-4 border-white bg-white"
                 />
-              </>
-            ) : (
-              <div className="flex-1 w-full max-h-[500px] overflow-y-scroll font-medium flex flex-col gap-4">
-                {([...certificateData?.["hydra:member"]] as any)?.map(
-                  (certificate: any, index: number) => (
-                    <div
-                      className="flex flex-col gap-2 items-center border p-4 rounded-2xl shadow-sm pointer"
-                      key={index}
-                    >
-                      <div className="w-full flex flex-row gap-2 items-center">
-                        <Image
-                          src={
-                            certificate?.event?.images.find(
-                              (img: any) => img.type == "main"
-                            )?.path || "/assets/placeholder.svg"
-                          }
-                          width={40}
-                          height={40}
-                          alt={certificate?.event?.title + "image"}
-                        />
-                        <div>{certificate?.event?.title}</div>
-                      </div>
-                      <div className=" text-black/70 text-md self-end">
-                        {toDateString(certificate?.event?.startTime)}
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            )}
-          </div>
+
+                <Space>
+                  <Title level={5}>
+                    {user.lastName} {user.firstName}
+                  </Title>
+                  <Tag color="green" icon={<CheckCircleOutlined />}>
+                    {user.type}
+                  </Tag>
+                </Space>
+              </Space>
+            </Col>
+
+            <Col>
+              <Space>
+                <div className="w-6 h-6 lg:w-6 lg:h-6 relative">
+                  <Image
+                    src={
+                      user?.level
+                        ? `/assets/volunteer/level_${user?.level}.png`
+                        : "/assets/placeholder.svg"
+                    }
+                    alt="volunteerlevel"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <Text strong>
+                  <Tag
+                    color={`${
+                      user?.level == 1
+                        ? "#1F276F"
+                        : user?.level == 2
+                        ? "#FEC01E"
+                        : user?.level == 3
+                        ? "#FD3716"
+                        : "#000"
+                    }`}
+                  >
+                    Level: {user?.level}
+                  </Tag>
+                </Text>
+
+                <Divider type="vertical" />
+                <Text strong>Миний хандив: 0₮</Text>
+              </Space>
+            </Col>
+          </Row>
         </div>
+      </div>
+
+      <div className="container mt-4">
+        <Row gutter={[15, 15]}>
+          <Col span={6}>
+            <div className="bg-white p-8 rounded-md">
+              <Flex justify="space-between">
+                <Title level={5}>About Me</Title>
+                <Link href="#">
+                  <Button icon={<EditOutlined />} type="link" />
+                </Link>
+              </Flex>
+              <Divider />
+              {user?.bio}
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rutrum
+              ut erat id semper. Duis venenatis luctus varius. Pellentesque
+              tincidunt sit amet urna malesuada placerat. Pellentesque fringilla
+              lectus non ultricies scelerisque. Ut consectetur egestas
+              vestibulum. Sed varius vel augue in efficitur. Proin facilisis
+              metus sit amet eleifend efficitur. Sed a tellus elementum,
+              eleifend eros eget, pulvinar orci. Vestibulum imperdiet, lorem ut
+              pulvinar lacinia, mi diam malesuada libero, a consectetur purus
+              nunc quis urna. Pellentesque mattis interdum massa in
+            </div>
+          </Col>
+          <Col span={18}>
+            <Tabs defaultActiveKey="1" items={tabItems} type="card" />
+          </Col>
+        </Row>
       </div>
     </MainLayout>
   );

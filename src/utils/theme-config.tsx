@@ -4,6 +4,11 @@ export const themeConfig = {
     // Add other token settings here if needed
   },
   components: {
+    Tabs: {
+      cardBg: "#f6fbff",
+      // itemColor: "#666",
+      cardPadding: 15,
+    },
     Layout: {
       headerBg: "#fff",
       headerHeight: 74,
