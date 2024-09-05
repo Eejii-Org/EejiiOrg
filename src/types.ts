@@ -121,3 +121,33 @@ export type ChangePasswordType = {
 export type CategoryType = {};
 
 export type MediaType = {};
+
+export type CertificateType = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  slug: string;
+  title: string;
+  type: string;
+  description: string;
+  shortDescription: string | null;
+  state: string;
+  isEnabled: boolean;
+  isFeatured: boolean;
+  contact: ContactType;
+  maxPoint: number;
+  volunteeringHours: null | number;
+  startTime: string;
+  endTime: string;
+  createdAt: string;
+  updatedAt: string;
+  owner: OwnerType;
+  images: ImageType[];
+  address: AddressType;
+  media: MediaType[];
+  eventUsers: EventUserType[];
+  roles: RoleType[];
+  categories: CategoryType[];
+  approvedAt: null;
+};

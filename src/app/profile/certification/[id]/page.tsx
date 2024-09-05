@@ -13,9 +13,10 @@ import {
 } from "@react-pdf/renderer";
 import { MainLayout } from "@/components";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+
 import { getCookie } from "cookies-next";
+import QRCode from "qrcode";
+import { message } from "antd";
 
 // Register the font with react-pdf
 Font.register({
@@ -57,19 +58,45 @@ Font.register({
 
 function CertificationPreview({ params }: { params: { id: string } }) {
   const [certData, setCertData] = useState();
+  const [qrUrl, setQrUrl] = useState();
+
   const { id } = params;
 
   useEffect(() => {
     const getMyCertificate = async () => {
       const token = getCookie("token");
-
       const result = await myCertificate(id, token);
-
       setCertData(result);
     };
 
     getMyCertificate();
   }, []);
+
+  useEffect(() => {
+    // Generate QR
+    let profileUrl;
+    const opts = {
+      color: {
+        dark: "#000",
+        light: "#fff7e8",
+      },
+    };
+
+    const generateQRCode = async (text: string) => {
+      try {
+        const qrCodeDataURL = await QRCode.toDataURL(text, opts);
+        setQrUrl(qrCodeDataURL);
+      } catch (err: any) {
+        message.warning(err);
+        return;
+      }
+    };
+
+    if (certData?.number) {
+      profileUrl = `https://eejii.org/approved-certificates/${certData?.number}`;
+      generateQRCode(profileUrl);
+    }
+  }, [certData]);
 
   // Create styles
   const styles = StyleSheet.create({
@@ -77,8 +104,6 @@ function CertificationPreview({ params }: { params: { id: string } }) {
       fontFamily: "Cormorant Garamond",
       backgroundColor: "#fff7e8",
       position: "relative",
-      width: "100px",
-      height: "100px",
       color: "#252525",
     },
     pageBackground: {
@@ -112,7 +137,15 @@ function CertificationPreview({ params }: { params: { id: string } }) {
       textAlign: "center",
       letterSpacing: 4,
     },
+    level: {
+      position: "absolute",
+      left: 266,
 
+      top: 235,
+      width: 60,
+      margin: "0 auto",
+      textAlign: "center",
+    },
     name: {
       position: "relative",
       top: 365,
@@ -173,22 +206,67 @@ function CertificationPreview({ params }: { params: { id: string } }) {
       textAlign: "center",
       lineHeight: 1.2,
     },
-  });
 
-  console.log("certData", certData);
+    qrcode: {
+      position: "absolute",
+      bottom: 215,
+      left: 82,
+      height: 55,
+      width: 55,
+    },
+
+    ecert: {
+      position: "absolute",
+      bottom: 200,
+      left: 65,
+      fontSize: 12,
+    },
+
+    partner: {
+      position: "absolute",
+      top: 570,
+      right: 105,
+    },
+
+    partnerLogo: {
+      height: 55,
+      width: 55,
+      textAlign: "center",
+    },
+
+    partnerName: {
+      position: "absolute",
+      top: 625,
+      right: 65,
+      width: 135,
+      textAlign: "center",
+      fontSize: 12,
+      whiteSpace: "keep-all",
+    },
+  });
 
   const withHTML = () => {
     return (
       <PDFViewer style={{ width: "100%", height: "100%" }}>
-        <Document
-          title={certData?.template.organizationName}
-          author="eejii.org"
-        >
-          <Page style={styles.page}>
+        <Document title={certData?.number} author="eejii.org">
+          <Page size="A4" style={styles.page}>
             <Text style={styles.title}>CERTIFICATE</Text>
             <Text style={styles.subTitle}>
               For volunteer{"\n"}participation
             </Text>
+
+            <View style={styles.level}>
+              <Image
+                src={
+                  certData?.volunteer?.level
+                    ? `/assets/volunteer/level_${certData?.volunteer?.level}.png`
+                    : "/assets/placeholder.svg"
+                }
+                alt="volunteerlevel"
+                fill
+                className="object-contain"
+              />
+            </View>
             <Text style={styles.name}>
               {certData?.volunteer.firstName} {certData?.volunteer.lastName}
             </Text>
@@ -213,6 +291,23 @@ function CertificationPreview({ params }: { params: { id: string } }) {
               For guiding at the National Trauma and Orthopaedic Research Center
             </Text>
 
+            <View style={styles.qrcode}>
+              <Image src={qrUrl} />
+            </View>
+
+            <Text style={styles.ecert}>Check E-Certificate</Text>
+
+            <View style={styles.partner}>
+              <Image
+                style={styles.partnerLogo}
+                src={certData?.template?.logoPath}
+              />
+            </View>
+
+            <Text style={styles.partnerName}>
+              National Trauma and Orthopaedic Research Center
+            </Text>
+
             <Text style={styles.date}>{dayjs().format("MMMM D, YYYY")}</Text>
 
             <Image
@@ -225,11 +320,7 @@ function CertificationPreview({ params }: { params: { id: string } }) {
     );
   };
 
-  return (
-    <MainLayout>
-      <div style={{ height: "100vh" }}>{certData && withHTML()}</div>
-    </MainLayout>
-  );
+  return <div style={{ height: "100vh" }}>{certData && withHTML()}</div>;
 }
 
 export default CertificationPreview;

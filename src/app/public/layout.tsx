@@ -38,7 +38,7 @@ const EmptyBio = () => {
   );
 };
 
-const ProfileLayout = ({
+const PublicProfileLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -178,4 +178,4 @@ const ProfileLayout = ({
   );
 };
 
-export default ProfileLayout;
+export default PublicProfileLayout;

@@ -56,7 +56,7 @@ const EmptyBio = () => {
   );
 };
 
-const ProfilePage = () => {
+const PublicProfile = () => {
   const { user, userLoading } = useAuth();
   const [certificateData, setCertificateData] = useState([]);
 
@@ -175,4 +175,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default PublicProfile;

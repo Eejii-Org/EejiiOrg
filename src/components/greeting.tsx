@@ -20,17 +20,6 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
       link: "/profile",
     },
     {
-      label: <Link href="/profile/certification">Миний батламж</Link>,
-      key: "2",
-      link: "/profile/certification",
-    },
-    {
-      label: <Link href="#">Оролцсон арга хэмжээ</Link>,
-      key: "3",
-      link: "#",
-      disabled: true,
-    },
-    {
       label: <Link href="/auth/logout">Гарах</Link>,
       key: "logout",
       link: "/auth/logout",

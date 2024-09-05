@@ -19,6 +19,7 @@
     "dayjs": "^1.11.13",
     "jspdf": "^2.5.1",
     "next": "14.2.3",
+    "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",
     "react-pdf-html": "^2.1.2",

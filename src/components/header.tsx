@@ -57,7 +57,7 @@ export const Header = () => {
   };
 
   return (
-    <AntdHeader className="shadow-sm p-0 z-50 fixed w-full bg-white">
+    <AntdHeader className="shadow-sm p-0 z-50 fixed w-full bg-white top-0">
       <div className="container">
         <Row justify="space-between" align="middle">
           <Col>

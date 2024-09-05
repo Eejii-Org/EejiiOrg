@@ -3,6 +3,9 @@ export * from "./auth";
 export * from "./events";
 export * from "./partners";
 export * from "./supporters";
+export * from "./profile";
+export * from "./activity";
+export * from "./donate";
 
 export * from "./icons";
 
