@@ -1,5 +1,5 @@
 "use client";
-import { signUp } from "@/actions";
+import { api } from "@/actions";
 import { UserType } from "@/types";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -36,13 +36,13 @@ const SignUp = () => {
   // Handle Submit Registration
   const onFinish: FormProps<UserType>["onFinish"] = async (values) => {
     setLoading(true);
-    const result = await signUp(values);
+    const result = await api.post("/api/register", { ...values });
 
-    if (!result?.email) {
-      message.error(result.data);
+    if (!result?.success) {
+      message.error(result.message.data);
     } else {
       message.success("Бүртгэл амжилттай");
-      router.push(`/auth/sign-up/success?email=${result.email}`);
+      router.push(`/auth/sign-up/success?email=${result.data.email}`);
     }
 
     setLoading(false);

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
-import { verifyEmail } from "@/actions";
+import { api } from "@/actions";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -56,7 +56,7 @@ const Comp = () => {
         return;
       }
 
-      const result = await verifyEmail(email, token);
+      const result = await api.post("/api/users/verifyEmail", { email, token });
 
       if (result.success) {
         setSuccess(true);

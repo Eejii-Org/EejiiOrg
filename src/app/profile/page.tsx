@@ -1,42 +1,18 @@
 "use client";
-import {
-  MainLayout,
-  ProfileHeader,
-  EventList,
-  ActivityList,
-  DonationList,
-} from "@/components";
+
 import { useAuth } from "@/providers";
 import { getCookie } from "cookies-next";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { getCertificate } from "@/actions";
-import dayjs from "dayjs";
-
+import { getEventUsers } from "@/actions";
 import {
   HeartOutlined,
   ClockCircleOutlined,
   FireOutlined,
   ArrowUpOutlined,
 } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Tabs,
-  Statistic,
-  Typography,
-  Button,
-  Tag,
-  Space,
-  Table,
-  Flex,
-  Result,
-  List,
-  Avatar,
-  Progress,
-  Divider,
-} from "antd";
+import { Row, Col, Statistic, Typography, Button, Result } from "antd";
+import { ActivityList } from "@/components";
 
 const { Title } = Typography;
 
@@ -58,7 +34,7 @@ const EmptyBio = () => {
 
 const ProfilePage = () => {
   const { user, userLoading } = useAuth();
-  const [certificateData, setCertificateData] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
 
   useEffect(() => {
     const fetchCertificateData = async () => {
@@ -66,10 +42,12 @@ const ProfilePage = () => {
       const token = getCookie("token");
       if (!token) return;
 
-      const result = await getCertificate(token);
+      const result = await getEventUsers(token);
+
+      console.log("result", result);
 
       if (result?.["hydra:member"] as any) {
-        setCertificateData(result?.["hydra:member"]);
+        setUserEvents(result?.["hydra:member"]);
       }
     };
 
@@ -82,22 +60,6 @@ const ProfilePage = () => {
     }
     return redirect("/");
   }
-
-  const data = [
-    {
-      title:
-        "For guiding at the National Trauma and Orthopaedic Research Center",
-    },
-    {
-      title: "Ant Design Title 2",
-    },
-    {
-      title: "Ant Design Title 3",
-    },
-    {
-      title: "Ant Design Title 4",
-    },
-  ];
 
   return (
     <Row gutter={[15, 15]}>
@@ -149,27 +111,7 @@ const ProfilePage = () => {
       </Col>
 
       <Col span={24}>
-        <div className="bg-white p-6 rounded-md">
-          <Title level={5}>Батламжууд</Title>
-          <Divider />
-          <List
-            itemLayout="horizontal"
-            dataSource={data}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-                    />
-                  }
-                  title={<Title level={5}>{item.title}</Title>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                />
-              </List.Item>
-            )}
-          />
-        </div>
+        <ActivityList />
       </Col>
     </Row>
   );

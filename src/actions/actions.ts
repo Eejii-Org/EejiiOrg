@@ -1,27 +1,17 @@
 "use server";
-
+import { api } from "./axiosInstance";
 import { BannerPositionType } from "@/components/ad";
-import { UserType, ForgotPasswordType, ChangePasswordType } from "@/types";
+import {
+  UserType,
+  ForgotPasswordType,
+  ChangePasswordType,
+  EventType,
+} from "@/types";
 import axios from "axios";
 
 /* 
   Authentication
 */
-
-export const signIn = async (userData: UserType) => {
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth`,
-      {
-        ...userData,
-      }
-    );
-
-    return data;
-  } catch (error: any) {
-    return error.response?.data;
-  }
-};
 
 export const signUp = async (userData: UserType) => {
   "use server";
@@ -37,72 +27,6 @@ export const signUp = async (userData: UserType) => {
     return data;
   } catch (error: any) {
     return error?.response?.data;
-  }
-};
-
-export const verifyEmail = async (email: string, token: string) => {
-  "use server";
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verifyEmail`,
-      {
-        email,
-        token,
-      }
-    );
-
-    return {
-      success: true,
-      data: data,
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error?.response?.data,
-    };
-  }
-};
-
-export const getVerifyEmail = async (email: string) => {
-  "use server";
-
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/verificationToken`,
-      {
-        email,
-      }
-    );
-    return data;
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error?.response?.data,
-    };
-  }
-};
-
-export const forgotPassword = async (forgotData: ForgotPasswordType) => {
-  "use server";
-
-  console.log("forgotData", forgotData);
-  try {
-    const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/forgotPassword`,
-      {
-        ...forgotData,
-      }
-    );
-
-    return {
-      success: true,
-      data: data,
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error?.response?.data,
-    };
   }
 };
 
@@ -298,6 +222,30 @@ export const getMediaByPartner = async (partnerId: number, limit: number) => {
   Events
 */
 
+export const createEvent = async (params: EventType, token: string) => {
+  try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/new`,
+      {
+        params,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data,
+    };
+  }
+};
+
 export const getEvents = async (
   page: number,
   q: string,
@@ -351,7 +299,7 @@ export const myEvents = async (token: string) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&myJoined=true`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?myJoined=true`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -383,8 +331,6 @@ export const getCertificate = async (token: string) => {
         },
       }
     );
-
-    console.log("res", res);
 
     return res.data;
   } catch (e) {

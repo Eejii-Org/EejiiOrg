@@ -320,7 +320,11 @@ function CertificationPreview({ params }: { params: { id: string } }) {
     );
   };
 
-  return <div style={{ height: "100vh" }}>{certData && withHTML()}</div>;
+  return (
+    <MainLayout>
+      <div style={{ height: "100vh" }}>{certData && withHTML()}</div>
+    </MainLayout>
+  );
 }
 
 export default CertificationPreview;

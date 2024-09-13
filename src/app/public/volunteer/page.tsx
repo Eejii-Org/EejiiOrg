@@ -1,11 +1,5 @@
 "use client";
-import {
-  MainLayout,
-  ProfileHeader,
-  EventList,
-  ActivityList,
-  DonationList,
-} from "@/components";
+import { AboutMe, UserStats, ActivityList } from "@/components";
 import { useAuth } from "@/providers";
 import { getCookie } from "cookies-next";
 import { redirect } from "next/navigation";
@@ -99,77 +93,29 @@ const PublicProfile = () => {
     },
   ];
 
-  return (
-    <Row gutter={[15, 15]}>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Сайн дурын ажил"
-          value={4}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<FireOutlined />}
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Зарцуулсан цаг"
-          value={13}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<ClockCircleOutlined />}
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Идэвх"
-          value={90}
-          precision={2}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<ArrowUpOutlined />}
-          suffix="%"
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Хандив"
-          value="₮20,000"
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<HeartOutlined />}
-        />
-      </Col>
+  const about = `
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rutrum ut erat id semper. 
+  Duis venenatis luctus varius. Pellentesque tincidunt sit amet urna malesuada placerat. 
+  Pellentesque fringilla lectus non ultricies scelerisque. Ut consectetur egestas vestibulum. 
+  Sed varius vel augue in efficitur. Proin facilisis metus sit amet eleifend efficitur. 
+  Sed a tellus elementum, eleifend eros eget, pulvinar orci. Vestibulum imperdiet, lorem ut 
+  pulvinar lacinia, mi diam malesuada libero, a consectetur purus nunc quis urna. 
+  Pellentesque mattis interdum massa in.`;
 
-      <Col span={24}>
-        <div className="bg-white p-6 rounded-md">
-          <Title level={5}>Батламжууд</Title>
-          <Divider />
-          <List
-            itemLayout="horizontal"
-            dataSource={data}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-                    />
-                  }
-                  title={<Title level={5}>{item.title}</Title>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                />
-              </List.Item>
-            )}
-          />
-        </div>
+  return (
+    <Row gutter={[15, 15]} align="stretch">
+      <Col span={12}>
+        <Row gutter={[10, 10]}>
+          <Col span={24}>
+            <UserStats />
+          </Col>
+          <Col span={24}>
+            <AboutMe bio={about} />
+          </Col>
+        </Row>
+      </Col>
+      <Col span={12}>
+        <ActivityList />
       </Col>
     </Row>
   );

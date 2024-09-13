@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { UserType } from "@/types";
 import {
-  HomeOutlined,
+  ExclamationCircleTwoTone,
   CheckCircleTwoTone,
   PictureOutlined,
 } from "@ant-design/icons";
@@ -24,6 +24,35 @@ import Link from "next/link";
 const { Text, Title } = Typography;
 
 export const ProfileHeader = ({ user }: { user: UserType }) => {
+  const name = user?.organization || `${user.lastName} ${user.firstName}`;
+
+  const RenderVerify = () => {
+    const approved = user?.approved;
+
+    if (!approved)
+      return (
+        <Title level={4}>
+          {name} {""}
+          <Tooltip
+            title="Not Verified"
+            placement="right"
+            color="orange"
+            defaultOpen={true}
+          >
+            <ExclamationCircleTwoTone twoToneColor="#fa8c16" />
+          </Tooltip>
+        </Title>
+      );
+
+    return (
+      <Title level={4}>
+        {name} {""}
+        <Tooltip title="Verified" placement="right" color="blue" open={true}>
+          <CheckCircleTwoTone />
+        </Tooltip>
+      </Title>
+    );
+  };
   return (
     <div>
       <div
@@ -58,53 +87,8 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
                 />
 
                 <Space>
-                  <Link href="/profile">
-                    <Title level={4}>
-                      {user.lastName} {user.firstName}{" "}
-                      <Tooltip
-                        title="Verified Volunteer"
-                        placement="right"
-                        defaultOpen={true}
-                        color="blue"
-                      >
-                        <CheckCircleTwoTone />
-                      </Tooltip>
-                    </Title>
-                  </Link>
+                  <RenderVerify />
                 </Space>
-              </Space>
-            </Col>
-
-            <Col>
-              <Space className="hidden sm:flex">
-                <div className="w-6 h-6 lg:w-6 lg:h-6 relative">
-                  <Image
-                    src={
-                      user?.level
-                        ? `/assets/volunteer/level_${user?.level}.png`
-                        : "/assets/placeholder.svg"
-                    }
-                    alt="volunteerlevel"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-
-                <Text strong>
-                  <Tag
-                    color={`${
-                      user?.level == 1
-                        ? "#1F276F"
-                        : user?.level == 2
-                        ? "#FEC01E"
-                        : user?.level == 3
-                        ? "#FD3716"
-                        : "#000"
-                    }`}
-                  >
-                    Level: {user?.level}
-                  </Tag>
-                </Text>
               </Space>
             </Col>
           </Row>

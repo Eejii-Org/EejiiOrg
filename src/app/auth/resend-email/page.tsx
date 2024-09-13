@@ -1,6 +1,6 @@
 "use client";
 import { useState, Suspense } from "react";
-import { getVerifyEmail } from "@/actions";
+import { api } from "@/actions";
 import { Button, message, Result } from "antd";
 import { useSearchParams } from "next/navigation";
 
@@ -13,8 +13,15 @@ const Comp = () => {
     const email = searchParams.get("email");
     if (!email) return;
     setLoading(true);
-    await getVerifyEmail(email);
-    message.success("Баталгаажуулах холбоос амжилттай илгээгдлээ!");
+
+    const result = await api.post("/api/users/verificationToken", { email });
+
+    if (result.success) {
+      message.success("Баталгаажуулах холбоос амжилттай илгээгдлээ!");
+    } else {
+      message.error(result.message.data);
+    }
+
     setLoading(false);
   };
 

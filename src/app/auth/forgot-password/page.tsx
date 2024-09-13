@@ -1,9 +1,7 @@
 "use client";
 import { ForgotPasswordType } from "@/types";
-import { forgotPassword } from "@/actions";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { api } from "@/actions";
+import { useState } from "react";
 import Link from "next/link";
 
 // Antd
@@ -24,7 +22,8 @@ const ForgotPassword = () => {
     };
 
     setLoading(true);
-    const result = await forgotPassword(updatedVale);
+
+    const result = await api.post("/api/users/forgotPassword", updatedVale);
 
     if (!result.success) {
       message.warning(result?.message?.data);

@@ -1,25 +1,23 @@
 "use client";
-import { CertificateType } from "@/types";
 import type { TableProps } from "antd";
 import Link from "next/link";
 import { useAuth } from "@/providers";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
-import { getCertificate } from "@/actions";
+import { myEvents } from "@/actions";
 import dayjs from "dayjs";
+import Image from "next/image";
 
-import { CloudDownloadOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import {
   Button,
   Tag,
   Table,
   Typography,
-  Flex,
-  Radio,
-  Checkbox,
-  Divider,
-  Form,
+  Result,
   Space,
+  Select,
+  Flex,
 } from "antd";
 
 interface DataType {
@@ -32,87 +30,82 @@ interface DataType {
   volunteeringHours: string;
 }
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 // certification columns
 const columns: TableProps<DataType>["columns"] = [
   {
-    title: "#",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Санаачлагч",
-    key: "organizationName",
-    dataIndex: "organizationName",
-  },
-  {
     title: "Нэр",
     key: "title",
-    render: (text, record) => record.event.title,
-  },
-  {
-    title: "Оноо",
-    dataIndex: "grade",
-    key: "grade",
-    render: (text, record) => <Tag color="green">+{text}</Tag>,
+    render: (text, record) => (
+      <Link href="#">
+        <Space>
+          <Image
+            src={"/assets/placeholder.svg"}
+            width={40}
+            height={40}
+            className="object-cover rounded-md"
+          />
+          <div>
+            {record.title}
+            <Text type="secondary" className="block">
+              {record.owner.username}
+            </Text>
+          </div>
+        </Space>
+      </Link>
+    ),
   },
   {
     title: "Үргэлжлэх хугацаа",
     key: "dateRange",
     render: (text, record) => {
-      const startDate = dayjs(record.event.startTime);
-      const endDate = dayjs(record.event.endTime);
+      const startDate = dayjs(record.startTime);
+      const endDate = dayjs(record.endTime);
 
       return (
         <div>
-          {startDate.format("YYYY/MM/DD")} - {endDate.format("YYYY/MM/DD")}
+          {startDate.format("YYYY.MM.DD")} - {endDate.format("YYYY.MM.DD")}
         </div>
       );
     },
   },
   {
-    title: "Зарцуулсан цаг",
+    title: "Зарцуулах цаг",
     dataIndex: "volunteeringHours",
     key: "volunteeringHours",
     render: (text, record) => {
-      const hours = record.event.volunteeringHours;
+      const hours = record.volunteeringHours;
       if (!hours) return "N/A";
 
-      return record.event.volunteeringHours;
+      return record.volunteeringHours;
     },
   },
   {
-    title: "Төлөв",
-    dataIndex: "grade",
-    key: "grade",
-    render: (text, record) => <Tag color="green">+{text}</Tag>,
-  },
-  {
-    title: "Батламж",
-    dataIndex: "",
-    key: "download",
-    render: (text, record) => (
-      <Link
-        href={`/profile/certification/${record.template.id}`}
-        target="_blank"
-      >
-        <Button
-          icon={<CloudDownloadOutlined />}
-          type="primary"
-          ghost
-          size="small"
-        >
-          татах
-        </Button>
-      </Link>
-    ),
+    title: "Одоогийн төлөв",
+    dataIndex: "state",
+    key: "state",
+    render: (text, record) => <StateConverter />,
   },
 ];
 
+const StateConverter = (state) => {
+  switch (state) {
+    case "new":
+      return <Tag color="green">Хүсэлт илгээсэн</Tag>;
+      break;
+    case "approved":
+      return <Tag color="green">Хүсэлт илгээсэн</Tag>;
+      break;
+    default:
+      return <Tag color="green">Хүсэлт илгээсэн</Tag>;
+  }
+};
+
 const EventList = () => {
   const { user } = useAuth();
-  const [certificateData, setCertificateData] = useState([]);
+  const [events, setEvents] = useState([]);
+  const isPartner = user?.type === "partner";
 
   useEffect(() => {
     const fetchCertificateData = async () => {
@@ -120,10 +113,10 @@ const EventList = () => {
       const token = getCookie("token");
       if (!token) return;
 
-      const result = await getCertificate(token);
+      const result = await myEvents(token);
 
       if (result?.["hydra:member"] as any) {
-        setCertificateData(result?.["hydra:member"]);
+        setEvents(result?.["hydra:member"]);
       }
     };
 
@@ -134,30 +127,46 @@ const EventList = () => {
     <div className="bg-white p-6 rounded-md">
       <Flex justify="space-between">
         <Title level={5}>Миний арга хэмжээнүүд</Title>
-        <Link href={`/profile/events/create`}>
-          <Button type="primary" ghost>
-            <PlusCircleOutlined /> Шинээр үүсгэх
-          </Button>
-        </Link>
+
+        <Space>
+          Шүүж харах:
+          <Select
+            defaultValue="Бүгд"
+            style={{
+              width: 150,
+            }}
+            options={[
+              {
+                value: "Бүгд",
+                label: "Бүгд",
+              },
+              {
+                value: "joined",
+                label: "Хүсэлт илгээсэн",
+              },
+              {
+                value: "Оролцсон",
+                label: "Оролцсон",
+              },
+              {
+                value: "Миний Үүсгэсэн",
+                label: "Миний Үүсгэсэн",
+              },
+            ]}
+          />
+          {isPartner && (
+            <Link href={`/profile/events/create`}>
+              <Button type="primary">
+                <PlusCircleOutlined /> Шинээр үүсгэх
+              </Button>
+            </Link>
+          )}
+        </Space>
       </Flex>
-
-      <Divider />
-
-      <Form>
-        <Form.Item noStyle>
-          <Radio.Group>
-            <Radio value={1}>Бүгд</Radio>
-            <Radio value={2}>Оролцох хүсэлт илгээсэн</Radio>
-            <Radio value={3}>Оролцож байгаа</Radio>
-            <Radio value={4}>Дууссан</Radio>
-            <Radio value={5}>Миний Үүсгэсэн</Radio>
-          </Radio.Group>
-        </Form.Item>
-      </Form>
 
       <Table
         pagination={false}
-        dataSource={certificateData}
+        dataSource={events}
         columns={columns}
         className="border-t border-[#eee] mt-6"
       />

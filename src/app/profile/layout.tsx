@@ -1,15 +1,6 @@
 "use client";
-import {
-  Row,
-  Col,
-  List,
-  Space,
-  Result,
-  Button,
-  Flex,
-  Divider,
-  Typography,
-} from "antd";
+import { AboutMe } from "@/components";
+import { Row, Col, List, Space } from "antd";
 import { redirect } from "next/navigation";
 import { MainLayout, ProfileHeader } from "@/components";
 import { useAuth } from "@/providers";
@@ -18,25 +9,8 @@ import {
   SettingOutlined,
   FilePdfOutlined,
   DollarOutlined,
-  EditOutlined,
 } from "@ant-design/icons";
 import { usePathname } from "next/navigation";
-
-const { Title } = Typography;
-
-const EmptyBio = () => {
-  return (
-    <Result
-      status="warning"
-      subTitle="Та өөрийн миний тухай хэсгийг оруулна уу."
-      extra={[
-        <Button type="primary" key="console">
-          Засах
-        </Button>,
-      ]}
-    />
-  );
-};
 
 const ProfileLayout = ({
   children,
@@ -45,8 +19,6 @@ const ProfileLayout = ({
 }>) => {
   const { user, userLoading } = useAuth();
   const pathname = usePathname();
-
-  console.log("pathname", pathname);
 
   if (!user) {
     if (userLoading) {
@@ -58,6 +30,7 @@ const ProfileLayout = ({
   const profileMenu = [
     {
       key: "1",
+      userType: "all",
       label: (
         <Space>
           <FilePdfOutlined /> Хянах самбар
@@ -68,6 +41,7 @@ const ProfileLayout = ({
     },
     {
       key: "2",
+      userType: "all",
       label: (
         <Space>
           <FilePdfOutlined /> Арга хэмжээнүүд
@@ -76,7 +50,18 @@ const ProfileLayout = ({
       link: "/profile/events",
     },
     {
+      key: "certificates",
+      userType: "volunteer",
+      label: (
+        <Space>
+          <FilePdfOutlined /> Сертификат
+        </Space>
+      ),
+      link: "/profile/certificates",
+    },
+    {
       key: "3",
+      userType: "partner",
       label: (
         <Space>
           <FilePdfOutlined /> Төсөл хөтөлбөрүүд
@@ -86,6 +71,7 @@ const ProfileLayout = ({
     },
     {
       key: "4",
+      userType: "partner",
       label: (
         <Space>
           <FilePdfOutlined /> Ирсэн хүсэлтүүд
@@ -95,6 +81,7 @@ const ProfileLayout = ({
     },
     {
       key: "5",
+      userType: "all",
       label: (
         <Space>
           <DollarOutlined /> Хандив
@@ -104,6 +91,7 @@ const ProfileLayout = ({
     },
     {
       key: "6",
+      userType: "partner",
       label: (
         <Space>
           <SettingOutlined /> Байгууллага
@@ -113,6 +101,7 @@ const ProfileLayout = ({
     },
     {
       key: "7",
+      userType: "all",
       label: (
         <Space>
           <SettingOutlined /> Тохиргоо
@@ -122,9 +111,14 @@ const ProfileLayout = ({
     },
   ];
 
+  // Filter the menu based on the user type
+  const filteredMenu = profileMenu.filter(
+    (item) => item.userType === "all" || item.userType === user.type
+  );
+
   return (
     <MainLayout>
-      <div className="bg-slate-100 min-h-screen">
+      <div className="bg-[#f5f5f5] min-h-screen">
         <ProfileHeader user={user} />
 
         <div className="container py-6">
@@ -132,7 +126,7 @@ const ProfileLayout = ({
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="bg-white p-8 mb-4 rounded-md">
                 <List
-                  dataSource={profileMenu}
+                  dataSource={filteredMenu}
                   renderItem={(item) => (
                     <List.Item>
                       <Link
@@ -148,25 +142,7 @@ const ProfileLayout = ({
                 />
               </div>
 
-              <div className="bg-white p-8 rounded-md">
-                <Flex justify="space-between">
-                  <Title level={5}>About Me</Title>
-                  <Link href="#">
-                    <Button icon={<EditOutlined />} type="link" />
-                  </Link>
-                </Flex>
-                {user?.bio}
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                rutrum ut erat id semper. Duis venenatis luctus varius.
-                Pellentesque tincidunt sit amet urna malesuada placerat.
-                Pellentesque fringilla lectus non ultricies scelerisque. Ut
-                consectetur egestas vestibulum. Sed varius vel augue in
-                efficitur. Proin facilisis metus sit amet eleifend efficitur.
-                Sed a tellus elementum, eleifend eros eget, pulvinar orci.
-                Vestibulum imperdiet, lorem ut pulvinar lacinia, mi diam
-                malesuada libero, a consectetur purus nunc quis urna.
-                Pellentesque mattis interdum massa in
-              </div>
+              <AboutMe user={user} />
             </Col>
             <Col xs={24} sm={24} md={24} lg={18}>
               {children}

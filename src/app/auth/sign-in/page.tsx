@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { setCookie } from "cookies-next";
 import { useAuth } from "@/providers";
-import { signIn } from "@/actions";
+import { api } from "@/actions";
 
 // Antd
 import type { FormProps } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Divider, Typography, message, Space } from "antd";
+import { Form, Input, Button, Divider, Typography, message } from "antd";
 
 const { Title } = Typography;
 
@@ -24,23 +24,23 @@ const SignIn = () => {
   // Handle Submit Registration
   const onFinish: FormProps<UserType>["onFinish"] = async (values) => {
     setLoading(true);
-    const result = await signIn(values);
+    const result = await api.post("/api/auth", values);
 
-    if (!result.token) {
-      if (result.code === 3001) {
+    if (!result.success) {
+      if (result.message.code === 3001) {
         router.push(`/auth/resend-email?email=${email}`);
-        message.error(result.data);
+        message.error(result?.message?.message);
         setLoading(false);
         return;
       }
 
-      message.error(result.message);
+      message.error(result.message?.message);
       setLoading(false);
       return;
     }
 
     message.success("Амжилттай нэвтэрлээ...");
-    setCookie("token", result.token);
+    setCookie("token", result.data.token);
     getUser();
     router.push("/profile");
 

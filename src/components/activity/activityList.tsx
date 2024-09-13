@@ -3,8 +3,9 @@ import { CertificateType } from "@/types";
 import type { TableProps } from "antd";
 import Link from "next/link";
 import dayjs from "dayjs";
-import { CloudDownloadOutlined } from "@ant-design/icons";
-import { Button, Tag, Table } from "antd";
+import { FilePdfOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { Flex, Tag, Table, Typography, Divider, Timeline, Button } from "antd";
+const { Title, Text } = Typography;
 
 interface DataType {
   key: string;
@@ -17,82 +18,76 @@ interface DataType {
 }
 
 // certification columns
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "#",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Санаачлагч",
-    key: "organizationName",
-    dataIndex: "organizationName",
-  },
-  {
-    title: "Нэр",
-    key: "title",
-    render: (text, record) => record.event.title,
-  },
-  {
-    title: "Оноо",
-    dataIndex: "grade",
-    key: "grade",
-    render: (text, record) => <Tag color="green">+{text}</Tag>,
-  },
+const TimeLineTemp = () => {
+  return (
+    <div>
+      <Title level={5} className="pb-0">
+        NGO support
+      </Title>
+      <Text strong>
+        Герман болон Англи хэлний сургалтын багшлах сайн дурын ажилтан сонгох
+      </Text>
+      <br />
+      <Text strong>Байгууллага: </Text>National Center for material and child
+      health of mongolia
+      <br /> <Text strong>Үргэлжлэх хугацаа:</Text> Oct 31, 2021 - Nov 7, 2021
+      <br /> <Text strong>Төлөв:</Text>
+      <Text type="warning"> Оролцох хүсэлт илгээсэн</Text>
+    </div>
+  );
+};
 
-  {
-    title: "Үргэлжлэх хугацаа",
-    key: "dateRange",
-    render: (text, record) => {
-      const startDate = dayjs(record.event.startTime);
-      const endDate = dayjs(record.event.endTime);
-
-      return (
-        <div>
-          {startDate.format("YYYY/MM/DD")} - {endDate.format("YYYY/MM/DD")}
-        </div>
-      );
-    },
-  },
-  {
-    title: "Зарцуулсан цаг",
-    dataIndex: "volunteeringHours",
-    key: "volunteeringHours",
-    render: (text, record) => {
-      const hours = record.event.volunteeringHours;
-      if (!hours) return "N/A";
-
-      return record.event.volunteeringHours;
-    },
-  },
-  {
-    title: "Батламж",
-    dataIndex: "",
-    key: "download",
-    render: (text, record) => (
-      <Link
-        href={`/profile/certification/${record.template.id}`}
-        target="_blank"
-      >
-        <Button
-          icon={<CloudDownloadOutlined />}
-          type="primary"
-          ghost
-          size="small"
-        >
-          татах
-        </Button>
-      </Link>
-    ),
-  },
-];
+const TimeLineTemp2 = () => {
+  return (
+    <div>
+      <Title level={5} className="pb-0">
+        Taught English to kids
+      </Title>
+      Герман болон Англи хэлний сургалтын багшлах сайн дурын ажилтан сонгох
+      <br />
+      Санаачлагч: National Center for material and child health of mongolia
+      <br />
+      Үргэлжлэх хугацаа: Oct 31, 2021 - Nov 7, 2021 <br />
+      Төлөв: <Text type="success">Амжилттай дуусгасан</Text>
+    </div>
+  );
+};
 
 export const ActivityList = () => {
   return (
-    <Table
-      columns={columns}
-      className="bg-white p-4 rounded-b-md -mt-4"
-      pagination={false}
-    />
+    <div
+      className="rounded-md"
+      style={{
+        backgroundImage:
+          "url(https://www.unicef.org/belarus/sites/unicef.org.belarus/files/styles/hero_mobile/public/KOST2124.jpg.webp?itok=b3CjRdpH)",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="bg-gradient-to-r from-white to-[rgba(255,255,255,0.85)] p-6 rounded-md">
+        <Flex justify="space-between">
+          <Title level={5}>Арга хэмжээнүүд</Title>{" "}
+          <Button icon={<FilePdfOutlined />}>Тодорхойлол харах</Button>
+        </Flex>
+
+        <Divider />
+        <Timeline
+          items={[
+            {
+              children: <TimeLineTemp />,
+            },
+            {
+              children: <TimeLineTemp />,
+              dot: <CheckCircleOutlined />,
+            },
+            {
+              children: <TimeLineTemp />,
+            },
+            {
+              children: <TimeLineTemp />,
+            },
+          ]}
+        />
+      </div>
+    </div>
   );
 };

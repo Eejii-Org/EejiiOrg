@@ -25,11 +25,11 @@ const { Text } = Typography;
 const links = [
   {
     link: "/projects",
-    label: "Төсөл",
+    label: "Төсөл хөтөлбөр",
   },
   {
     link: "/events?page=1&t=event",
-    label: "Сайн дурын ажил",
+    label: "Сайн дурын ажилууд",
   },
 
   {

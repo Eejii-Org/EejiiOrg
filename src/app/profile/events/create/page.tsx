@@ -3,10 +3,9 @@ import Link from "next/link";
 import { useAuth } from "@/providers";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
-import { getCertificate } from "@/actions";
+import { api } from "@/actions";
 import dayjs from "dayjs";
 
-import { CloudDownloadOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
@@ -22,6 +21,7 @@ import {
   Steps,
   Flex,
 } from "antd";
+import { EventType } from "@/types";
 
 const { Text } = Typography;
 const { Step } = Steps;
@@ -180,15 +180,18 @@ const districts = [
 const EventCreate = () => {
   const { user } = useAuth();
   const [current, setCurrent] = useState(0);
-  const [isSubmit, setIsSubmit] = useState(0);
+  const [formData, setFormData] = useState();
+  const [isSubmit, setIsSubmit] = useState(false);
   const [form] = Form.useForm();
+  const isPartner = user?.type === "partner";
+  const isApproved = true;
 
   const steps = [
     {
       title: "Ерөнхий мэдээлэл",
       content: (
         <Row gutter={15}>
-          <Col span={12}>
+          <Col span={10}>
             <Form.Item
               label="Арга хэмжээний нэр"
               name="title"
@@ -205,7 +208,7 @@ const EventCreate = () => {
           <Col span={6}>
             <Form.Item
               label="Хандивын төрөл"
-              name="eventType"
+              name="type"
               rules={[
                 {
                   required: true,
@@ -222,20 +225,20 @@ const EventCreate = () => {
                 options={[
                   {
                     label: "Хандив олох",
-                    value: "1",
+                    value: "event",
                   },
                   {
                     label: "Хандив өгөх цуглуулах",
-                    value: "2",
+                    value: "event",
                   },
                 ]}
               />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={4}>
             <Form.Item
-              label="Үргэлжлэх хугацаа"
-              name="date"
+              label="Эхлэх хугацаа"
+              name="startTime"
               rules={[
                 {
                   required: true,
@@ -243,11 +246,21 @@ const EventCreate = () => {
                 },
               ]}
             >
-              <RangePicker
-                style={{
-                  width: "100%",
-                }}
-              />
+              <DatePicker />
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item
+              label="Үргэлжлэх хугацаа"
+              name="endTime"
+              rules={[
+                {
+                  required: true,
+                  message: "Заавал бөглөх!",
+                },
+              ]}
+            >
+              <DatePicker />
             </Form.Item>
           </Col>
 
@@ -280,99 +293,118 @@ const EventCreate = () => {
             </Form.Item>
           </Col>
 
-          <Col span={12}>
-            <Form.Item
-              label="Хариуцсан хүний нэр"
-              name="eventUser"
-              rules={[
-                {
-                  required: true,
-                  message: "Заавал бөглөх!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Холбогдох утасны дугаар"
-              name="eventUserPhone"
-              rules={[
-                {
-                  required: true,
-                  message: "Заавал бөглөх!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
+          <Form.List name="contact">
+            {() => (
+              <Row gutter={15}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Хариуцсан хүний имэйл"
+                    name="email"
+                    rules={[{ required: true, message: "Заавал бөглөх!" }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Холбогдох утасны дугаар"
+                    name="phoneNumber"
+                    rules={[{ required: true, message: "Заавал бөглөх!" }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+            )}
+          </Form.List>
         </Row>
       ),
     },
     {
       title: "Байршил",
       content: (
-        <>
-          <Row gutter={[15, 15]}>
-            <Col span={8}>
-              <Form.Item
-                label="Аймаг/хот"
-                name="province"
-                rules={[
-                  {
-                    required: true,
-                    message: "Заавал бөглөх!",
-                  },
-                ]}
-              >
-                <Select
-                  style={{
-                    width: "100%",
-                  }}
-                  options={province}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                label="Дүүрэг/Сум"
-                name="district"
-                rules={[
-                  {
-                    required: true,
-                    message: "Заавал бөглөх!",
-                  },
-                ]}
-              >
-                <Select
-                  style={{
-                    width: "100%",
-                  }}
-                  options={districts}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Хороо/баг" name="khoroo">
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item
-            label="Дэлгэрэнгүй хаяг"
-            name="title"
-            rules={[
-              {
-                required: true,
-                message: "Заавал бөглөх!",
-              },
-            ]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-        </>
+        <Form.List name="address">
+          {() => (
+            <Row gutter={[15, 15]}>
+              <Col span={6}>
+                <Form.Item
+                  label="Улс"
+                  name="country"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    options={province}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  label="Аймаг/хот"
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    options={province}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  label="Дүүрэг/Сум"
+                  name="region"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    options={districts}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label="Хороо/баг" name="khoroo">
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  label="Дэлгэрэнгүй хаяг"
+                  name="noName"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Input.TextArea rows={4} />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+        </Form.List>
       ),
     },
     {
@@ -438,40 +470,55 @@ const EventCreate = () => {
     },
   ];
 
-  const next = () => {
-    form
-      .validateFields()
-      .then(() => {
-        setCurrent(current + 1);
-      })
-      .catch((info) => {
-        console.log("Validation Failed:", info);
-      });
+  const next = async () => {
+    try {
+      const values = await form.validateFields();
+
+      // Merge current step values into formData
+      setFormData((prevValues) => ({
+        ...prevValues,
+        ...values,
+      }));
+
+      setCurrent(current + 1);
+    } catch (info) {
+      console.log("Validation Failed:", info);
+    }
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
 
-  const handleSubmit = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        console.log("Form Values:", values);
+      setFormData((prevValues) => ({
+        ...prevValues,
+        ...values,
+      }));
+
+      const result = await api.post("/api/events/new", formData);
+
+      if (result.success) {
         message.success("Processing complete!");
         setIsSubmit(true);
-      })
-      .catch((info) => {
-        console.log("Validation Failed:", info);
-      });
+      } else {
+        console.log("why", result);
+      }
+
+      console.log("result", result);
+    } catch (info) {
+      console.log("Validation Failed:", info);
+    }
   };
 
-  const SuccesResult = () => {
+  const WarninResult = () => {
     return (
       <Result
-        status="success"
-        title="Таны хүсэлт амжилттай илгээгдлээ."
-        subTitle="Бид таны оруулсан мэдээллийг нягталж үзээд зөвшөөрсөн тохиолдолд нийтлэгдэх болно. Тэр болтол хүлээлгийн горимд шилжихийг анхаарна уу. Энд дарж өөрийн арга хэмжээнүүдийг харах боломжтой"
+        status="warning"
+        title="Та эхлээд байгууллагаа баталгаажуулна уу!"
+        subTitle="Та арга хэмжээ оруулахын тулд эхлээд бидэнтэй холбогдож зохих гэрээ хийх хэрэгтэй"
       />
     );
   };
@@ -488,6 +535,7 @@ const EventCreate = () => {
         <div className="bg-[#f5f5f5] p-6 rounded-lg mb-6">
           {steps[current].content}
         </div>
+
         <Flex justify="space-between">
           {current > 0 && (
             <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
@@ -497,12 +545,12 @@ const EventCreate = () => {
 
           <div>
             {current === steps.length - 1 && (
-              <Button type="primary" onClick={() => handleSubmit()}>
+              <Button type="primary" onClick={handleSubmit}>
                 Хүсэлт илгээх
               </Button>
             )}
             {current < steps.length - 1 && (
-              <Button type="primary" onClick={() => next()}>
+              <Button type="primary" onClick={next}>
                 Үргэлжлүүлэх
               </Button>
             )}
@@ -512,13 +560,14 @@ const EventCreate = () => {
     </>
   );
 
+  const Render = () => (isSubmit ? <SuccesResult /> : <StepForm />);
+
   return (
     <div className="bg-white p-6 rounded-md">
       <Title level={5}>Сайн дурын арга хэмжээ үүсгэх:</Title>
-
       <Divider />
 
-      {isSubmit ? <SuccesResult /> : <StepForm />}
+      {isApproved && isPartner ? <Render /> : <WarninResult />}
     </div>
   );
 };

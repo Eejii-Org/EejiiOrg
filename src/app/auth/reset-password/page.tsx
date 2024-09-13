@@ -1,6 +1,6 @@
 "use client";
 import { ChangePasswordType } from "@/types";
-import { verifyResetCode, changePassword } from "@/actions";
+import { api } from "@/actions";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
@@ -51,13 +51,15 @@ const Comp = () => {
         return;
       }
 
-      const result = await verifyResetCode(email, resetCode);
-
+      const result = await api.post("/api/users/verifyResetCode", {
+        email,
+        resetCode,
+      });
       // Update isVerified based on the result
       if (result.success) {
         setSuccess(true);
       } else {
-        message.error("Invalid reset code.");
+        message.error(result.message.data);
       }
 
       setLoading(false);
@@ -70,7 +72,8 @@ const Comp = () => {
     values
   ) => {
     setBtnLoading(true);
-    const result = await changePassword(values);
+
+    const result = await api.post("/api/users/changePassword", values);
 
     if (!result.success) {
       message.warning(result?.message?.data);
