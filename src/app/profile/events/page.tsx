@@ -2,23 +2,12 @@
 import type { TableProps } from "antd";
 import Link from "next/link";
 import { useAuth } from "@/providers";
-import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
-import { myEvents } from "@/actions";
+import { api } from "@/actions";
 import dayjs from "dayjs";
 import Image from "next/image";
-
 import { PlusCircleOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Tag,
-  Table,
-  Typography,
-  Result,
-  Space,
-  Select,
-  Flex,
-} from "antd";
+import { Button, Tag, Table, Typography, Space, Select, Flex } from "antd";
 
 interface DataType {
   key: string;
@@ -31,63 +20,6 @@ interface DataType {
 }
 
 const { Title, Text } = Typography;
-
-// certification columns
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Нэр",
-    key: "title",
-    render: (text, record) => (
-      <Link href="#">
-        <Space>
-          <Image
-            src={"/assets/placeholder.svg"}
-            width={40}
-            height={40}
-            className="object-cover rounded-md"
-          />
-          <div>
-            {record.title}
-            <Text type="secondary" className="block">
-              {record.owner.username}
-            </Text>
-          </div>
-        </Space>
-      </Link>
-    ),
-  },
-  {
-    title: "Үргэлжлэх хугацаа",
-    key: "dateRange",
-    render: (text, record) => {
-      const startDate = dayjs(record.startTime);
-      const endDate = dayjs(record.endTime);
-
-      return (
-        <div>
-          {startDate.format("YYYY.MM.DD")} - {endDate.format("YYYY.MM.DD")}
-        </div>
-      );
-    },
-  },
-  {
-    title: "Зарцуулах цаг",
-    dataIndex: "volunteeringHours",
-    key: "volunteeringHours",
-    render: (text, record) => {
-      const hours = record.volunteeringHours;
-      if (!hours) return "N/A";
-
-      return record.volunteeringHours;
-    },
-  },
-  {
-    title: "Одоогийн төлөв",
-    dataIndex: "state",
-    key: "state",
-    render: (text, record) => <StateConverter />,
-  },
-];
 
 const StateConverter = (state) => {
   switch (state) {
@@ -107,21 +39,137 @@ const EventList = () => {
   const [events, setEvents] = useState([]);
   const isPartner = user?.type === "partner";
 
+  console.log("user", user);
+
   useEffect(() => {
-    const fetchCertificateData = async () => {
-      if (!user) return;
-      const token = getCookie("token");
-      if (!token) return;
+    const fetchEvents = async () => {
+      const result = await api.get("/api/events?myJoined=true");
 
-      const result = await myEvents(token);
-
-      if (result?.["hydra:member"] as any) {
-        setEvents(result?.["hydra:member"]);
+      if (result?.data?.["hydra:member"] as any) {
+        setEvents(result?.data?.["hydra:member"]);
       }
     };
 
-    fetchCertificateData();
+    fetchEvents();
   }, [user]);
+
+  // event columns
+  const volunteerColumns: TableProps<DataType>["columns"] = [
+    {
+      title: "Нэр",
+      key: "title",
+      render: (text, record) => (
+        <Link href="#">
+          <Space>
+            <Image
+              src={"/assets/placeholder.svg"}
+              width={40}
+              height={40}
+              className="object-cover rounded-md"
+            />
+            <div>
+              {record.title}
+              <Text type="secondary" className="block">
+                {record.owner.username}
+              </Text>
+            </div>
+          </Space>
+        </Link>
+      ),
+    },
+    {
+      title: "Үргэлжлэх хугацаа",
+      key: "dateRange",
+      render: (text, record) => {
+        const startDate = dayjs(record.startTime);
+        const endDate = dayjs(record.endTime);
+
+        return (
+          <div>
+            {startDate.format("YYYY.MM.DD")} - {endDate.format("YYYY.MM.DD")}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Зарцуулах цаг",
+      dataIndex: "volunteeringHours",
+      key: "volunteeringHours",
+      render: (text, record) => {
+        const hours = record.volunteeringHours;
+        if (!hours) return "N/A";
+
+        return record.volunteeringHours;
+      },
+    },
+    {
+      title: "Одоогийн төлөв",
+      dataIndex: "state",
+      key: "state",
+      render: (text, record) => <StateConverter />,
+    },
+  ];
+
+  const partnerColumns: TableProps<DataType>["columns"] = [
+    {
+      title: "Нэр",
+      key: "title",
+      render: (text, record) => (
+        <Link href="#">
+          <Space>
+            <Image
+              src={"/assets/placeholder.svg"}
+              width={40}
+              height={40}
+              className="object-cover rounded-md"
+            />
+            <div>
+              {record.title}
+              <Text type="secondary" className="block">
+                {record.owner.username}
+              </Text>
+            </div>
+          </Space>
+        </Link>
+      ),
+    },
+    {
+      title: "Үргэлжлэх хугацаа",
+      key: "dateRange",
+      render: (text, record) => {
+        const startDate = dayjs(record.startTime);
+        const endDate = dayjs(record.endTime);
+
+        return (
+          <div>
+            {startDate.format("YYYY.MM.DD")} - {endDate.format("YYYY.MM.DD")}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Зарцуулах цаг",
+      dataIndex: "volunteeringHours",
+      key: "volunteeringHours",
+      render: (text, record) => {
+        const hours = record.volunteeringHours;
+        if (!hours) return "N/A";
+
+        return record.volunteeringHours;
+      },
+    },
+    {
+      title: "Одоогийн төлөв",
+      dataIndex: "state",
+      key: "state",
+      render: (text, record) => <StateConverter />,
+    },
+    {
+      title: "Засах",
+      key: "edit",
+      render: (text, record) => <Button>Засах</Button>,
+    },
+  ];
 
   return (
     <div className="bg-white p-6 rounded-md">
@@ -155,7 +203,7 @@ const EventList = () => {
             ]}
           />
           {isPartner && (
-            <Link href={`/profile/events/create`}>
+            <Link href="/profile/events/create">
               <Button type="primary">
                 <PlusCircleOutlined /> Шинээр үүсгэх
               </Button>
@@ -167,7 +215,7 @@ const EventList = () => {
       <Table
         pagination={false}
         dataSource={events}
-        columns={columns}
+        columns={isPartner ? partnerColumns : volunteerColumns}
         className="border-t border-[#eee] mt-6"
       />
     </div>

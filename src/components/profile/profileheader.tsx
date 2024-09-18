@@ -27,9 +27,9 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
   const name = user?.organization || `${user.lastName} ${user.firstName}`;
 
   const RenderVerify = () => {
-    const approved = user?.approved;
+    const isVerified = user?.state === "accepted";
 
-    if (!approved)
+    if (!isVerified)
       return (
         <Title level={4}>
           {name} {""}
@@ -47,7 +47,7 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
     return (
       <Title level={4}>
         {name} {""}
-        <Tooltip title="Verified" placement="right" color="blue" open={true}>
+        <Tooltip title="Verified" placement="right" color="blue">
           <CheckCircleTwoTone />
         </Tooltip>
       </Title>

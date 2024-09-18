@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { AboutMe } from "@/components";
 import { Row, Col, List, Space } from "antd";
 import { redirect } from "next/navigation";
@@ -10,7 +11,7 @@ import {
   FilePdfOutlined,
   DollarOutlined,
 } from "@ant-design/icons";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const ProfileLayout = ({
   children,
@@ -18,13 +19,21 @@ const ProfileLayout = ({
   children: React.ReactNode;
 }>) => {
   const { user, userLoading } = useAuth();
+  const router = useRouter();
   const pathname = usePathname();
+  // Define routes that are restricted for 'volunteer' users
+  const restrictedRoutes = ["/profile/events/create", "/profile/permit"];
 
   if (!user) {
     if (userLoading) {
       return <div>Loading...</div>;
     }
     return redirect("/");
+  }
+
+  if (user?.type === "volunteer" && restrictedRoutes.includes(pathname)) {
+    router.push("/profile");
+    return;
   }
 
   const profileMenu = [
@@ -94,10 +103,10 @@ const ProfileLayout = ({
       userType: "partner",
       label: (
         <Space>
-          <SettingOutlined /> Байгууллага
+          <SettingOutlined /> Эрх авах
         </Space>
       ),
-      link: "/profile/edit",
+      link: "/profile/permit",
     },
     {
       key: "7",
@@ -115,6 +124,8 @@ const ProfileLayout = ({
   const filteredMenu = profileMenu.filter(
     (item) => item.userType === "all" || item.userType === user.type
   );
+
+  if (userLoading) return "loading";
 
   return (
     <MainLayout>

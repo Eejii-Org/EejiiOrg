@@ -25,7 +25,7 @@ const SignIn = () => {
   const onFinish: FormProps<UserType>["onFinish"] = async (values) => {
     setLoading(true);
     const result = await api.post("/api/auth", values);
-
+    console.log("result", result);
     if (!result.success) {
       if (result.message.code === 3001) {
         router.push(`/auth/resend-email?email=${email}`);

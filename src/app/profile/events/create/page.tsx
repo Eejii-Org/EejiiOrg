@@ -1,16 +1,13 @@
 "use client";
-import Link from "next/link";
 import { useAuth } from "@/providers";
-import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/actions";
-import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 import {
   Button,
   Form,
   Typography,
-  Result,
   Input,
   Divider,
   Row,
@@ -23,7 +20,6 @@ import {
 } from "antd";
 import { EventType } from "@/types";
 
-const { Text } = Typography;
 const { Step } = Steps;
 
 interface DataType {
@@ -37,7 +33,6 @@ interface DataType {
 }
 
 const { Title } = Typography;
-const { RangePicker } = DatePicker;
 
 const province = [
   {
@@ -178,13 +173,24 @@ const districts = [
 ];
 
 const EventCreate = () => {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, userLoading } = useAuth();
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState();
-  const [isSubmit, setIsSubmit] = useState(false);
   const [form] = Form.useForm();
-  const isPartner = user?.type === "partner";
-  const isApproved = true;
+  const { eventPermit, state } = user;
+  const isVerified = state === "accepted";
+  const isAvalaiblePermit = eventPermit > 0;
+
+  if (!isVerified) {
+    router.push("/profile/result?reason=verify");
+    return;
+  }
+
+  if (!isAvalaiblePermit) {
+    router.push("/profile/result?reason=nopermit");
+    return;
+  }
 
   const steps = [
     {
@@ -251,7 +257,7 @@ const EventCreate = () => {
           </Col>
           <Col span={4}>
             <Form.Item
-              label="Үргэлжлэх хугацаа"
+              label="Дуусах хугацаа"
               name="endTime"
               rules={[
                 {
@@ -295,7 +301,7 @@ const EventCreate = () => {
 
           <Form.List name="contact">
             {() => (
-              <Row gutter={15}>
+              <>
                 <Col span={12}>
                   <Form.Item
                     label="Хариуцсан хүний имэйл"
@@ -314,7 +320,7 @@ const EventCreate = () => {
                     <Input />
                   </Form.Item>
                 </Col>
-              </Row>
+              </>
             )}
           </Form.List>
         </Row>
@@ -383,6 +389,47 @@ const EventCreate = () => {
                   />
                 </Form.Item>
               </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label="Дүүрэг Code"
+                  name="regionCode"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    options={[{ label: "MN", value: "Mn" }]}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label="Country Code"
+                  name="countryCode"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Заавал бөглөх!",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "100%",
+                    }}
+                    options={[{ label: "MN", value: "Mn" }]}
+                  />
+                </Form.Item>
+              </Col>
+
               <Col span={6}>
                 <Form.Item label="Хороо/баг" name="khoroo">
                   <Input />
@@ -412,19 +459,28 @@ const EventCreate = () => {
       content: (
         <>
           <Row gutter={15}>
-            <Col span={12}>
+            <Col span={8}>
               <Form.Item
                 name="requiredVolunteer"
-                label="Хэдэн сайн дурыг ажилтан хэрэгтэй байгаа тоогоо оруулна уу."
+                label="Хэрэгтэй байгаа сайн дурыхан:"
                 rules={[{ required: true, message: "Тоо оруулна уу" }]}
               >
-                <Input />
+                <Input placeholder="Тоо оруулах" />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Form.Item
-                name="requiredVolunteer"
+                name="ageRestriction"
                 label="Доод насны хязгаар"
+                rules={[{ required: true, message: "Тоо оруулна уу" }]}
+              >
+                <Input placeholder="Тоо оруулна уу" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name="registerEndDate"
+                label="Бүртгэл хаагдах огноо"
                 rules={[{ required: true, message: "Тоо оруулна уу" }]}
               >
                 <Input />
@@ -434,7 +490,7 @@ const EventCreate = () => {
 
           <Form.Item
             label="Сайн дурын ажилтан юу хийх талаарх товч мэдээлэл оруулна уу."
-            name="title"
+            name="volunteerDescription"
             rules={[
               {
                 required: true,
@@ -445,13 +501,9 @@ const EventCreate = () => {
             <Input.TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item label="Тавигдах шаардлага." name="title">
-            <Input.TextArea rows={4} />
-          </Form.Item>
-
           <Form.Item
             label="Ямар чадвартай байвал илүү тохирох вэ."
-            name="title"
+            name="volunteerRequirements"
             rules={[
               {
                 required: true,
@@ -500,29 +552,19 @@ const EventCreate = () => {
 
       const result = await api.post("/api/events/new", formData);
 
-      if (result.success) {
-        message.success("Processing complete!");
-        setIsSubmit(true);
-      } else {
-        console.log("why", result);
+      if (!result.success) {
+        message.warning(result?.message?.message);
+        return;
       }
 
-      console.log("result", result);
+      message.success("Амжилттай үүсгэлээ!");
+      router.push("/profile/events");
     } catch (info) {
       console.log("Validation Failed:", info);
     }
   };
 
-  const WarninResult = () => {
-    return (
-      <Result
-        status="warning"
-        title="Та эхлээд байгууллагаа баталгаажуулна уу!"
-        subTitle="Та арга хэмжээ оруулахын тулд эхлээд бидэнтэй холбогдож зохих гэрээ хийх хэрэгтэй"
-      />
-    );
-  };
-
+  console.log("setFormData", formData);
   const StepForm = () => (
     <>
       <Steps current={current} size="small" className="mb-8">
@@ -560,14 +602,12 @@ const EventCreate = () => {
     </>
   );
 
-  const Render = () => (isSubmit ? <SuccesResult /> : <StepForm />);
-
   return (
     <div className="bg-white p-6 rounded-md">
       <Title level={5}>Сайн дурын арга хэмжээ үүсгэх:</Title>
       <Divider />
 
-      {isApproved && isPartner ? <Render /> : <WarninResult />}
+      <StepForm />
     </div>
   );
 };

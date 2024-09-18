@@ -44,12 +44,17 @@ const DownloadInstance = axios.create({
 export const api = {
   get: async (url: string) => {
     try {
-      const res = await AxiosInstance.get(url);
-      return res;
+      const headers = authHeader();
+      const { data } = await AxiosInstance.get(url, { headers });
+      return {
+        success: true,
+        data: data,
+      };
     } catch (err) {
       return {
-        isFailed: err.response?.status || 500,
-        message: err.response?.data?.message || "An unknown error occurred",
+        success: false,
+        staus: err.response?.status || 500,
+        message: err?.response?.data || "An unknown error occurred",
       };
     }
   },
