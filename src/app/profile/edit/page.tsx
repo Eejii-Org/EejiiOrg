@@ -8,7 +8,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { myEvents, getCertificate } from "@/actions";
+import { api, getCertificate } from "@/actions";
 import dayjs from "dayjs";
 
 import { MailOutlined, PhoneOutlined, EditOutlined } from "@ant-design/icons";
@@ -27,6 +27,7 @@ import {
   Select,
   DatePicker,
 } from "antd";
+import { UserType } from "@/types";
 const { TextArea } = Input;
 const { Text, Title } = Typography;
 
@@ -59,6 +60,36 @@ const ProfileEdit = () => {
     return redirect("/auth");
   }
 
+  const handleOnFinish = async (val: UserType) => {
+    const url = `/api/user/${user?.id}/edit`;
+    const result = await api.put(url, val);
+
+    if (!result.success) {
+      return message.warning(result.message.message);
+    }
+
+    return message.success("Амжилттай хадгалагдлаа!");
+  };
+
+  const handleChangePassword = async (val: UserType) => {
+    const url = `/api/users/changePassword`;
+    const data = {
+      email: user?.email,
+      oldPassword: val.oldPassword,
+      newPassword: val.newPassword,
+      confirmPassword: val.confirmPassword,
+    };
+    const result = await api.post(url, data);
+
+    console.log("result", result);
+
+    if (!result.success) {
+      return message.warning(result.message.message);
+    }
+
+    return message.success("Амжилттай хадгалагдлаа!");
+  };
+
   return (
     <div>
       <Form
@@ -66,11 +97,14 @@ const ProfileEdit = () => {
         layout="vertical"
         initialValues={user}
         className="bg-white p-8 rounded-md"
+        onFinish={handleOnFinish}
       >
-        <Title level={5}>Миний тухай</Title>
+        <Title level={5}>
+          {user?.type !== "volunteer" ? "Байгууллагын тухай" : "Миний тухай"}
+        </Title>
         <Divider />
-        <Form.Item name="bio">
-          <TextArea rows={4} />
+        <Form.Item name="bio" rules={[{ max: 560 }]}>
+          <TextArea rows={6} />
         </Form.Item>
 
         <Form.Item>
@@ -85,37 +119,26 @@ const ProfileEdit = () => {
         layout="vertical"
         initialValues={user}
         className="bg-white p-8 rounded-md my-6"
+        onFinish={handleOnFinish}
       >
-        <Title level={5}>Хувийн мэдээлэл</Title>
+        <Title level={5}>Ерөнхий мэдээлэл</Title>
         <Divider />
 
         <Row gutter={15}>
           <Col span={8}>
-            <Form.Item
-              label="Овог:"
-              name="lastname"
-              rules={[
-                {
-                  required: true,
-                  message: "Заавал бөглөх!",
-                },
-              ]}
-            >
-              <Input placeholder="Овогоо оруулна уу..." />
+            <Form.Item label="Овог:" name="lastName">
+              <Input
+                placeholder="Овогоо оруулна уу..."
+                disabled={user?.type !== "volunteer"}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item
-              label="Нэр:"
-              name="firstName"
-              rules={[
-                {
-                  required: true,
-                  message: "Заавал бөглөх!",
-                },
-              ]}
-            >
-              <Input placeholder="Нэрээ оруулна уу..." />
+            <Form.Item label="Нэр:" name="firstName">
+              <Input
+                placeholder="Нэрээ оруулна уу..."
+                disabled={user?.type !== "volunteer"}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -154,14 +177,18 @@ const ProfileEdit = () => {
           </Col>
           <Col span={8}>
             <Form.Item name="birthdate" label="Төрсөн өдөр:">
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker
+                style={{ width: "100%" }}
+                disabled={user?.type !== "volunteer"}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item name="gender" label="Хүйс:">
               <Select
-                placeholder="Та Байгууллагын төрөл"
+                placeholder="Хүйс"
                 style={{ width: "100%" }}
+                disabled={user?.type !== "volunteer"}
               >
                 <Select.Option value="m">Эрэгтэй</Select.Option>
                 <Select.Option value="f">эмэгтэй</Select.Option>
@@ -170,7 +197,7 @@ const ProfileEdit = () => {
           </Col>
           <Col span={8}>
             <Form.Item name="registerNumber" label="Рэгистер:">
-              <Input />
+              <Input disabled={user?.type !== "volunteer"} />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -178,6 +205,7 @@ const ProfileEdit = () => {
               <Select
                 placeholder="Та Байгууллагын төрөл"
                 style={{ width: "100%" }}
+                disabled={user?.type === "volunteer"}
               >
                 <Select.Option value="supporter">ХХК</Select.Option>
                 <Select.Option value="volunteer">
@@ -192,7 +220,10 @@ const ProfileEdit = () => {
           </Col>
           <Col span={8}>
             <Form.Item name="organization" label="Байгууллагын нэр:">
-              <Input placeholder="Та байгууллагын нэрээ оруулна уу..." />
+              <Input
+                placeholder="Та байгууллагын нэрээ оруулна уу..."
+                disabled={user?.type === "volunteer"}
+              />
             </Form.Item>
           </Col>
           <Col span={24}>
@@ -213,9 +244,24 @@ const ProfileEdit = () => {
         name="forgot-password"
         layout="vertical"
         className="bg-white p-8 rounded-md"
+        onFinish={handleChangePassword}
       >
         <Title level={5}>Нууц үг солих</Title>
         <Divider />
+
+        <Form.Item
+          name="oldPassword"
+          label="Хуучин нууц үг:"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Заавал бөглөх!",
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
         <Form.Item
           name="newPassword"

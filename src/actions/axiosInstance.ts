@@ -74,6 +74,22 @@ export const api = {
       };
     }
   },
+  put: async (url: string, payload: object) => {
+    try {
+      const headers = authHeader();
+      const { data } = await AxiosInstance.put(url, payload, { headers });
+
+      return {
+        success: true,
+        data: data,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        message: err?.response?.data,
+      };
+    }
+  },
   download: async (url: string, payload: object) => {
     try {
       const res = await DownloadInstance.get(url, {

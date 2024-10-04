@@ -42,7 +42,11 @@ const links = [
 const items = [
   { link: "/supporters", key: "supporters", label: "Дэмжигчид" },
   { link: "/partners", key: "partners", label: "Хамтрагчид" },
-  { link: "/volunteers", key: "volunteers", label: "Сайн дурынхан" },
+  {
+    link: "/volunteers",
+    key: "volunteers",
+    label: <Link href="/volunteers">Сайн дурынхан</Link>,
+  },
 ];
 
 export const Header = () => {
@@ -61,7 +65,7 @@ export const Header = () => {
       <div className="container">
         <Row justify="space-between" align="middle">
           <Col>
-            <Link href="/profile">
+            <Link href="/">
               <div className="relative w-[168px] h-[42px]">
                 <Image
                   src="/assets/logo.png"

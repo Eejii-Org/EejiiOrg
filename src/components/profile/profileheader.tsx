@@ -1,64 +1,31 @@
 "use client";
-import Image from "next/image";
 import { UserType } from "@/types";
 import {
   ExclamationCircleTwoTone,
-  CheckCircleTwoTone,
   PictureOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Divider,
-  Typography,
-  Avatar,
-  Button,
-  Tag,
-  Space,
-  Tooltip,
-  Breadcrumb,
-} from "antd";
-
+import { Typography, Avatar, Button, Space, Tooltip, Flex } from "antd";
 import Link from "next/link";
-
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 export const ProfileHeader = ({ user }: { user: UserType }) => {
-  const name = user?.organization || `${user.lastName} ${user.firstName}`;
+  const isVolunteer = user?.type === "volunteer";
+  const isVerified = user?.state === "accepted";
+  const iconColor = isVerified ? null : "#fa8c16";
 
-  const RenderVerify = () => {
-    const isVerified = user?.state === "accepted";
+  const name = isVolunteer
+    ? `${user?.lastName} ${user?.firstName}`
+    : user?.organization;
 
-    if (!isVerified)
-      return (
-        <Title level={4}>
-          {name} {""}
-          <Tooltip
-            title="Not Verified"
-            placement="right"
-            color="orange"
-            defaultOpen={true}
-          >
-            <ExclamationCircleTwoTone twoToneColor="#fa8c16" />
-          </Tooltip>
-        </Title>
-      );
-
-    return (
-      <Title level={4}>
-        {name} {""}
-        <Tooltip title="Verified" placement="right" color="blue">
-          <CheckCircleTwoTone />
-        </Tooltip>
-      </Title>
-    );
-  };
   return (
     <div>
       <div
-        className="w-full rounded-t-md h-52 relative"
+        className="w-full rounded-t-md relative h-96"
         style={{
-          background: "url(/assets/profile/profile-bg.jpg)",
+          background: isVolunteer
+            ? "url(/assets/profile/profile-bg.jpg)"
+            : "url(/assets/partner/bg.jpg)",
           backgroundSize: "cover",
         }}
       >
@@ -74,24 +41,42 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
 
       <div className="bg-white h-16 rounded-b-md shadow-sm">
         <div className="container  px-4">
-          <Row align="middle" justify="space-between" gutter={15}>
-            <Col>
-              <Space>
-                <Avatar
-                  size={80}
-                  src={
-                    user.images?.find((img) => img.type == "main")?.path ||
-                    "/assets/placeholder.svg"
-                  }
-                  className="border-4 border-white -mt-2 bg-white"
-                />
+          <Flex justify="space-between">
+            <Space>
+              <Avatar
+                size={80}
+                src={
+                  user?.images?.find((img) => img.type == "main")?.path ||
+                  "/assets/placeholder.svg"
+                }
+                className="border-4 border-white -mt-2 bg-white"
+              />
 
-                <Space>
-                  <RenderVerify />
-                </Space>
-              </Space>
-            </Col>
-          </Row>
+              <Tooltip
+                defaultOpen
+                title={isVerified ? "Verified" : "Not Verified"}
+                placement="right"
+                color={isVerified ? "blue" : "orange"}
+              >
+                <Title level={4}>
+                  <Space>
+                    {name}
+                    <ExclamationCircleTwoTone twoToneColor={iconColor} />
+                  </Space>
+                </Title>
+              </Tooltip>
+            </Space>
+
+            <div>
+              <Title level={4}>
+                <Tooltip title="Зочин байдлаар харах" placement="right">
+                  <Link href={`/public/${user?.type}?id=${user?.id}`}>
+                    <EyeOutlined />
+                  </Link>
+                </Tooltip>
+              </Title>
+            </div>
+          </Flex>
         </div>
       </div>
     </div>

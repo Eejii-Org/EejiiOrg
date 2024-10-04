@@ -1,7 +1,6 @@
 "use client";
-import { useEffect } from "react";
 import { AboutMe } from "@/components";
-import { Row, Col, List, Space } from "antd";
+import { Row, Col, List, Space, Spin } from "antd";
 import { redirect } from "next/navigation";
 import { MainLayout, ProfileHeader } from "@/components";
 import { useAuth } from "@/providers";
@@ -26,7 +25,11 @@ const ProfileLayout = ({
 
   if (!user) {
     if (userLoading) {
-      return <div>Loading...</div>;
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <Spin spinning={userLoading} />
+        </div>
+      );
     }
     return redirect("/");
   }
@@ -60,7 +63,7 @@ const ProfileLayout = ({
     },
     {
       key: "certificates",
-      userType: "volunteer",
+      userType: "all",
       label: (
         <Space>
           <FilePdfOutlined /> Сертификат
@@ -86,7 +89,7 @@ const ProfileLayout = ({
           <FilePdfOutlined /> Ирсэн хүсэлтүүд
         </Space>
       ),
-      link: "/profile/projects",
+      link: "/profile/reqiuests",
     },
     {
       key: "5",
@@ -124,8 +127,6 @@ const ProfileLayout = ({
   const filteredMenu = profileMenu.filter(
     (item) => item.userType === "all" || item.userType === user.type
   );
-
-  if (userLoading) return "loading";
 
   return (
     <MainLayout>

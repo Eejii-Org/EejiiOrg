@@ -12,7 +12,7 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import { Row, Col, Statistic, Typography, Button, Result } from "antd";
-import { ActivityList } from "@/components";
+import { ActivityList, UserStats } from "@/components";
 
 const { Title } = Typography;
 
@@ -44,8 +44,6 @@ const ProfilePage = () => {
 
       const result = await getEventUsers(token);
 
-      console.log("result", result);
-
       if (result?.["hydra:member"] as any) {
         setUserEvents(result?.["hydra:member"]);
       }
@@ -54,66 +52,15 @@ const ProfilePage = () => {
     fetchCertificateData();
   }, [user]);
 
-  if (!user) {
-    if (userLoading) {
-      return <div>Loading...</div>;
-    }
-    return redirect("/");
-  }
+  console.log("user", user);
 
   return (
-    <Row gutter={[15, 15]}>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Сайн дурын ажил"
-          value={4}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<FireOutlined />}
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Зарцуулсан цаг"
-          value={13}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<ClockCircleOutlined />}
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Идэвх"
-          value={90}
-          precision={2}
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<ArrowUpOutlined />}
-          suffix="%"
-        />
-      </Col>
-      <Col span={6}>
-        <Statistic
-          className="bg-white p-6 rounded-md"
-          title="Хандив"
-          value="₮20,000"
-          valueStyle={{
-            color: "#3f8600",
-          }}
-          prefix={<HeartOutlined />}
-        />
-      </Col>
-
-      <Col span={24}>
+    <>
+      <UserStats user={user} />
+      <div className="mt-4">
         <ActivityList />
-      </Col>
-    </Row>
+      </div>
+    </>
   );
 };
 

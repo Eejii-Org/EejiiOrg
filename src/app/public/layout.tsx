@@ -1,64 +1,46 @@
 "use client";
-import {
-  Row,
-  Col,
-  List,
-  Space,
-  Result,
-  Button,
-  Flex,
-  Divider,
-  Typography,
-} from "antd";
-import { redirect } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { Result, Button, Spin } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MainLayout, ProfileHeader } from "@/components";
-import { useAuth } from "@/providers";
-import Link from "next/link";
-import {
-  SettingOutlined,
-  FilePdfOutlined,
-  DollarOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
-import { usePathname } from "next/navigation";
-
-const { Title } = Typography;
-
-const EmptyBio = () => {
-  return (
-    <Result
-      status="warning"
-      subTitle="Та өөрийн миний тухай хэсгийг оруулна уу."
-      extra={[
-        <Button type="primary" key="console">
-          Засах
-        </Button>,
-      ]}
-    />
-  );
-};
+import { api } from "@/actions";
 
 const PublicProfileLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const { user, userLoading } = useAuth();
-  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
+  const [userData, setUserData] = useState();
+  const [userLoading, setUserLoading] = useState(true);
 
-  console.log("pathname", pathname);
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await api.get(`api/userPublicProfile/${userId}`);
 
-  if (!user) {
-    if (userLoading) {
-      return <div>Loading...</div>;
-    }
-    return redirect("/");
-  }
+      if (!result.success) {
+        return router.push("/");
+      }
+      setUserData(result.data);
+      setUserLoading(false);
+    };
+
+    fetchData();
+  }, [userId]);
+
+  if (!userData)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spin spinning={userLoading} />
+      </div>
+    );
 
   return (
     <MainLayout>
       <div className="bg-[#f5f5f5] min-h-screen">
-        <ProfileHeader user={user} />
+        <ProfileHeader user={userData} />
         <div className="container py-6">{children}</div>
       </div>
     </MainLayout>

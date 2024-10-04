@@ -18,6 +18,8 @@ export type UserType = {
   images?: ImageType[];
   level?: number;
   xp?: number;
+  state?: string;
+  organization?: string;
 };
 
 export type OwnerType = {

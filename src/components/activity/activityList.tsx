@@ -65,7 +65,7 @@ export const ActivityList = () => {
     >
       <div className="bg-gradient-to-r from-white to-[rgba(255,255,255,0.85)] p-6 rounded-md">
         <Flex justify="space-between">
-          <Title level={5}>Арга хэмжээнүүд</Title>{" "}
+          <Title level={5}>Арга хэмжээнүүд</Title>
           <Button icon={<FilePdfOutlined />}>Тодорхойлол харах</Button>
         </Flex>
 

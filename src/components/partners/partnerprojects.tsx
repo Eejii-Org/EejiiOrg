@@ -65,6 +65,8 @@ export const PartnerProjects = ({ partner }: { partner: any }) => {
           : "grant_fundraising"
       }&owner.id=${partner.id}`
     );
+
+    console.log("res", res);
     if (t == "events") {
       setEvents([...events, ...res.data["hydra:member"]]);
       setLoading(false);

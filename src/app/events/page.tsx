@@ -15,6 +15,8 @@ const EventsPage = async ({
   const events: EventType[] = eventsData?.["hydra:member"];
   const featuredEvents: EventType[] = featuredEventsData?.["hydra:member"];
   const lastPageIndex = eventsData?.["hydra:meta"].pagination.last;
+
+  console.log("categories", categories);
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
