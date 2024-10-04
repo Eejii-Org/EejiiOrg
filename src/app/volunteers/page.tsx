@@ -166,8 +166,8 @@ const VolunteersPage = () => {
             </Col>
           </Row>
           <Row gutter={[10, 10]}>
-            {volunteers.map((item) => (
-              <Col span={6}>
+            {volunteers.map((item, idx) => (
+              <Col span={6} key={idx}>
                 <Link href={`/public/volunteer/${item.id}`}>
                   <div className="border bg-white rounded-md p-3">
                     <Space>

@@ -7,7 +7,13 @@ const EmptyBio = () => {
   return <Result status="warning" subTitle="Мэдээлэл оруулаагүй байна" />;
 };
 
-export const UserLevel ({ bio, skills }: { bio: string; skills: string[] }) => {
+export const UserLevel = ({
+  bio,
+  skills,
+}: {
+  bio: string;
+  skills: string[];
+}) => {
   return (
     <div className="bg-white p-8 rounded-md">
       <Title level={5}>Миний тухай</Title>

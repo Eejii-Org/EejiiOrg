@@ -1,12 +1,9 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/providers";
-import { useState } from "react";
-import { api } from "@/actions";
 import { useRouter } from "next/navigation";
-
 import { Typography, Divider, message } from "antd";
-
+import { api } from "@/actions";
 import { EventForm } from "@/components";
 
 const { Title } = Typography;
@@ -19,19 +16,16 @@ const EventCreate = () => {
   const isVerified = state === "accepted";
   const isAvalaiblePermit = eventPermit > 0;
 
-  console.log("user", user);
-
-  if (!isVerified) {
-    router.push("/profile/result?reason=verify");
-    return;
-  }
-
-  if (!isAvalaiblePermit) {
-    router.push("/profile/result?reason=nopermit");
-    return;
-  }
-
   useEffect(() => {
+    if (!isVerified) {
+      router.push("/profile/result?reason=verify");
+      return;
+    }
+    if (!isAvalaiblePermit) {
+      router.push("/profile/result?reason=nopermit");
+      return;
+    }
+
     const fetchCategories = async () => {
       const result = await api.get("/api/categories");
 
@@ -39,26 +33,17 @@ const EventCreate = () => {
 
       const categories = result.data?.["hydra:member"];
 
-      console.log("categories", categories);
-
-      const updatedCategory = categories.map((cat) => {
-        const updatedCat = {
-          label: cat.name,
-          value: cat["@id"],
-          key: cat.id,
-        };
-
-        return updatedCat;
-      });
+      const updatedCategory = categories.map((cat) => ({
+        label: cat.name,
+        value: cat["@id"],
+        key: cat.id,
+      }));
 
       setCategory(updatedCategory);
-      console.log("category result", result);
     };
 
     fetchCategories();
-  }, [user]);
-
-  console.log("category", category);
+  }, [isVerified, isAvalaiblePermit, router]);
 
   return (
     <div className="bg-white p-6 rounded-md">

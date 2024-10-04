@@ -53,17 +53,18 @@ const MyCertificates = () => {
       <Divider />
 
       <Row gutter={[15, 15]}>
-        {certificateData.map((item) => {
+        {certificateData.map((item, idx) => {
           return (
-            <Col span={6}>
+            <Col span={6} key={idx}>
               <Card
                 cover={
                   <img alt="example" src="/assets/certificate/pdf-icon.png" />
                 }
                 actions={[
                   <Link
-                    href={`/pdf/certification/${item.template.id}`}
+                    href={`/pdf/certification/${item?.template?.id}`}
                     target="_blank"
+                    key={item?.template?.id}
                   >
                     Үзэх/Татах
                   </Link>,

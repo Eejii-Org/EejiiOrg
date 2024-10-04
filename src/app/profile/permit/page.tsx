@@ -85,8 +85,8 @@ const ProfilePermit = () => {
     <div className="">
       <Row gutter={[15, 15]}>
         {permitData.map((item, idx) => (
-          <Col span={12}>
-            <Card key={idx}>
+          <Col span={12} key={idx}>
+            <Card>
               <Space direction="vertical">
                 <Flex justify="space-between">
                   <Title level={5}>{item?.name}</Title>
@@ -124,8 +124,8 @@ const ProfilePermit = () => {
         />
 
         <Row gutter={[10, 10]}>
-          {qpayResult?.urls?.map((bank) => (
-            <Col span={3}>
+          {qpayResult?.urls?.map((bank, idx) => (
+            <Col span={3} key={idx}>
               <a data-app={bank.link}>
                 <img
                   src={bank.logo}
