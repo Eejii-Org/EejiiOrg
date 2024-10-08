@@ -79,8 +79,6 @@ const ProfilePermit = () => {
     setQpayResult(result.data?.message);
   };
 
-  console.log("qpayResult", qpayResult);
-
   return (
     <div className="">
       <Row gutter={[15, 15]}>

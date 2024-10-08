@@ -14,9 +14,12 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
   const isVerified = user?.state === "accepted";
   const iconColor = isVerified ? null : "#fa8c16";
 
-  const name = isVolunteer
-    ? `${user?.lastName} ${user?.firstName}`
-    : user?.organization;
+  const firstName = user?.firstName ? user?.firstName : "";
+  const lastName = user?.lastName ? user?.lastName : "";
+
+  console.log("user", user);
+
+  const name = isVolunteer ? `${firstName} ${lastName}` : user?.organization;
 
   return (
     <div>

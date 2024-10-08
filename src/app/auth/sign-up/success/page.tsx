@@ -1,7 +1,7 @@
 "use client";
 import { useState, Suspense } from "react";
 import { ThankYouIllustration } from "@/components";
-import { getVerifyEmail } from "@/actions";
+import { api } from "@/actions";
 import { Button, message } from "antd";
 import { useSearchParams } from "next/navigation";
 
@@ -16,7 +16,9 @@ const Comp = () => {
     setLoading(true);
     if (!email) return;
 
-    await getVerifyEmail(email);
+    console.log("email", email);
+
+    await api.post("/api/users/verificationToken", { email: email });
     message.success("Амжилттай илгээгдлээ!");
     setLoading(false);
   };

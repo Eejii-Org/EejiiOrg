@@ -58,6 +58,8 @@ const Comp = () => {
 
       const result = await api.post("/api/users/verifyEmail", { email, token });
 
+      console.log("result", result);
+
       if (result.success) {
         setSuccess(true);
       } else if (result?.message?.code === 2006) {

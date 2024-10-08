@@ -63,6 +63,8 @@ export const UserStats = ({ user }: { user: any }) => {
     );
   }
 
+  console.log("user", user);
+
   return (
     <Row gutter={[10, 10]}>
       <Col span={8}>

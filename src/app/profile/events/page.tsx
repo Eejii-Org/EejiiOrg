@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/actions";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   PlusCircleOutlined,
   EditOutlined,
@@ -28,14 +29,14 @@ interface DataType {
 
 const { Title, Text } = Typography;
 
-const StateConverter = (isEnabled: boolean) => {
-  console.log("isEnabled", isEnabled);
-  switch (isEnabled) {
-    case true:
-      return <Tag color="green">баталгаажсан</Tag>;
+const StateConverter = (data: boolean) => {
+  console.log("state", data.state);
+  switch (data.state) {
+    case "accepted":
+      return <Tag color="green">Зөвшөөрсөн</Tag>;
       break;
-    case false:
-      return <Tag color="green">Хүсэлт илгээсэн</Tag>;
+    case "pending":
+      return <Tag color="orange">Хүсэлт илгээсэн</Tag>;
       break;
     default:
       return <Tag color="green">Хүсэлт илгээсэн</Tag>;
@@ -46,26 +47,40 @@ const EventList = () => {
   const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const isVolunteer = user?.type === "volunteer";
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const state = searchParams.get("state");
+
+  const fetchEvents = async () => {
+    let result;
+
+    if (isVolunteer) {
+      const stateFilter = !state ? "" : `?state=${state}`;
+      result = await api.get(`/api/me/eventRequests${stateFilter}`);
+    } else {
+      result = await api.get("/api/events?myCreated=true");
+    }
+
+    if (result?.data?.["hydra:member"] as any) {
+      setEvents(result?.data?.["hydra:member"]);
+    }
+  };
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      let result;
-
-      if (isVolunteer) {
-        result = await api.get("/api/events?myJoined=true");
-      } else {
-        result = await api.get("/api/events?myCreated=true");
-      }
-
-      if (result?.data?.["hydra:member"] as any) {
-        setEvents(result?.data?.["hydra:member"]);
-      }
-    };
-
     fetchEvents();
   }, [user, isVolunteer]);
 
-  console.log("events", events);
+  useEffect(() => {
+    fetchEvents();
+  }, [searchParams]);
+
+  const handleStateFilter = (value) => {
+    if (!value) {
+      router.push(`/profile/events`);
+    } else {
+      router.push(`/profile/events?state=${value}`);
+    }
+  };
 
   // event columns
   const volunteerColumns: TableProps<DataType>["columns"] = [
@@ -82,9 +97,9 @@ const EventList = () => {
               className="object-cover rounded-md"
             />
             <div>
-              {record.title}
+              {record.event.title}
               <Text type="secondary" className="block">
-                {record.owner.username}
+                {record.event.owner.organization}
               </Text>
             </div>
           </Space>
@@ -120,7 +135,7 @@ const EventList = () => {
       title: "Одоогийн төлөв",
       dataIndex: "state",
       key: "state",
-      render: (text, record) => <StateConverter />,
+      render: (text, record) => <StateConverter state={text} />,
     },
   ];
 
@@ -216,7 +231,11 @@ const EventList = () => {
     {
       title: "Засах",
       key: "edit",
-      render: (text, record) => <Button size="small" icon={<EditOutlined />} />,
+      render: (text, record) => (
+        <Link href={`/profile/events/edit?slug=${record.slug}`}>
+          <Button size="small" icon={<EditOutlined />} />
+        </Link>
+      ),
     },
   ];
 
@@ -232,22 +251,31 @@ const EventList = () => {
             style={{
               width: 150,
             }}
+            onChange={handleStateFilter}
             options={[
               {
-                value: "Бүгд",
+                value: null,
                 label: "Бүгд",
               },
               {
-                value: "joined",
+                value: "pending",
                 label: "Хүсэлт илгээсэн",
               },
               {
-                value: "Оролцсон",
-                label: "Оролцсон",
+                value: "accepted",
+                label: "Зөвшөөрсөн",
               },
               {
-                value: "Миний Үүсгэсэн",
-                label: "Миний Үүсгэсэн",
+                value: "denied",
+                label: "Татгалзсан",
+              },
+              {
+                value: "cancelled",
+                label: "Цуцлагдсан",
+              },
+              {
+                value: "done",
+                label: "Дууссан",
               },
             ]}
           />

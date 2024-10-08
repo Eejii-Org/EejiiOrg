@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { getCertificate } from "@/actions";
 import { CertificateType } from "@/types";
 
-import { Typography, Divider, Steps, Card, Row, Col } from "antd";
+import { Typography, Divider, Steps, Card, Row, Col, Flex, Button } from "antd";
 const { Meta } = Card;
 
 const { Text } = Typography;
@@ -49,7 +49,11 @@ const MyCertificates = () => {
 
   return (
     <div className="bg-white p-6 rounded-md">
-      <Title level={5}>Миний Сертификатууд</Title>
+      <Flex justify="space-between">
+        <Title level={5}>Миний Сертификатууд</Title>
+        <Button type="primary">Шинээр үүсгэх</Button>
+      </Flex>
+
       <Divider />
 
       <Row gutter={[15, 15]}>

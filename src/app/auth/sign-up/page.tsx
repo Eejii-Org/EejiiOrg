@@ -38,8 +38,10 @@ const SignUp = () => {
     setLoading(true);
     const result = await api.post("/api/register", { ...values });
 
+    console.log("result", result);
+
     if (!result?.success) {
-      message.error(result.message.data);
+      message.error(result.message.message);
     } else {
       message.success("Бүртгэл амжилттай");
       router.push(`/auth/sign-up/success?email=${result.data.email}`);
@@ -78,7 +80,7 @@ const SignUp = () => {
         <Col span={12}>
           <Form.Item
             label="Овог:"
-            name="lastname"
+            name="lastName"
             rules={[
               {
                 required: true,

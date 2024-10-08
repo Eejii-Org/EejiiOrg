@@ -42,14 +42,12 @@ const EventReqiuests = () => {
   const { user } = useAuth();
   const [eventList, setEventList] = useState();
   const [event, setEvent] = useState();
+  const [reload, setReload] = useState();
   const [eventUsers, setEventUsers] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState();
   const searchParams = useSearchParams();
   const eventName = searchParams.get("event");
   const state = searchParams.get("state");
   const router = useRouter();
-
-  console.log("eventName", eventName);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -63,6 +61,17 @@ const EventReqiuests = () => {
     fetchEvents();
   }, [user]);
 
+  const fetchEventUsers = async () => {
+    const stateFilter = !state ? "" : `?state=${state}`;
+    const endpoint = `/api/events/${eventName}/eventUsers${stateFilter}`;
+
+    const result = await api.get(endpoint);
+
+    if (result?.data?.["hydra:member"] as any) {
+      setEventUsers(result?.data?.["hydra:member"]);
+    }
+  };
+
   useEffect(() => {
     const fetchEvent = async () => {
       const endpoint = `/api/events/${eventName}`;
@@ -70,17 +79,6 @@ const EventReqiuests = () => {
 
       if (result?.data) {
         setEvent(result?.data);
-      }
-    };
-
-    const fetchEventUsers = async () => {
-      const stateFilter = !state ? "" : `?state=${state}`;
-      const endpoint = `/api/events/${eventName}/eventUsers${stateFilter}`;
-
-      const result = await api.get(endpoint);
-
-      if (result?.data?.["hydra:member"] as any) {
-        setEventUsers(result?.data?.["hydra:member"]);
       }
     };
 
@@ -95,7 +93,6 @@ const EventReqiuests = () => {
   };
 
   const handleAccept = async (userId) => {
-    console.log("userId", userId);
     const result = await api.put(
       `/api/events/${eventName}/eventUsers/${userId}/accept`
     );
@@ -104,7 +101,17 @@ const EventReqiuests = () => {
       message.warning(result?.message?.message);
     }
 
-    console.log("result", result);
+    fetchEventUsers();
+  };
+
+  const handleSendCertificate = async (id) => {
+    const result = await api.post(
+      `/api/events/${eventName}/eventUsers/${id}/certificate`
+    );
+
+    if (!result.success) {
+      message.warning(result?.message?.message);
+    }
   };
 
   console.log("eventUsers", eventUsers);
@@ -229,7 +236,12 @@ const EventReqiuests = () => {
       render: (text, record) => {
         if (record.state === "accepted") {
           return (
-            <Button size="small" type="primary" icon={<SendOutlined />}>
+            <Button
+              size="small"
+              type="primary"
+              icon={<SendOutlined />}
+              onClick={() => handleSendCertificate(record?.id)}
+            >
               Сертификат олгох
             </Button>
           );

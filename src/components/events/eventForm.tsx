@@ -2,8 +2,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { api } from "@/actions";
-import { useRouter } from "next/navigation";
-
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Button,
   Form,
@@ -161,34 +160,33 @@ const districts = [
 export const EventForm = ({
   initialData,
   categories,
+  btnText,
 }: {
   initialData: EventType;
   categories: CategoryType;
+  btnText: String;
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
+  const param = useSearchParams();
+  const slug = param.get("slug");
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: EventType) => {
     try {
-      // const values = await form.validateFields();
+      let result;
 
-      // setFormData((prevValues) => ({
-      //   ...prevValues,
-      //   ...values,
-      // }));
-
-      console.log("formData", values);
-
-      const result = await api.post("/api/events/new", values);
-
-      console.log("result", result);
+      if (slug) {
+        result = await api.put(`/api/events/${slug}`, values);
+      } else {
+        result = await api.post("/api/events/new", values);
+      }
 
       if (!result.success) {
         message.warning(result?.message?.message);
         return;
       }
 
-      message.success("Амжилттай үүсгэлээ!");
+      message.success("Амжилттай!");
       router.push("/profile/events");
     } catch (info) {
       console.log("Validation Failed:", info);
@@ -485,7 +483,10 @@ export const EventForm = ({
                 label="Хэрэгтэй байгаа сайн дурыхан:"
                 rules={[{ required: true, message: "Тоо оруулна уу" }]}
               >
-                <InputNumber placeholder="Тоо оруулах" />
+                <InputNumber
+                  placeholder="Тоо оруулах"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -494,14 +495,17 @@ export const EventForm = ({
                 label="Доод насны хязгаар"
                 rules={[{ required: true, message: "Тоо оруулна уу" }]}
               >
-                <InputNumber placeholder="Тоо оруулна уу" />
+                <InputNumber
+                  placeholder="Тоо оруулна уу"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </Col>
           </Row>
         </div>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Хүсэлт илгээх
+            {btnText ? btnText : "Үүсгэх"}
           </Button>
         </Form.Item>
       </Form>
