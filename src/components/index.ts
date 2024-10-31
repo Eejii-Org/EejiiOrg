@@ -6,6 +6,7 @@ export * from "./supporters";
 export * from "./profile";
 export * from "./activity";
 export * from "./donate";
+export * from "./certificate";
 
 export * from "./icons";
 
@@ -20,6 +21,7 @@ export * from "./goback";
 export * from "./featuredcarousel";
 export * from "./sharebutton";
 export * from "./ad";
+export * from "./imageUpload";
 
 // Header
 export * from "./greeting";

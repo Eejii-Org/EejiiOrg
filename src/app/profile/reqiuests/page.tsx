@@ -19,11 +19,10 @@ import {
   message,
   Radio,
   Select,
+  Tooltip,
 } from "antd";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { SendOutlined } from "@ant-design/icons";
-
-const { Meta } = Card;
+import { SendOutlined, PlusOutlined, FilePdfOutlined } from "@ant-design/icons";
 
 interface DataType {
   key: string;
@@ -48,6 +47,8 @@ const EventReqiuests = () => {
   const eventName = searchParams.get("event");
   const state = searchParams.get("state");
   const router = useRouter();
+
+  console.log("eventList", eventList);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -112,6 +113,10 @@ const EventReqiuests = () => {
     if (!result.success) {
       message.warning(result?.message?.message);
     }
+
+    message.success("Амжилттай илгээлэй");
+
+    fetchEventUsers();
   };
 
   console.log("eventUsers", eventUsers);
@@ -124,42 +129,6 @@ const EventReqiuests = () => {
     } else {
       router.push(`/profile/reqiuests?event=${eventName}&state=${value}`);
     }
-  };
-
-  const EventInfoBoard = () => {
-    if (!eventName) {
-      return (
-        <Alert
-          className="mt-4"
-          description="Та одоогоор ямарч арга хэмжээ сонгоогүй байна!"
-          type="info"
-          showIcon
-        />
-      );
-    }
-
-    return (
-      <div className="bg-[#e6f4ff] border border-[#91caff] p-4 rounded-md mt-4 bg-gray">
-        <Space size="small" split={<Divider type="vertical" />}>
-          <Space>
-            Бүртгэл эхлэх:
-            <Text>
-              {dayjs(event?.registrationStartTime).format("YYYY.MM.DD")}
-            </Text>
-          </Space>
-          <Space>
-            Бүртгэл хаагдах:
-            <Text>
-              {dayjs(event?.registrationEndTime).format("YYYY.MM.DD")}
-            </Text>
-          </Space>
-          <Space>
-            Одоогийн байдлаар cонгогдсон:
-            <Text>12</Text>
-          </Space>
-        </Space>
-      </div>
-    );
   };
 
   const columns: TableProps<DataType>["columns"] = [
@@ -194,6 +163,7 @@ const EventReqiuests = () => {
       title: "Огноо",
       dataIndex: "createdAt",
       key: "createdAt",
+      align: "center",
       render: (text, record) => {
         return dayjs(text).fromNow();
       },
@@ -211,6 +181,7 @@ const EventReqiuests = () => {
       title: "Хүйс",
       dataIndex: "owner",
       key: "gender",
+      align: "center",
       render: (text, record) => {
         return <div>{text === "f" ? "Эмэгтэй" : "Эрэгтэй"}</div>;
       },
@@ -219,6 +190,7 @@ const EventReqiuests = () => {
       title: "Нас",
       dataIndex: "owner",
       key: "birthday",
+      align: "center",
       render: (text, record) => {
         const age = dayjs().diff(text.birthday, "year");
         return age;
@@ -228,23 +200,53 @@ const EventReqiuests = () => {
       title: "Утас",
       dataIndex: "owner",
       key: "phoneNumber",
+      align: "center",
       render: (text, record) => text.phoneNumber,
     },
     {
+      title: "Сертификат",
       key: "edit",
-      align: "right",
+      align: "center",
       render: (text, record) => {
         if (record.state === "accepted") {
-          return (
-            <Button
-              size="small"
-              type="primary"
-              icon={<SendOutlined />}
-              onClick={() => handleSendCertificate(record?.id)}
-            >
-              Сертификат олгох
-            </Button>
-          );
+          if (record.certificateTemplateCreated) {
+            return (
+              <Space>
+                <Button
+                  size="small"
+                  type="primary"
+                  icon={<FilePdfOutlined />}
+                  onClick={() => handleSendCertificate(record?.id)}
+                  disabled={record.certificateCreated}
+                  ghost
+                />
+
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={() => handleSendCertificate(record?.id)}
+                  disabled={record.certificateCreated}
+                >
+                  {record.certificateCreated ? "Олгогдсон" : "Сертификат олгох"}
+                </Button>
+              </Space>
+            );
+          } else {
+            return (
+              <Link href="/profile/certificates/create">
+                <Tooltip title="Уг сайн дурын арга хэмжээний Сертификат үүсээгүй байгаа тул шинээр үүсгэх шаардлагатай">
+                  <Button
+                    size="small"
+                    ghost
+                    type="primary"
+                    icon={<PlusOutlined />}
+                  >
+                    Сертификат үүсгэх
+                  </Button>
+                </Tooltip>
+              </Link>
+            );
+          }
         } else {
           return (
             <Button

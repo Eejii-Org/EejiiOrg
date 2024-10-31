@@ -9,6 +9,9 @@ import {
   SettingOutlined,
   FilePdfOutlined,
   DollarOutlined,
+  DashboardOutlined,
+  UnorderedListOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -45,7 +48,7 @@ const ProfileLayout = ({
       userType: "all",
       label: (
         <Space>
-          <FilePdfOutlined /> Хянах самбар
+          <DashboardOutlined /> Хянах самбар
         </Space>
       ),
 
@@ -56,7 +59,7 @@ const ProfileLayout = ({
       userType: "all",
       label: (
         <Space>
-          <FilePdfOutlined /> Арга хэмжээнүүд
+          <UnorderedListOutlined /> Арга хэмжээнүүд
         </Space>
       ),
       link: "/profile/events",
@@ -76,7 +79,7 @@ const ProfileLayout = ({
       userType: "partner",
       label: (
         <Space>
-          <FilePdfOutlined /> Төсөл хөтөлбөрүүд
+          <UnorderedListOutlined /> Төсөл хөтөлбөрүүд
         </Space>
       ),
       link: "/profile/projects",
@@ -86,7 +89,7 @@ const ProfileLayout = ({
       userType: "partner",
       label: (
         <Space>
-          <FilePdfOutlined /> Ирсэн хүсэлтүүд
+          <UsergroupAddOutlined /> Ирсэн хүсэлтүүд
         </Space>
       ),
       link: "/profile/reqiuests",

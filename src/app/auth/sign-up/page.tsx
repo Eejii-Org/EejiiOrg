@@ -116,13 +116,11 @@ const SignUp = () => {
                 style={{ width: "100%" }}
               >
                 <Select.Option value="supporter">ХХК</Select.Option>
-                <Select.Option value="volunteer">
+                <Select.Option value="org">
                   Төрийн бус байгууллага
                 </Select.Option>
 
-                <Select.Option value="volunteer">
-                  Төрийн байгууллага
-                </Select.Option>
+                <Select.Option value="nonorg">Төрийн байгууллага</Select.Option>
               </Select>
             </Form.Item>
           </Col>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/providers";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Typography, Divider, message } from "antd";
+import { Typography, Divider, message, Skeleton } from "antd";
 import { api } from "@/actions";
 import { EventForm } from "@/components";
 import dayjs from "dayjs";
@@ -53,8 +53,6 @@ const EventEdit = () => {
   const fetchDetail = async () => {
     const result = await api.get(`/api/events/${slug}`);
 
-    console.log("resultresultresultresult", result);
-
     if (!result.success) return message.warning(result.message.message);
 
     const updatedCategory = result.data?.categories.map((cat) => ({
@@ -79,14 +77,16 @@ const EventEdit = () => {
     fetchDetail();
   }, []);
 
-  if (!detail?.id) return "loading";
-
   return (
     <div className="bg-white p-6 rounded-md">
       <Title level={5}>Арга хэмжээ засах:</Title>
       <Divider />
 
-      <EventForm initialData={detail} categories={category} btnText="Засах" />
+      {!detail?.id ? (
+        <Skeleton active />
+      ) : (
+        <EventForm initialData={detail} categories={category} btnText="Засах" />
+      )}
     </div>
   );
 };

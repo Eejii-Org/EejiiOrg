@@ -5,12 +5,19 @@ import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { getCertificate } from "@/actions";
 import { CertificateType } from "@/types";
-
-import { Typography, Divider, Steps, Card, Row, Col, Flex, Button } from "antd";
+import { api } from "@/actions";
+import {
+  Typography,
+  Divider,
+  Empty,
+  Card,
+  Row,
+  Col,
+  Flex,
+  Button,
+  Skeleton,
+} from "antd";
 const { Meta } = Card;
-
-const { Text } = Typography;
-const { Step } = Steps;
 
 interface DataType {
   key: string;
@@ -24,10 +31,17 @@ interface DataType {
 
 const { Title } = Typography;
 
+const truncateText = (text: string) => {
+  const maxLength = 25;
+  return text?.length > maxLength
+    ? text?.substring(0, maxLength) + "..."
+    : text;
+};
+
 const MyCertificates = () => {
   const { user } = useAuth();
-
-  const [certificateData, setCertificateData] = useState([]);
+  const isVolunteer = user?.type === "volunteer";
+  const [certificateData, setCertificateData] = useState();
 
   useEffect(() => {
     const fetchCertificateData = async () => {
@@ -35,27 +49,27 @@ const MyCertificates = () => {
       const token = getCookie("token");
       if (!token) return;
 
-      const result = await getCertificate(token);
+      let result;
 
-      if (result?.["hydra:member"] as any) {
-        setCertificateData(result?.["hydra:member"]);
+      if (!isVolunteer) {
+        result = await api.get("/api/events/certificateTemplates/");
+        setCertificateData(result?.data);
+      } else {
+        result = await getCertificate(token);
+        if (result?.["hydra:member"] as any) {
+          setCertificateData(result?.["hydra:member"]);
+        }
       }
     };
 
     fetchCertificateData();
   }, [user]);
 
-  console.log("certificateData", certificateData);
-
-  return (
-    <div className="bg-white p-6 rounded-md">
-      <Flex justify="space-between">
-        <Title level={5}>Миний Сертификатууд</Title>
-        <Button type="primary">Шинээр үүсгэх</Button>
-      </Flex>
-
-      <Divider />
-
+  const RednerList = () => {
+    if (!certificateData.length) {
+      return <Empty />;
+    }
+    return (
       <Row gutter={[15, 15]}>
         {certificateData.map((item, idx) => {
           return (
@@ -65,24 +79,58 @@ const MyCertificates = () => {
                   <img alt="example" src="/assets/certificate/pdf-icon.png" />
                 }
                 actions={[
-                  <Link
-                    href={`/pdf/certification/${item?.template?.id}`}
-                    target="_blank"
-                    key={item?.template?.id}
-                  >
-                    Үзэх/Татах
-                  </Link>,
+                  !isVolunteer ? (
+                    <Link
+                      href={`/profile/certificates/edit?slug=${item?.slug}`}
+                      key={`link-volunteer-${item?.slug}`}
+                    >
+                      Засах
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/pdf/certification/${item?.number}`}
+                      target="_blank"
+                      key={`link-${item?.number}`}
+                    >
+                      Татах
+                    </Link>
+                  ),
                 ]}
               >
                 <Meta
-                  title={item?.event?.title}
-                  description={item?.organizationName}
+                  title={
+                    isVolunteer
+                      ? truncateText(item?.event.title)
+                      : truncateText(item?.title)
+                  }
+                  description={
+                    isVolunteer
+                      ? truncateText(item?.template?.organizationName)
+                      : truncateText(item?.organizationName)
+                  }
                 />
               </Card>
             </Col>
           );
         })}
       </Row>
+    );
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-md">
+      <Flex justify="space-between">
+        <Title level={5}>
+          {isVolunteer ? "Миний Сертификатууд" : "Үүсгэсэн сертификатууд"}
+        </Title>
+        <Button type="primary">
+          <Link href="/profile/certificates/create">Шинээр үүсгэх</Link>
+        </Button>
+      </Flex>
+
+      <Divider />
+
+      {!certificateData ? <Skeleton active /> : <RednerList />}
     </div>
   );
 };

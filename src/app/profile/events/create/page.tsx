@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/providers";
 import { useRouter } from "next/navigation";
-import { Typography, Divider, message } from "antd";
+import { Typography, Divider, message, Skeleton } from "antd";
 import { api } from "@/actions";
 import { EventForm } from "@/components";
 
@@ -11,13 +11,14 @@ const { Title } = Typography;
 const EventCreate = () => {
   const router = useRouter();
   const [category, setCategory] = useState([]);
-  const { user, userLoading } = useAuth();
+  const { user } = useAuth();
   const { eventPermit, state } = user;
-  const isVerified = state === "accepted";
+  const checkState = state === "accepted";
   const isAvalaiblePermit = eventPermit > 0;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isVerified) {
+    if (!checkState) {
       router.push("/profile/result?reason=verify");
       return;
     }
@@ -40,17 +41,20 @@ const EventCreate = () => {
       }));
 
       setCategory(updatedCategory);
+      setLoading(false);
     };
 
     fetchCategories();
-  }, [isVerified, isAvalaiblePermit, router]);
+  }, [checkState, isAvalaiblePermit, router]);
+
+  useEffect(() => {}, [state]);
 
   return (
     <div className="bg-white p-6 rounded-md">
       <Title level={5}>Сайн дурын арга хэмжээ үүсгэх:</Title>
       <Divider />
 
-      <EventForm categories={category} />
+      {loading ? <Skeleton active /> : <EventForm categories={category} />}
     </div>
   );
 };

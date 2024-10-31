@@ -13,12 +13,13 @@ import Image from "next/image";
 const EventPage = async ({ params }: { params: { slug: string } }) => {
   const eventData = await getEvent(params.slug);
   const eventUsers = await getEventUsers(params.slug);
-  const eventPartners = eventUsers.filter(
+  const eventPartners = eventUsers?.filter(
     (eventUser: any) => eventUser.userType == "partner"
   );
-  const eventVolunteers = eventUsers.filter(
+  const eventVolunteers = eventUsers?.filter(
     (eventUser: any) => eventUser.userType == "volunteer"
   );
+
   return (
     <MainLayout>
       <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-col md:flex-row gap-16">
@@ -159,11 +160,11 @@ const EventPage = async ({ params }: { params: { slug: string } }) => {
             </div>
             {/* Partner and register details */}
             <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
-              {eventPartners.length !== 0 && (
+              {eventPartners?.length !== 0 && (
                 <>
                   <div className="flex flex-col gap-2">
                     <label className="font-medium">Хамтрагч байгууллага:</label>
-                    {eventPartners.map(
+                    {eventPartners?.map(
                       ({ owner }: { owner: any }, ind: number) => (
                         <div
                           className="flex flex-row gap-2 items-center"

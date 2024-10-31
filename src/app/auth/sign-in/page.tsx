@@ -34,12 +34,12 @@ const SignIn = () => {
         return;
       }
 
-      message.error(result.message?.message);
+      message.error(result.message?.message || result.message);
       setLoading(false);
       return;
     }
 
-    message.success("Амжилттай нэвтэрлээ...");
+    message.success("Нэвтэрч байна, түр хүлээнэ үү...");
     setCookie("token", result.data.token);
     getUser();
     router.push("/profile");

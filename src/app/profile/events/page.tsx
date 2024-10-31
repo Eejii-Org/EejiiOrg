@@ -30,7 +30,6 @@ interface DataType {
 const { Title, Text } = Typography;
 
 const StateConverter = (data: boolean) => {
-  console.log("state", data.state);
   switch (data.state) {
     case "accepted":
       return <Tag color="green">Зөвшөөрсөн</Tag>;
@@ -45,7 +44,7 @@ const StateConverter = (data: boolean) => {
 
 const EventList = () => {
   const { user } = useAuth();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState();
   const isVolunteer = user?.type === "volunteer";
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -82,6 +81,7 @@ const EventList = () => {
     }
   };
 
+  console.log("events", events);
   // event columns
   const volunteerColumns: TableProps<DataType>["columns"] = [
     {
@@ -147,10 +147,13 @@ const EventList = () => {
         <Link href={`/events/${record.slug}`} target="_blank">
           <Space>
             <Image
-              src={"/assets/placeholder.svg"}
+              src={
+                record?.images?.filter((img) => img.type === "event")?.pop()
+                  ?.path || "/assets/placeholder.svg"
+              }
               width={40}
               height={40}
-              className="object-cover rounded-md"
+              className=" rounded-md"
             />
             <div>
               <Text strong>{record.title}</Text>
@@ -211,19 +214,8 @@ const EventList = () => {
       align: "center",
       render: (text, record) => (
         <Link href={`/profile/reqiuests?event=${record?.slug}`}>
-          <Button size="small" icon={<UserSwitchOutlined />}>
-            0
-          </Button>
-        </Link>
-      ),
-    },
-    {
-      title: "Сонгогдсон",
-      key: "edit",
-      render: (text, record) => (
-        <Link href={`/profile/reqiuests?event=${record?.slug}&state=accepted`}>
-          <Button size="small" icon={7}>
-            - Харах
+          <Button size="small" type="primary">
+            {record.eventUsers.length}
           </Button>
         </Link>
       ),
@@ -245,41 +237,44 @@ const EventList = () => {
         <Title level={5}>Миний арга хэмжээнүүд</Title>
 
         <Space>
-          Шүүж харах:
-          <Select
-            defaultValue="Бүгд"
-            style={{
-              width: 150,
-            }}
-            onChange={handleStateFilter}
-            options={[
-              {
-                value: null,
-                label: "Бүгд",
-              },
-              {
-                value: "pending",
-                label: "Хүсэлт илгээсэн",
-              },
-              {
-                value: "accepted",
-                label: "Зөвшөөрсөн",
-              },
-              {
-                value: "denied",
-                label: "Татгалзсан",
-              },
-              {
-                value: "cancelled",
-                label: "Цуцлагдсан",
-              },
-              {
-                value: "done",
-                label: "Дууссан",
-              },
-            ]}
-          />
-          {!isVolunteer && (
+          {isVolunteer ? (
+            <div>
+              Шүүж харах:
+              <Select
+                defaultValue="Бүгд"
+                style={{
+                  width: 150,
+                }}
+                onChange={handleStateFilter}
+                options={[
+                  {
+                    value: null,
+                    label: "Бүгд",
+                  },
+                  {
+                    value: "pending",
+                    label: "Хүсэлт илгээсэн",
+                  },
+                  {
+                    value: "accepted",
+                    label: "Зөвшөөрсөн",
+                  },
+                  {
+                    value: "denied",
+                    label: "Татгалзсан",
+                  },
+                  {
+                    value: "cancelled",
+                    label: "Цуцлагдсан",
+                  },
+                  {
+                    value: "done",
+                    label: "Дууссан",
+                  },
+                ]}
+              />
+            </div>
+          ) : (
             <Link href="/profile/events/create">
               <Button type="primary">
                 <PlusCircleOutlined /> Шинээр үүсгэх
@@ -290,6 +285,7 @@ const EventList = () => {
       </Flex>
 
       <Table
+        loading={events ? false : true}
         pagination={false}
         dataSource={events}
         columns={isVolunteer ? volunteerColumns : partnerColumns}

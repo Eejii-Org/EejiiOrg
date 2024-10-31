@@ -81,8 +81,6 @@ const ProfileEdit = () => {
     };
     const result = await api.post(url, data);
 
-    console.log("result", result);
-
     if (!result.success) {
       return message.warning(result.message.message);
     }

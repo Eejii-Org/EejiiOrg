@@ -70,7 +70,7 @@ export const api = {
     } catch (err) {
       return {
         success: false,
-        message: err?.response?.data,
+        message: err?.response?.data || "An unknown error occurred",
       };
     }
   },

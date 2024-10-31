@@ -1,6 +1,4 @@
 "use client";
-import { useEffect } from "react";
-import { useState } from "react";
 import { api } from "@/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -12,12 +10,10 @@ import {
   Select,
   DatePicker,
   message,
-  Steps,
-  Flex,
   InputNumber,
 } from "antd";
 import { CategoryType, EventType } from "@/types";
-const { Step } = Steps;
+import ImageUpload from "@/components/imageUpload";
 
 const province = [
   {
@@ -172,6 +168,7 @@ export const EventForm = ({
   const slug = param.get("slug");
 
   const onFinish = async (values: EventType) => {
+    console.log("values", values);
     try {
       let result;
 
@@ -193,6 +190,10 @@ export const EventForm = ({
     }
   };
 
+  const handleUploadSuccess = (data: any) => {
+    console.log("handleUploadSuccess data", data);
+  };
+
   return (
     <>
       <Form
@@ -201,7 +202,7 @@ export const EventForm = ({
         initialValues={initialData}
         onFinish={onFinish}
       >
-        <div className="bg-[#f5f5f5] p-6 rounded-lg mb-6">
+        <div>
           <Row gutter={15}>
             <Col span={12}>
               <Form.Item
@@ -301,6 +302,15 @@ export const EventForm = ({
                 ]}
               >
                 <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
+              <Form.Item label="Зураг хуулах:">
+                <ImageUpload
+                  imageType="event"
+                  onUploadSuccess={handleUploadSuccess}
+                />
               </Form.Item>
             </Col>
 

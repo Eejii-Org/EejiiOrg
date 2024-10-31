@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { myCertificate } from "@/actions";
+import { api } from "@/actions";
 import {
   PDFViewer,
   Page,
@@ -14,9 +14,8 @@ import {
 import { MainLayout } from "@/components";
 import dayjs from "dayjs";
 
-import { getCookie } from "cookies-next";
 import QRCode from "qrcode";
-import { message } from "antd";
+import { message, Result, Spin } from "antd";
 
 // Register the font with react-pdf
 Font.register({
@@ -64,9 +63,11 @@ function CertificationPreview({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const getMyCertificate = async () => {
-      const token = getCookie("token");
-      const result = await myCertificate(id, token);
-      setCertData(result);
+      const result = await api.get(`/api/certificates/${id}/byNumber`);
+
+      if (!result.success) return message.warning(result.message.message);
+
+      setCertData(result.data);
     };
 
     getMyCertificate();
@@ -93,7 +94,7 @@ function CertificationPreview({ params }: { params: { id: string } }) {
     };
 
     if (certData?.number) {
-      profileUrl = `https://eejii.org/approved-certificates/${certData?.number}`;
+      profileUrl = `${process.env.NEXT_PUBLIC_DOMAIN}/pdf/certificates/${certData?.number}`;
       generateQRCode(profileUrl);
     }
   }, [certData]);
@@ -288,7 +289,7 @@ function CertificationPreview({ params }: { params: { id: string } }) {
             </Text>
 
             <Text style={styles.description}>
-              For guiding at the National Trauma and Orthopaedic Research Center
+              {certData.template.shortDescription}
             </Text>
 
             <View style={styles.qrcode}>
@@ -320,9 +321,24 @@ function CertificationPreview({ params }: { params: { id: string } }) {
     );
   };
 
+  if (!certData)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spin />
+      </div>
+    );
+
   return (
     <MainLayout>
-      <div style={{ height: "100vh" }}>{certData && withHTML()}</div>
+      {certData ? (
+        <div style={{ height: "100vh" }}>{certData && withHTML()}</div>
+      ) : (
+        <Result
+          status="404"
+          title="Уг сертификат нь манай санд бүртгэлгүй байна"
+          subTitle="Sorry, the page you visited does not exist."
+        />
+      )}
     </MainLayout>
   );
 }
