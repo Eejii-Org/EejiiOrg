@@ -157,10 +157,12 @@ export const EventForm = ({
   initialData,
   categories,
   btnText,
+  eventType,
 }: {
   initialData: EventType;
   categories: CategoryType;
   btnText: String;
+  eventType: String;
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
@@ -168,7 +170,6 @@ export const EventForm = ({
   const slug = param.get("slug");
 
   const onFinish = async (values: EventType) => {
-    console.log("values", values);
     try {
       let result;
 
@@ -235,6 +236,7 @@ export const EventForm = ({
                     width: "100%",
                   }}
                   placeholder="сонгох"
+                  defaultValue={eventType}
                   options={[
                     {
                       label: "Арга хэмжээ",
@@ -245,6 +247,7 @@ export const EventForm = ({
                       value: "volunteering_event",
                     },
                   ]}
+                  disabled
                 />
               </Form.Item>
             </Col>

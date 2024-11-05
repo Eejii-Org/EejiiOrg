@@ -69,11 +69,9 @@ const SignUp = () => {
           placeholder="Та эхлээд хэрэглэгчийн төрлөө сонгоно уу!"
           style={{ width: "100%" }}
         >
-          <Select.Option value="volunteer">
-            Сайн дурын ажилтан (volunteer)
-          </Select.Option>
-          <Select.Option value="supporter">Дэмжигч (supporter)</Select.Option>
-          <Select.Option value="partner">Хамтрагч (partner)</Select.Option>
+          <Select.Option value="volunteer">Сайн дурын ажилтан</Select.Option>
+          <Select.Option value="supporter">Аж ахуй нэгж</Select.Option>
+          <Select.Option value="partner">Төрийн бус байгууллага</Select.Option>
         </Select>
       </Form.Item>
       <Row gutter={15}>
@@ -115,12 +113,13 @@ const SignUp = () => {
                 placeholder="Та Байгууллагын төрөл"
                 style={{ width: "100%" }}
               >
-                <Select.Option value="supporter">ХХК</Select.Option>
-                <Select.Option value="org">
-                  Төрийн бус байгууллага
+                <Select.Option value="private">Хувын хэвшил</Select.Option>
+                <Select.Option value="international">
+                  Олон улсын байгууллага
                 </Select.Option>
-
-                <Select.Option value="nonorg">Төрийн байгууллага</Select.Option>
+                <Select.Option value="goverment">
+                  Төрийн байгууллага
+                </Select.Option>
               </Select>
             </Form.Item>
           </Col>

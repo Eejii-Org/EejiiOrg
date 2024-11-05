@@ -56,7 +56,7 @@ const ProfileLayout = ({
     },
     {
       key: "2",
-      userType: "all",
+      userType: ["partner", "volunteer"],
       label: (
         <Space>
           <UnorderedListOutlined /> Арга хэмжээнүүд
@@ -66,7 +66,7 @@ const ProfileLayout = ({
     },
     {
       key: "certificates",
-      userType: "all",
+      userType: ["partner", "volunteer"],
       label: (
         <Space>
           <FilePdfOutlined /> Сертификат
@@ -76,7 +76,7 @@ const ProfileLayout = ({
     },
     {
       key: "3",
-      userType: "partner",
+      userType: ["partner", "supporter"],
       label: (
         <Space>
           <UnorderedListOutlined /> Төсөл хөтөлбөрүүд
@@ -106,7 +106,7 @@ const ProfileLayout = ({
     },
     {
       key: "6",
-      userType: "partner",
+      userType: ["partner", "supporter"],
       label: (
         <Space>
           <SettingOutlined /> Эрх авах
@@ -128,7 +128,11 @@ const ProfileLayout = ({
 
   // Filter the menu based on the user type
   const filteredMenu = profileMenu.filter(
-    (item) => item.userType === "all" || item.userType === user.type
+    (item) =>
+      item.userType === "all" ||
+      (Array.isArray(item.userType)
+        ? item.userType.includes(user.type)
+        : item.userType === user.type)
   );
 
   return (

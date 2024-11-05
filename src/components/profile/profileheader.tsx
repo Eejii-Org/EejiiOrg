@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserType } from "@/types";
 import {
   ExclamationCircleTwoTone,
@@ -21,6 +21,23 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
   const lastName = user?.lastName ? user?.lastName : "";
   const name = isVolunteer ? `${firstName} ${lastName}` : user?.organization;
   const [imageType, setImageType] = useState<string>();
+  const [verifiedUserType, setVerifiedUserType] = useState<string>("");
+
+  useEffect(() => {
+    switch (user?.type) {
+      case "volunteer":
+        setVerifiedUserType("Сайн дурын ажилтан");
+        break;
+      case "supporter":
+        setVerifiedUserType("Аж ахуй нэгж");
+        break;
+      case "partner":
+        setVerifiedUserType("Төрийн бус байгууллага");
+        break;
+      default:
+        setVerifiedUserType("");
+    }
+  }, [user?.type]);
 
   const handleUploadSuccess = (data: any) => {
     console.log("handleUploadSuccess data", data);
@@ -90,11 +107,8 @@ export const ProfileHeader = ({ user }: { user: UserType }) => {
                 </Tooltip>
 
                 <Tooltip
-                  defaultOpen
                   title={
-                    isVerified
-                      ? `Verified ${capitalizeFirstLetter(user.type)}`
-                      : "Not Verified"
+                    isVerified ? verifiedUserType : "Профайлаа бүрэн бөглөнө үү"
                   }
                   placement="right"
                   color={isVerified ? "blue" : "orange"}

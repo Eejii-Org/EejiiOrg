@@ -14,21 +14,8 @@ const EventEdit = () => {
   const slug = param.get("slug");
   const [detail, setDetail] = useState();
   const [category, setCategory] = useState([]);
-  const { user, userLoading } = useAuth();
-  const { eventPermit, state } = user;
-  const isVerified = state === "accepted";
-  const isAvalaiblePermit = eventPermit > 0;
 
   useEffect(() => {
-    if (!isVerified) {
-      router.push("/profile/result?reason=verify");
-      return;
-    }
-    if (!isAvalaiblePermit) {
-      router.push("/profile/result?reason=nopermit");
-      return;
-    }
-
     const fetchCategories = async () => {
       const result = await api.get("/api/categories");
 
@@ -46,9 +33,7 @@ const EventEdit = () => {
     };
 
     fetchCategories();
-  }, [isVerified, isAvalaiblePermit, router]);
-
-  console.log("slug", slug);
+  }, [router]);
 
   const fetchDetail = async () => {
     const result = await api.get(`/api/events/${slug}`);
@@ -79,7 +64,7 @@ const EventEdit = () => {
 
   return (
     <div className="bg-white p-6 rounded-md">
-      <Title level={5}>Арга хэмжээ засах:</Title>
+      <Title level={5}>Засах:</Title>
       <Divider />
 
       {!detail?.id ? (

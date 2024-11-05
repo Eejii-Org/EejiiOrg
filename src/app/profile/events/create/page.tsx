@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/providers";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Typography, Divider, message, Skeleton } from "antd";
 import { api } from "@/actions";
 import { EventForm } from "@/components";
@@ -12,17 +12,23 @@ const EventCreate = () => {
   const router = useRouter();
   const [category, setCategory] = useState([]);
   const { user } = useAuth();
-  const { eventPermit, state } = user;
+  const { eventPermit, volunteeringEventPermit, state } = user;
   const checkState = state === "accepted";
-  const isAvalaiblePermit = eventPermit > 0;
+  const isEventPermit = eventPermit > 0;
+  const isVolPermit = volunteeringEventPermit > 0;
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const eventType = searchParams.get("type");
 
   useEffect(() => {
     if (!checkState) {
       router.push("/profile/result?reason=verify");
       return;
     }
-    if (!isAvalaiblePermit) {
+    if (
+      (!isVolPermit && eventType === "volunteering_event") ||
+      (!isEventPermit && eventType === "event")
+    ) {
       router.push("/profile/result?reason=nopermit");
       return;
     }
@@ -45,16 +51,24 @@ const EventCreate = () => {
     };
 
     fetchCategories();
-  }, [checkState, isAvalaiblePermit, router]);
+  }, [checkState, isVolPermit, eventType, isEventPermit, router]);
 
   useEffect(() => {}, [state]);
 
   return (
     <div className="bg-white p-6 rounded-md">
-      <Title level={5}>Сайн дурын арга хэмжээ үүсгэх:</Title>
+      <Title level={5}>
+        {eventType === "volunteering_event"
+          ? "Сайн дурын ажил үүсгэх:"
+          : "Арга хэмжээ үүсгэх:"}
+      </Title>
       <Divider />
 
-      {loading ? <Skeleton active /> : <EventForm categories={category} />}
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        <EventForm categories={category} eventType={eventType} />
+      )}
     </div>
   );
 };

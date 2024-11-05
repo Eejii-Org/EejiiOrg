@@ -17,6 +17,7 @@ import {
   Divider,
   Flex,
   Modal,
+  Select,
 } from "antd";
 
 interface DataType {
@@ -36,7 +37,8 @@ const ProfilePermit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [qpayResult, setQpayResult] = useState();
-
+  const [selectedOption, setSelectedOption] = useState<string>();
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
   useEffect(() => {
     const getPermits = async () => {
       const result = await api.get("/api/permits");
@@ -79,34 +81,84 @@ const ProfilePermit = () => {
     setQpayResult(result.data?.message);
   };
 
+  const volunteerEventQuantity = () => {
+    return permitData
+      .filter((item) => item?.type === "volunteering_event")
+      .map((item) => ({
+        label: `${item.quantity} удаагын эрх`, // Concatenate quantity and price
+        value: item?.code,
+        price: item?.price,
+      }));
+  };
+
+  const grantFundraisingQuantity = () => {
+    return permitData
+      .filter((item) => item?.type === "grant_fundraising")
+      .map((item) => ({
+        label: `${item.quantity} удаагын эрх`, // Concatenate quantity and price
+        value: item?.code,
+        price: item?.price,
+      }));
+  };
+
   return (
-    <div className="">
-      <Row gutter={[15, 15]}>
-        {permitData.map((item, idx) => (
-          <Col span={12} key={idx}>
-            <Card>
-              <Space direction="vertical">
-                <Flex justify="space-between">
-                  <Title level={5}>{item?.name}</Title>
-
-                  <div>{item.price}₮</div>
-                </Flex>
-
-                <div dangerouslySetInnerHTML={{ __html: item?.description }} />
-                <Divider />
-                <Button
-                  loading={loading}
-                  block
-                  type="primary"
-                  onClick={() => handleBuy(item.code)}
-                >
-                  Авах
-                </Button>
-              </Space>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+    <div>
+      <div>
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Flex justify="space-between" className="bg-white p-6 rounded-md">
+            <div>
+              <Title level={5}>Хандив "өгөх төсөл"</Title>
+              Та уг эрхийг авсанаар "Хандив өгөх төсөл" үүсгэх эрхтэй болно
+            </div>
+            <Space direction="vertical">
+              <Select
+                options={grantFundraisingQuantity()}
+                onChange={(value) => setSelectedOption(value)}
+                defaultValue="createGrantProject"
+              />
+              <Button
+                loading={btnLoading}
+                block
+                type="primary"
+                onClick={() => handleBuy(selectedOption)} // Pass the selected option's value
+              >
+                {selectedOption
+                  ? grantFundraisingQuantity().find(
+                      (item) => item.value === selectedOption
+                    )?.price
+                  : "Эрх авах"}
+                {/* Show price or default text */}
+              </Button>
+            </Space>
+          </Flex>
+          <Flex justify="space-between" className="bg-white p-6 rounded-md">
+            <div>
+              <Title level={5}>"Сайн дурын ажил" үүсгэх эрх</Title>
+              Та уг эрхийг авсанаар "Сайн дурын ажил" үүсгэх эрхтэй болно
+            </div>
+            <Space direction="vertical">
+              <Select
+                options={volunteerEventQuantity()}
+                onChange={(value) => setSelectedOption(value)}
+                defaultValue="createVolunteeringEvent"
+              />
+              <Button
+                loading={btnLoading}
+                block
+                type="primary"
+                onClick={() => handleBuy(selectedOption)} // Pass the selected option's value
+              >
+                {selectedOption
+                  ? volunteerEventQuantity().find(
+                      (item) => item.value === selectedOption
+                    )?.price
+                  : "Эрх авах"}
+                {/* Show price or default text */}
+              </Button>
+            </Space>
+          </Flex>
+        </Space>
+      </div>
 
       <Modal
         open={isModalOpen}

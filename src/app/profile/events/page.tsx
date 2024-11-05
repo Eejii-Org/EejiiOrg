@@ -10,10 +10,22 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   PlusCircleOutlined,
   EditOutlined,
-  UserSwitchOutlined,
+  CalendarOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
-import { Button, Tag, Table, Typography, Space, Select, Flex } from "antd";
+import {
+  Button,
+  Tag,
+  Table,
+  Typography,
+  Space,
+  Select,
+  Flex,
+  Modal,
+  Result,
+  Row,
+  Col,
+} from "antd";
 
 interface DataType {
   key: string;
@@ -49,6 +61,7 @@ const EventList = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const state = searchParams.get("state");
+  const [showModal, setShowModal] = useState();
 
   const fetchEvents = async () => {
     let result;
@@ -81,7 +94,10 @@ const EventList = () => {
     }
   };
 
-  console.log("events", events);
+  const handleCreateEvent = () => {
+    setShowModal(true);
+  };
+
   // event columns
   const volunteerColumns: TableProps<DataType>["columns"] = [
     {
@@ -220,6 +236,7 @@ const EventList = () => {
         </Link>
       ),
     },
+
     {
       title: "Засах",
       key: "edit",
@@ -275,11 +292,9 @@ const EventList = () => {
               />
             </div>
           ) : (
-            <Link href="/profile/events/create">
-              <Button type="primary">
-                <PlusCircleOutlined /> Шинээр үүсгэх
-              </Button>
-            </Link>
+            <Button type="primary" onClick={handleCreateEvent}>
+              <PlusCircleOutlined /> Шинээр үүсгэх
+            </Button>
           )}
         </Space>
       </Flex>
@@ -291,6 +306,47 @@ const EventList = () => {
         columns={isVolunteer ? volunteerColumns : partnerColumns}
         className="border-t border-[#eee] mt-6"
       />
+
+      <Modal
+        open={showModal}
+        onCancel={() => setShowModal(false)}
+        footer={false}
+        width={700}
+      >
+        <Row gutter={[15, 15]}>
+          <Col span={12}>
+            <Result
+              className="bg-[#f5f5f5]  rounded-md"
+              icon={<CalendarOutlined />}
+              title="Арга хэмжээ"
+              subTitle={`Сайн дурыханыг татан оролцуулах боломжгүй. Танд ${user?.eventPermit} эрх байна.`}
+              extra={[
+                <Link href="/profile/events/create?type=event">
+                  <Button type="primary" key="console">
+                    Шинээр үүсгэх
+                  </Button>
+                </Link>,
+              ]}
+            />
+          </Col>
+
+          <Col span={12}>
+            <Result
+              className="bg-[#f5f5f5]  rounded-md"
+              icon={<UsergroupAddOutlined />}
+              title="Сайн дурын ажил"
+              subTitle={`Сайн дурыханыг татан оролцуулах боломжтой. Танд ${user?.volunteeringEventPermit} эрх байна.`}
+              extra={[
+                <Link href="/profile/events/create?type=volunteering_event">
+                  <Button type="primary" key="console">
+                    Шинээр үүсгэх
+                  </Button>
+                </Link>,
+              ]}
+            />
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 };
