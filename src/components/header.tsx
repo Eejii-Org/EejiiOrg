@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState } from "react";
 import UserGreeting from "@/components/greeting";
 import Image from "next/image";
-import { CaretDown } from "./icons";
 import { MenuOutlined, UserOutlined, DownOutlined } from "@ant-design/icons";
 import { useAuth } from "@/providers";
 import {
@@ -17,7 +16,6 @@ import {
   Drawer,
   List,
   Typography,
-  Divider,
 } from "antd";
 const { Header: AntdHeader } = Layout;
 const { Text } = Typography;

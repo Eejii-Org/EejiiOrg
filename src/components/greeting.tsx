@@ -1,7 +1,24 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon, { UserOutlined, UnlockOutlined } from "@ant-design/icons";
-import { Space, Button, Dropdown, List, Divider } from "antd";
+import { api } from "@/actions";
+import DonateModal from "@/components/donate/donateModal";
+import {
+  Space,
+  Button,
+  Dropdown,
+  List,
+  Divider,
+  Form,
+  Input,
+  Popover,
+  Select,
+  Typography,
+  message,
+} from "antd";
+
+const { Title } = Typography;
 
 const HeartSvg = () => (
   <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 1024 1024">
@@ -13,6 +30,18 @@ const HeartSvg = () => (
 const HeartIcon = () => <Icon component={HeartSvg} />;
 
 const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
+  const [qpayResult, setQpayResult] = useState();
+  const [isModalOpen, setIsModalOpen] = useState();
+  const [btnLoading, setBtnLoading] = useState();
+
+  const [openDonatePop, setOpenDonatePop] = useState();
+
+  useEffect(() => {
+    if (qpayResult) {
+      setIsModalOpen(true);
+    }
+  }, [qpayResult]);
+
   const items = [
     {
       label: <Link href="/profile">Миний профайл</Link>,
@@ -27,13 +56,116 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
     },
   ];
 
+  const sendDonate = async (values: string) => {
+    setBtnLoading(true);
+    const result = await api.post("/api/donate", {
+      amount: values.amount,
+      method: "qpay",
+      email: values.email,
+    });
+
+    console.log("result", result);
+
+    if (!result.success) {
+      message.warning(result?.message?.message);
+      setBtnLoading(false);
+      return;
+    }
+
+    setQpayResult(result.data?.message?.details);
+    setBtnLoading(false);
+    setOpenDonatePop(false);
+  };
+
+  const DonateForm = () => {
+    const [selectedAmount, setSelectedAmount] = useState();
+    const amountOptions = [
+      {
+        label: "5,000₮",
+        value: 5000,
+      },
+      {
+        label: "10,000₮",
+        value: 10000,
+      },
+      {
+        label: "20,000₮",
+        value: 20000,
+      },
+      {
+        label: "50,000₮",
+        value: 50000,
+      },
+      {
+        label: "100,000₮",
+        value: 100000,
+      },
+      {
+        label: "500,000₮",
+        value: 500000,
+      },
+      {
+        label: "Дурын мөнгөн дүн",
+        value: "custom",
+      },
+    ];
+
+    const handleSelectAmount = (val) => {
+      setSelectedAmount(val);
+    };
+
+    console.log("selectedAmount", selectedAmount);
+
+    return (
+      <>
+        <Form
+          layout="vertical"
+          initialValues={{
+            amount: 50000,
+          }}
+          onFinish={sendDonate}
+          className="p-3"
+        >
+          <Title level={5}>Ээжийд хандив илгээх</Title>
+          <Divider />
+          <Form.Item label="Хандивлах мөнгөн дүнгээ сонгоно уу:" name="amount">
+            <Select options={amountOptions} onChange={handleSelectAmount} />
+          </Form.Item>
+          {selectedAmount === "custom" ? (
+            <Form.Item label="Дурын мөнгөн дүн оруулах:">
+              <Input placeholder="" />
+            </Form.Item>
+          ) : null}
+          <Form.Item name="email" label="Имэйл хаяг">
+            <Input placeholder="имэйл хаягаа оруулна уу ..." />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" block htmlType="submit" loading={btnLoading}>
+              Хандив илгээх
+            </Button>
+          </Form.Item>
+        </Form>
+      </>
+    );
+  };
+
   const donateBtn = () => {
     return (
-      <Link href="#">
-        <Button type="primary" ghost icon={<HeartIcon />} block>
-          Хандив илгээх
-        </Button>
-      </Link>
+      <>
+        <Popover content={<DonateForm />} trigger="click" open={!isModalOpen}>
+          <Button type="primary" ghost icon={<HeartIcon />} block>
+            Хандив илгээх
+          </Button>
+        </Popover>
+
+        <DonateModal
+          isDonate
+          openModal={isModalOpen}
+          qpayResult={qpayResult}
+          closeModal={() => setIsModalOpen(false)}
+        />
+      </>
     );
   };
 
