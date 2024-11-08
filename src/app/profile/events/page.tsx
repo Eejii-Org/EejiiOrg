@@ -321,7 +321,10 @@ const EventList = () => {
               title="Арга хэмжээ"
               subTitle={`Сайн дурыханыг татан оролцуулах боломжгүй. Танд ${user?.eventPermit} эрх байна.`}
               extra={[
-                <Link href="/profile/events/create?type=event">
+                <Link
+                  href="/profile/events/create?type=event"
+                  key="Шинээр үүсгэх"
+                >
                   <Button type="primary" key="console">
                     Шинээр үүсгэх
                   </Button>
@@ -337,7 +340,10 @@ const EventList = () => {
               title="Сайн дурын ажил"
               subTitle={`Сайн дурыханыг татан оролцуулах боломжтой. Танд ${user?.volunteeringEventPermit} эрх байна.`}
               extra={[
-                <Link href="/profile/events/create?type=volunteering_event">
+                <Link
+                  href="/profile/events/create?type=volunteering_event"
+                  key="Шинээр үүсгэх"
+                >
                   <Button type="primary" key="console">
                     Шинээр үүсгэх
                   </Button>

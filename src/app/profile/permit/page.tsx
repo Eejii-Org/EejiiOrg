@@ -90,8 +90,8 @@ const ProfilePermit = () => {
         <Space direction="vertical" style={{ width: "100%" }}>
           <Flex justify="space-between" className="bg-white p-6 rounded-md">
             <div>
-              <Title level={5}>"Сайн дурын ажил" үүсгэх эрх</Title>
-              Та уг эрхийг авсанаар "Сайн дурын ажил" үүсгэх эрхтэй болно
+              <Title level={5}>Сайн дурын ажил үүсгэх эрх</Title>
+              Та уг эрхийг авсанаар cайн дурын ажил үүсгэх эрхтэй болно
             </div>
             <Space direction="vertical">
               <Select
