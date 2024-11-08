@@ -153,7 +153,7 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
   const donateBtn = () => {
     return (
       <>
-        <Popover content={<DonateForm />} trigger="click" open={!isModalOpen}>
+        <Popover content={<DonateForm />} trigger="click">
           <Button type="primary" ghost icon={<HeartIcon />} block>
             Хандив илгээх
           </Button>
