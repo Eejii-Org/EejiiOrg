@@ -168,6 +168,7 @@ export const EventForm = ({
   const [form] = Form.useForm();
   const param = useSearchParams();
   const slug = param.get("slug");
+  form.setFieldsValue({ type: eventType });
 
   const onFinish = async (values: EventType) => {
     try {

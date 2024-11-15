@@ -217,12 +217,19 @@ const EventList = () => {
       title: "Төлөв",
       dataIndex: "isEnabled",
       key: "isEnabled",
-      render: (text, record) =>
-        text ? (
+      render: (text, record) => {
+        const done = "done"; // Make sure this value matches your actual condition
+
+        if (record.state === done) {
+          return <Tag color="blue">Дууссан</Tag>;
+        }
+
+        return record.isEnabled ? (
           <Tag color="green">Нийтлэгдсэн</Tag>
         ) : (
           <Tag color="warning">Хянагдаж байна</Tag>
-        ),
+        );
+      },
     },
     {
       title: "Хүсэлтүүд",

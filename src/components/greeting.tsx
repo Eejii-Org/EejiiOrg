@@ -34,8 +34,6 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState();
   const [btnLoading, setBtnLoading] = useState();
 
-  const [openDonatePop, setOpenDonatePop] = useState();
-
   useEffect(() => {
     if (qpayResult) {
       setIsModalOpen(true);
@@ -64,8 +62,6 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
       email: values.email,
     });
 
-    console.log("result", result);
-
     if (!result.success) {
       message.warning(result?.message?.message);
       setBtnLoading(false);
@@ -74,7 +70,7 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
 
     setQpayResult(result.data?.message?.details);
     setBtnLoading(false);
-    setOpenDonatePop(false);
+    setIsModalOpen(false);
   };
 
   const DonateForm = () => {
@@ -128,15 +124,26 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
         >
           <Title level={5}>Ээжийд хандив илгээх</Title>
           <Divider />
-          <Form.Item label="Хандивлах мөнгөн дүнгээ сонгоно уу:" name="amount">
+          <Form.Item
+            label="Хандивлах мөнгөн дүнгээ сонгоно уу:"
+            name="amount"
+            rules={[{ required: true, message: "Заавал бөглөх!" }]}
+          >
             <Select options={amountOptions} onChange={handleSelectAmount} />
           </Form.Item>
           {selectedAmount === "custom" ? (
-            <Form.Item label="Дурын мөнгөн дүн оруулах:">
+            <Form.Item
+              label="Дурын мөнгөн дүн оруулах:"
+              rules={[{ required: true, message: "Заавал бөглөх!" }]}
+            >
               <Input placeholder="" />
             </Form.Item>
           ) : null}
-          <Form.Item name="email" label="Имэйл хаяг">
+          <Form.Item
+            name="email"
+            label="Имэйл хаяг"
+            rules={[{ required: true, message: "Заавал бөглөх!" }]}
+          >
             <Input placeholder="имэйл хаягаа оруулна уу ..." />
           </Form.Item>
 

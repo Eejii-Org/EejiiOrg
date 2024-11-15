@@ -1,7 +1,19 @@
 import { getCategories, getEvents, getFeaturedEvents } from "@/actions";
-import { EventsBody, MainLayout } from "@/components";
+import { EventsBody, MainLayout, FeaturedSlider } from "@/components";
 import { EventType } from "@/types";
 import Image from "next/image";
+import { Carousel, Typography } from "antd";
+
+const { Title } = Typography;
+
+const contentStyle = {
+  margin: 0,
+  height: "160px",
+  color: "#fff",
+  lineHeight: "160px",
+  textAlign: "center",
+  background: "#364d79",
+};
 
 const EventsPage = async ({
   searchParams,
@@ -19,7 +31,9 @@ const EventsPage = async ({
   console.log("categories", categories);
   return (
     <MainLayout>
-      <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
+      <FeaturedSlider />
+
+      {/* <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
         <div className="flex max-md:flex-col gap-5 md:gap-9">
           <div className="absolute top-0 left-0 h-48 md:h-80 w-screen">
             <Image
@@ -40,7 +54,7 @@ const EventsPage = async ({
             category={category}
           />
         </div>
-      </div>
+      </div> */}
     </MainLayout>
   );
 };

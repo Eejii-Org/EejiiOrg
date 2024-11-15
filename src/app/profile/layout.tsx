@@ -21,6 +21,8 @@ const ProfileLayout = ({
   children: React.ReactNode;
 }>) => {
   const { user, userLoading } = useAuth();
+
+  console.log("userwwwwww", user);
   const router = useRouter();
   const pathname = usePathname();
   // Define routes that are restricted for 'volunteer' users

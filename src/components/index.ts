@@ -22,6 +22,7 @@ export * from "./featuredcarousel";
 export * from "./sharebutton";
 export * from "./ad";
 export * from "./imageUpload";
+export * from "./featuredSlider";
 
 // Header
 export * from "./greeting";
