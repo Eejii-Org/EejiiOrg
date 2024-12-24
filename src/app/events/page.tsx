@@ -1,60 +1,245 @@
-import { getCategories, getEvents, getFeaturedEvents } from "@/actions";
-import { EventsBody, MainLayout, FeaturedSlider } from "@/components";
+"use client";
+import { useState, useEffect } from "react";
+import { api } from "@/actions";
+import { MainLayout, FeaturedSlider } from "@/components";
 import { EventType } from "@/types";
-import Image from "next/image";
-import { Carousel, Typography } from "antd";
+import {
+  Typography,
+  Row,
+  Col,
+  Input,
+  Select,
+  Space,
+  Button,
+  Card,
+  Avatar,
+  Tooltip,
+  Radio,
+  Flex,
+  message,
+} from "antd";
+import dayjs from "dayjs";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UsergroupAddOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
+const { Meta } = Card;
+const { Search } = Input;
+const options = [
+  { label: "Бүгд", value: null },
+  { label: "Арга хэмжээ", value: "event" },
+  { label: "Сайн дурын ажил", value: "volunteering_event" },
+];
 
-const contentStyle = {
-  margin: 0,
-  height: "160px",
-  color: "#fff",
-  lineHeight: "160px",
-  textAlign: "center",
-  background: "#364d79",
-};
+const EventsPage = ({ searchParams }) => {
+  // Default parameters from URL search
+  const { type = "", search = "", category = "", limit = 12 } = searchParams;
+  const router = useRouter();
 
-const EventsPage = async ({
-  searchParams,
-}: {
-  searchParams: { page: number; q: string; t: string; category: string };
-}) => {
-  const { page = 1, q = "", t = "event", category = "" } = searchParams;
-  const { data: eventsData } = await getEvents(page, q, t, category);
-  const { data: featuredEventsData } = await getFeaturedEvents();
-  const categories = await getCategories();
-  const events: EventType[] = eventsData?.["hydra:member"];
-  const featuredEvents: EventType[] = featuredEventsData?.["hydra:member"];
-  const lastPageIndex = eventsData?.["hydra:meta"].pagination.last;
+  // States for fetched data
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [featured, setFeatured] = useState<any[]>([]);
+  const [eventloading, setEventLoading] = useState(true);
 
-  console.log("categories", categories);
+  // Fetch events data based on filters
+  const fetchEvent = async () => {
+    const qType = type && `&type=${type}`;
+    const qCat = category && `&categories.slug=${category}`;
+    const result = await api.get(
+      `/api/events?isEnabled=true&limit=${limit}&order[startTime]=desc${qType}${qCat}`
+    );
+
+    if (!result.success) {
+      return message.warning(result.message.message);
+    }
+
+    setEvents(result?.data?.["hydra:member"] || []);
+    setEventLoading(false);
+  };
+
+  // Fetch categories
+  const fetchCategories = async () => {
+    const result = await api.get("/api/categories");
+
+    if (!result.success) {
+      return message.warning(result.message.message);
+    }
+
+    setCategories(result?.data?.["hydra:member"] || []);
+  };
+
+  // Fetch featured Event
+  const fetchFeatured = async () => {
+    const result = await api.get(
+      "/api/events?isEnabled=true&order[approved_at]=desc&limit=3&isFeatured=true"
+    );
+
+    if (!result.success) {
+      return message.warning(result.message.message);
+    }
+
+    console.log("result", result);
+
+    setFeatured(result?.data?.["hydra:member"] || []);
+  };
+
+  console.log("fraetured", featured);
+
+  // Load initial data on page load or filter change
+  useEffect(() => {
+    setEventLoading(true);
+    fetchEvent();
+    fetchCategories();
+    fetchFeatured();
+  }, [type, search, category, limit]);
+
+  // Handle changing type filter
+  const handleChangeType = (e) => {
+    const value = e.target.value;
+    const currentParams = new URLSearchParams(window.location.search);
+
+    setEventLoading(true);
+    if (!value) {
+      currentParams.delete("type");
+    } else {
+      currentParams.set("type", value);
+    }
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
+  };
+
+  // Handle category selection
+  const handleSelectCategory = (value) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    setEventLoading(true);
+
+    if (!value) {
+      currentParams.delete("category.slug");
+    } else {
+      currentParams.set("category.slug", value);
+    }
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
+  };
+
+  // Handle loading more events
+  const handleLoadMore = () => {
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentLimit = parseInt(currentParams.get("limit") || "12", 10);
+    currentParams.set("limit", currentLimit + 12);
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
+  };
+
+  // Render event list
+  const RenderList = () => {
+    return (
+      <Row gutter={[20, 15]} className="mt-6">
+        {events.map((item) => (
+          <Col span={6} key={item.id}>
+            {console.log("item")}
+            <Card
+              cover={
+                <Link href={"/events/" + item.slug}>
+                  <img
+                    alt="example"
+                    src={item.images[0]?.path || "/assets/placeholder.svg"}
+                    style={{ width: "100%", height: 200, objectFit: "cover" }}
+                  />
+                </Link>
+              }
+              className="shadow-sm"
+              actions={[
+                <Space key="volunteers">
+                  <UsergroupAddOutlined />
+                  {item?.maxVolunteers}
+                </Space>,
+                <div key="date">
+                  {dayjs(item?.endTime).format("YYYY.MM.DD")}
+                </div>,
+              ]}
+            >
+              <Meta
+                avatar={
+                  <Tooltip title={item?.owner?.organization}>
+                    <Avatar src={item?.images[0]?.path} />
+                  </Tooltip>
+                }
+                title={item.title}
+                description={
+                  <div style={{ minHeight: "48px", overflow: "hidden" }}>
+                    {item?.shortDescription?.length > 100
+                      ? `${item?.shortDescription.slice(0, 50)}...`
+                      : item?.shortDescription}
+                  </div>
+                }
+              />
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    );
+  };
+
   return (
     <MainLayout>
-      <FeaturedSlider />
+      <FeaturedSlider featured={featured} />
 
-      {/* <div className="container max-md:mt-5 pb-[40px] md:py-[60px]">
-        <div className="flex max-md:flex-col gap-5 md:gap-9">
-          <div className="absolute top-0 left-0 h-48 md:h-80 w-screen">
-            <Image
-              src="/assets/event/banner.webp"
-              fill
-              alt="event-banner"
-              className="object-cover"
-            />
-          </div>
-          <EventsBody
-            pageIndex={page}
-            lastPageIndex={lastPageIndex}
-            events={events}
-            featuredEvents={featuredEvents}
-            t={t}
-            q={q}
-            categories={categories}
-            category={category}
-          />
+      <div className="bg-[#f5f5f5] pt-8">
+        <div className="container">
+          <Space direction="vertical" style={{ width: "100%" }}>
+            <Title level={4}>Арга хэмжээнүүд</Title>
+
+            <div className="flex justify-between">
+              <Radio.Group
+                options={options}
+                defaultValue={null}
+                optionType="button"
+                buttonStyle="solid"
+                onChange={handleChangeType}
+              />
+
+              <Space>
+                <Search placeholder="Search..." />
+                <Select
+                  allowClear
+                  style={{ width: 220 }}
+                  placeholder="Ангилал сонгох"
+                  onChange={handleSelectCategory}
+                  options={categories.map((item) => ({
+                    label: item.name,
+                    value: item.slug,
+                  }))}
+                />
+              </Space>
+            </div>
+          </Space>
+
+          {eventloading ? (
+            <Row gutter={[20, 15]} className="mt-6">
+              <Col span={6}>
+                <Card loading={true} />
+              </Col>
+              <Col span={6}>
+                <Card loading={true} />
+              </Col>
+              <Col span={6}>
+                <Card loading={true} />
+              </Col>
+              <Col span={6}>
+                <Card loading={true} />
+              </Col>
+            </Row>
+          ) : (
+            <RenderList />
+          )}
+
+          <Flex justify="center" className="py-10">
+            <Button onClick={handleLoadMore} type="primary">
+              Цааш үзэх
+            </Button>
+          </Flex>
         </div>
-      </div> */}
+      </div>
     </MainLayout>
   );
 };

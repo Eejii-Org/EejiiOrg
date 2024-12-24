@@ -26,7 +26,7 @@ const links = [
     label: "Төсөл хөтөлбөр",
   },
   {
-    link: "/events?page=1&t=event",
+    link: "/events?limit=12",
     label: "Сайн дурын ажилууд",
   },
 
@@ -59,76 +59,83 @@ export const Header = () => {
   };
 
   return (
-    <AntdHeader className="shadow-sm p-0 z-50 fixed w-full bg-white top-0">
-      <div className="container">
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Link href="/">
-              <div className="relative w-[168px] h-[42px]">
-                <Image
-                  src="/assets/logo.png"
-                  alt="foundation Logo"
-                  fill
-                  objectFit="contain"
-                />
-              </div>
-            </Link>
-          </Col>
-          <Col className="hidden md:block">
-            <Space>
-              {links.map((link, index) => {
-                return (
-                  <Link
-                    href={link?.link}
-                    key={index}
-                    className="px-4 text-lg font-semibold"
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-
-              <Dropdown menu={{ items }} placement="bottomRight" arrow>
-                <a href="#" className="px-4 text-lg font-semibold">
-                  Бид
-                  <DownOutlined style={{ fontSize: "10px", paddingLeft: 5 }} />
-                </a>
-              </Dropdown>
-            </Space>
-          </Col>
-
-          <Col className="hidden md:block">
-            {userLoading ? (
-              <Skeleton.Input active />
-            ) : (
-              <UserGreeting user={user} />
-            )}
-          </Col>
-
-          <Col className="md:hidden sm:block">
-            <Button onClick={showDrawer}>
-              <MenuOutlined />
-            </Button>
-          </Col>
-        </Row>
+    <>
+      <div className="fixed w-full bg-white top-0 bg-red-600 h-8 text-white text-sm text-center leading-8 z-50">
+        (Туршилтын хувилбар) Хөгжүүлэлт хийгдэж байна. Хэрэв та алдаа олж
+        илрүүлбэл бидэнд мэдэгдэнэ үү!
       </div>
+      <AntdHeader className="shadow-sm p-0 z-50 fixed w-full bg-white top-8">
+        <div className="container">
+          <Row justify="space-between" align="middle">
+            <Col>
+              <Link href="/">
+                <div className="relative w-[168px] h-[42px]">
+                  <Image
+                    src="/assets/logo.png"
+                    alt="foundation Logo"
+                    fill
+                    objectFit="contain"
+                  />
+                </div>
+              </Link>
+            </Col>
+            <Col className="hidden md:block">
+              <Space>
+                {links.map((link, index) => {
+                  return (
+                    <Link
+                      href={link?.link}
+                      key={index}
+                      className="px-4 text-lg font-semibold"
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
 
-      <Drawer title="Үндсэн цэс" open={open} onClose={onClose} width={350}>
-        {userLoading ? (
-          <Skeleton.Input active />
-        ) : (
-          <UserGreeting user={user} full />
-        )}
+                <Dropdown menu={{ items }} placement="bottomRight" arrow>
+                  <a href="#" className="px-4 text-lg font-semibold">
+                    Бид
+                    <DownOutlined
+                      style={{ fontSize: "10px", paddingLeft: 5 }}
+                    />
+                  </a>
+                </Dropdown>
+              </Space>
+            </Col>
 
-        <List
-          dataSource={links}
-          renderItem={(item) => (
-            <List.Item>
-              <Link href={item.link}>{item.label}</Link>
-            </List.Item>
+            <Col className="hidden md:block">
+              {userLoading ? (
+                <Skeleton.Input active />
+              ) : (
+                <UserGreeting user={user} />
+              )}
+            </Col>
+
+            <Col className="md:hidden sm:block">
+              <Button onClick={showDrawer}>
+                <MenuOutlined />
+              </Button>
+            </Col>
+          </Row>
+        </div>
+        <Drawer title="Үндсэн цэс" open={open} onClose={onClose} width={350}>
+          {userLoading ? (
+            <Skeleton.Input active />
+          ) : (
+            <UserGreeting user={user} full />
           )}
-        />
-      </Drawer>
-    </AntdHeader>
+
+          <List
+            dataSource={links}
+            renderItem={(item) => (
+              <List.Item>
+                <Link href={item.link}>{item.label}</Link>
+              </List.Item>
+            )}
+          />
+        </Drawer>
+      </AntdHeader>
+    </>
   );
 };

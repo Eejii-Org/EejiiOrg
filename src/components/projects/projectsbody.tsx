@@ -277,7 +277,7 @@ const FeaturedCarousel = ({ featured }: { featured: EventType[] }) => {
             alt={"Picture-" + event.title}
           />
           <h3 className="relative z-10 font-medium text-md md:text-xl text-white text-center">
-            {event.owner.username}
+            {event.owner?.username}
           </h3>
           <h2 className="relative z-10 font-medium text-xl md:text-3xl text-white text-center">
             {event.title}

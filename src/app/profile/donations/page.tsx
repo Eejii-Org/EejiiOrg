@@ -6,7 +6,7 @@ import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { api } from "@/actions";
 import dayjs from "dayjs";
-
+import { formatPrice, toDateString } from "@/utils";
 import { CloudDownloadOutlined } from "@ant-design/icons";
 import { Button, Tag, Table, Typography, Divider, message } from "antd";
 
@@ -40,7 +40,11 @@ const columns: TableProps<DataType>["columns"] = [
   {
     title: "Мөнгөн дүн",
     key: "amount",
-    dataIndex: "amount",
+    render: (index, record) => {
+      console.log("index", +index.amount);
+
+      return formatPrice(index.amount ?? 0, "MNT");
+    },
   },
   {
     title: "Гүйлгээ",

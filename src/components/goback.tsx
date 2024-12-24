@@ -9,7 +9,7 @@ export const GoBack = ({ children }: { children?: React.ReactNode }) => {
       onClick={() => window.history.back()}
       className="flex flex-row gap-2 items-center"
     >
-      <div className="p-2 bg-white rounded-full border">
+      <div className="p-1.5 bg-white rounded-full border">
         <ArrowLeft color="#000000" />
       </div>
       {children && children}

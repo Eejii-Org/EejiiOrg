@@ -101,16 +101,18 @@ const UserGreeting = ({ user, full }: { user: any; full?: boolean }) => {
         value: 500000,
       },
       {
+        label: "10₮",
+        value: 10,
+      },
+      {
         label: "Дурын мөнгөн дүн",
         value: "custom",
       },
     ];
 
-    const handleSelectAmount = (val) => {
+    const handleSelectAmount = (val: number) => {
       setSelectedAmount(val);
     };
-
-    console.log("selectedAmount", selectedAmount);
 
     return (
       <>

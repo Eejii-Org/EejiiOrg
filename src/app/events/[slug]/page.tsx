@@ -1,223 +1,299 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getEvent, getEventUsers } from "@/actions";
-import {
-  Ad,
-  Button,
-  GoBack,
-  MainLayout,
-  ParticipateButton,
-  ShareButton,
-} from "@/components";
+import { GoBack, MainLayout, ParticipateButton } from "@/components";
 import { toDateString, toShortDate } from "@/utils";
 import Image from "next/image";
+import {
+  Row,
+  Col,
+  Space,
+  Typography,
+  Divider,
+  Tag,
+  Flex,
+  List,
+  Avatar,
+  Tooltip,
+} from "antd";
+import { TagOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
-const EventPage = async ({ params }: { params: { slug: string } }) => {
-  const eventData = await getEvent(params.slug);
-  const eventUsers = await getEventUsers(params.slug);
-  const eventPartners = eventUsers?.filter(
-    (eventUser: any) => eventUser.userType == "partner"
-  );
-  const eventVolunteers = eventUsers?.filter(
-    (eventUser: any) => eventUser.userType == "volunteer"
-  );
+const { Title, Text } = Typography;
+
+const EventPage = ({ params }: { params: { slug: string } }) => {
+  const [eventData, setEventData] = useState<any>(null);
+  const [eventUsers, setEventUsers] = useState<any[]>([]);
+  const [eventPartners, setEventPartners] = useState<any[]>([]);
+  const [eventVolunteers, setEventVolunteers] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const event = await getEvent(params.slug);
+        const users = await getEventUsers(params.slug);
+
+        setEventData(event);
+        setEventUsers(users);
+        setEventPartners(
+          users?.filter((user: any) => user.userType === "partner")
+        );
+        setEventVolunteers(
+          users?.filter((user: any) => user.userType === "volunteer")
+        );
+      } catch (error) {
+        console.error("Failed to fetch event data:", error);
+      }
+    };
+
+    fetchData();
+  }, [params.slug]);
+
+  if (!eventData) {
+    return <div>Loading...</div>;
+  }
+
+  const mainImage = eventData.images.filter(
+    (image) => image.type === "main"
+  )[0];
+
+  const ownerProfileImage = eventData.owner.images.filter(
+    (image) => image.type === "profile"
+  )[0];
+
+  const backgroundImage = mainImage
+    ? `url(${mainImage.path})`
+    : "url('/assets/placeholder.svg')";
+
+  const EventState = () => {
+    if (eventData.state === "done") {
+      return <Tag color="blue">Дууссан</Tag>;
+    }
+
+    return eventData.isEnabled ? (
+      <Tag color="green">Нийтлэгдсэн</Tag>
+    ) : (
+      <Tag color="warning">Хянагдаж байна</Tag>
+    );
+  };
+
+  const PartnerList = () => {
+    if (!eventPartners || eventPartners?.length === 0) {
+      return null; // Handle the case where there are no partners
+    }
+
+    return (
+      <div>
+        {eventPartners.map(({ owner }: { owner: any }, ind: number) => (
+          <div className="flex flex-row gap-2 items-center" key={ind}>
+            <Image
+              src={owner.images?.[0]?.path || "/assets/placeholder.svg"}
+              width={36}
+              height={36}
+              className="object-cover"
+              alt="OwnerProfile"
+            />
+            <h3 className="text-lg font-semibold text-black/70">
+              {owner.username || "Unknown User"}
+            </h3>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <MainLayout>
-      <div className="container max-md:mt-5 pb-[40px] md:py-[60px] flex flex-col md:flex-row gap-16">
-        {/* Left Section for Event Detail */}
-        <div className="flex flex-1 flex-col gap-6">
-          {/* Title And Date */}
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-row items-center gap-4">
-              <GoBack />
-              <h1 className="text-lg md:text-2xl font-semibold">
-                {eventData.title}
-              </h1>
-            </div>
-            <h2 className="text-lg text-tertiary">
-              {toDateString(eventData.startTime) +
-                " - " +
-                toDateString(eventData.endTime)}
-            </h2>
-          </div>
-          {/* Content Hero Image */}
-          <div className="relative h-[448px] rounded-2xl overflow-hidden">
-            <Image
-              src={
-                eventData.images?.[0]?.path
-                  ? eventData.images?.[0]?.path
-                  : "/assets/placeholder.svg"
-              }
-              fill
-              alt={"Hero"}
-              className="object-contain bg-white"
-            />
-          </div>
-          {/* Content Categories */}
-          {eventData.categories && (
-            <div className="flex flex-row gap-6 flex-wrap">
-              {eventData.categories.map((category: any, ind: number) => (
+      <div className="bg-[#f5f5f5] py-10">
+        <div className="container">
+          <Row gutter={[15, 15]}>
+            <Col span={16}>
+              <div className="bg-white border p-8 rounded-2xl">
+                <Space className="mb-5">
+                  <GoBack />
+                  <div>
+                    <Title level={4} className="!mb-0">
+                      {eventData.title}
+                    </Title>
+
+                    <Space>
+                      <Text>
+                        {eventData.type === "volunteering_event"
+                          ? "Сайн дурын арга хэмжээ"
+                          : "Арга хэмжээ"}
+                      </Text>
+
+                      <Text>
+                        {dayjs(eventData.startTime).format("(YYYY.MM.DD - ")}
+                        {dayjs(eventData.endTime).format("YYYY.MM.DD)")}
+                      </Text>
+                    </Space>
+                    <Text></Text>
+                  </div>
+                </Space>
+
                 <div
-                  className=" px-3 py-[2px] rounded-full border border-primary text-primary"
-                  key={ind}
-                >
-                  {category.name}
-                </div>
-              ))}
-            </div>
-          )}
+                  style={{
+                    backgroundImage: backgroundImage,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                  className="h-[448px]"
+                />
 
-          {/* Content Body */}
-          <div className="flex flex-col gap-8 items-start">
-            <div className="text-lg font-bold text-primary px-4 py-[14px] border-b border-primary">
-              Танилцуулга
-            </div>
-            <div
-              className="w-full"
-              dangerouslySetInnerHTML={{ __html: eventData.description }}
-            ></div>
-            {/* <p className="w-full">{eventData.description || ""}</p> */}
-          </div>
-          {/* Content Medias */}
-          {eventData.media.length !== 0 && (
-            <div className="flex flex-col gap-5 pt-8">
-              <h3 className="text-2xl font-semibold">Арга хэмжээний мэдээ</h3>
-              <div className="flex bg-white rounded-2xl p-4">
-                <table className="flex-1">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="pb-3 text-left">Нийтлэгч</th>
-                      <th className="pb-3 text-left">Огноо</th>
-                      <th className="pb-3 text-left">Гарчиг</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {eventData.media.map((media: any, index: number) => (
-                      <tr className="border-b" key={index}>
-                        <td className="flex flex-row items-center gap-3 py-3 font-semibold">
-                          <Image
-                            src={
-                              media.images[0].path || "/assets/placeholder.svg"
-                            }
-                            width={40}
-                            height={40}
-                            alt={"User-Image"}
-                            className="object-cover"
-                          />
-                          {media.title}
-                        </td>
-                        <td className="text-md py-3">
-                          {toShortDate(media.createdAt)}
-                        </td>
-                        <td className="text-md py-3">{media.description}</td>
-                      </tr>
+                {/* Content Categories */}
+                {eventData.categories && (
+                  <Flex gap="4px 4px" wrap className="mt-4">
+                    <span>Ангилал: </span>
+                    {eventData.categories.map((category: any, ind: number) => (
+                      <Tag key={ind} icon={<TagOutlined />}>
+                        {category.name}
+                      </Tag>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+                  </Flex>
+                )}
 
-          {/* Share Content */}
-          <div className="pt-6 flex flex-col gap-6">
-            <h4 className="font-medium text-xl">Бусадтай хуваалцаарай!</h4>
-            <ShareButton />
-          </div>
-        </div>
-        {/* Right Section for Event Detail */}
-        <div className="md:w-[360px] flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row md:flex-col gap-4">
-            <div className="flex sm:hidden md:flex border border-primary items-center justify-center rounded-full font-semibold text-center h-min">
-              {eventData.type == "volunteering_event"
-                ? "Сайн дурын арга хэмжээ"
-                : "Арга хэмжээ"}
-            </div>
-            {/* Owner */}
-            <div className="bg-white border p-5 rounded-2xl flex-1 flex flex-col items-center justify-center gap-2">
-              {eventData?.owner && (
-                <>
-                  <h4 className="text-lg font-semibold">Зохион байгуулагч</h4>
-                  <div className="flex flex-row gap-2 items-center justify-center">
-                    <Image
-                      src={
-                        eventData.owner.images?.[0]?.path ||
-                        "/assets/placeholder.svg"
-                      }
-                      width={36}
-                      height={36}
-                      className="object-cover"
-                      alt={"OwnerProfile"}
-                    />
-                    <h3 className="text-lg font-semibold text-black/70">
-                      {eventData.owner.username}
+                <Divider />
+
+                {/* Content Body */}
+                <div
+                  className="w-full"
+                  dangerouslySetInnerHTML={{ __html: eventData.description }}
+                />
+
+                {/* Content Medias */}
+                {eventData.media.length !== 0 && (
+                  <div className="flex flex-col gap-5 pt-8">
+                    <h3 className="text-2xl font-semibold">
+                      Арга хэмжээний мэдээ
                     </h3>
+                    <div className="flex bg-white rounded-2xl p-4">
+                      <table className="flex-1">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="pb-3 text-left">Нийтлэгч</th>
+                            <th className="pb-3 text-left">Огноо</th>
+                            <th className="pb-3 text-left">Гарчиг</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {eventData.media.map((media: any, index: number) => (
+                            <tr className="border-b" key={index}>
+                              <td className="flex flex-row items-center gap-3 py-3 font-semibold">
+                                <Image
+                                  src={
+                                    media.images[0].path ||
+                                    "/assets/placeholder.svg"
+                                  }
+                                  width={40}
+                                  height={40}
+                                  alt={"User-Image"}
+                                  className="object-cover"
+                                />
+                                {media.title}
+                              </td>
+                              <td className="text-md py-3">
+                                {toShortDate(media.createdAt)}
+                              </td>
+                              <td className="text-md py-3">
+                                {media.description}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </>
-              )}
-
-              <div className={`w-full ${eventData?.owner ? "mt-4" : ""}`}>
-                <ParticipateButton slug={params.slug} />
+                )}
               </div>
-            </div>
-            {/* Partner and register details */}
-            <div className="bg-white border p-5 rounded-2xl flex flex-col justify-center gap-3">
-              {eventPartners?.length !== 0 && (
-                <>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-medium">Хамтрагч байгууллага:</label>
-                    {eventPartners?.map(
-                      ({ owner }: { owner: any }, ind: number) => (
-                        <div
-                          className="flex flex-row gap-2 items-center"
-                          key={ind}
-                        >
-                          <Image
-                            src={
-                              owner.images?.[0]?.path ||
-                              "/assets/placeholder.svg"
-                            }
-                            width={36}
-                            height={36}
-                            className="object-cover"
-                            alt={"OwnerProfile"}
-                          />
-                          <h3 className="text-lg font-semibold text-black/70">
-                            {owner.username}
-                          </h3>
-                        </div>
-                      )
-                    )}
-                  </div>
-                  <hr className="mt-2" />
-                </>
-              )}
+            </Col>
+            <Col span={8}>
+              <div className="flex flex-col sm:flex-row md:flex-col gap-4">
+                {/* <div className="flex sm:hidden md:flex border border-primary items-center justify-center rounded-full font-semibold text-center h-min">
+                  {eventData.type === "volunteering_event"
+                    ? "Сайн дурын арга хэмжээ"
+                    : "Арга хэмжээ"}
+                </div> */}
+                <div className="bg-white border p-5 rounded-2xl">
+                  {eventData?.owner && (
+                    <div>
+                      <Divider className="!mt-2">
+                        <Title level={5}>Зохион байгуулагч:</Title>
+                      </Divider>
+                      <Flex justify="center">
+                        <Avatar
+                          size={32}
+                          src={
+                            ownerProfileImage?.path ||
+                            eventData?.owner.images?.[0]?.path ||
+                            "/assets/placeholder.svg"
+                          }
+                        />
 
-              {eventData.address?.address && (
-                <>
-                  <div className="flex gap-2 flex-row">
-                    <h5 className="text-black/70 font-semibold">
-                      <label className="text-black font-medium">
-                        Байршил:{" "}
-                      </label>
-                      {eventData.address?.address}
-                    </h5>
-                  </div>
-                  <hr />
-                </>
-              )}
+                        <Title level={5} className="text-center">
+                          {eventData.owner.organization ||
+                            eventData.owner.username}
+                        </Title>
+                      </Flex>
+                    </div>
+                  )}
 
-              <div className="flex flex-col gap-2">
-                <label className="font-medium">
-                  Өргөдөл хүлээн авах хугацаа:
-                </label>
-                <h5 className="text-black/70 font-semibold">
-                  {toDateString(eventData.endTime)}
-                </h5>
+                  <div className={`w-full ${eventData?.owner ? "mt-4" : ""}`}>
+                    <ParticipateButton slug={params.slug} />
+                  </div>
+                </div>
+
+                <List bordered className="bg-white">
+                  <List.Item actions={[<EventState />]}>
+                    <Typography.Text>Төлөв:</Typography.Text>
+                  </List.Item>
+
+                  <List.Item
+                    actions={[
+                      <Avatar.Group>
+                        <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
+                        <Tooltip title="Ant User" placement="top">
+                          <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
+                        </Tooltip>
+                        <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
+                      </Avatar.Group>,
+                    ]}
+                  >
+                    <Typography.Text>Хамтрагч байгууллага:</Typography.Text>
+                  </List.Item>
+
+                  <List.Item
+                    actions={[
+                      `${dayjs(eventData.registrationStartTime).format(
+                        "YYYY/MM/DD"
+                      )} - ${dayjs(eventData.registrationEndTime).format(
+                        "YYYY/MM/DD"
+                      )}`,
+                    ]}
+                  >
+                    <Typography.Text>Бүртгэлийн хугацаа:</Typography.Text>
+                  </List.Item>
+
+                  <List.Item
+                    actions={[
+                      `${dayjs(eventData.startTime).format(
+                        "YYYY/MM/DD"
+                      )} - ${dayjs(eventData.endTime).format("YYYY/MM/DD")}`,
+                    ]}
+                  >
+                    <Typography.Text>Үргэлжлэх хугацаа:</Typography.Text>
+                  </List.Item>
+                </List>
+
+                <PartnerList />
               </div>
-            </div>
-          </div>
-          <div className="min-h-[512px] bg-white rounded-2xl flex overflow-hidden">
-            <Ad position="ad_event_detail_3x2" />
-          </div>
+              {/* <div className="min-h-[512px] bg-white rounded-2xl flex overflow-hidden">
+                <Ad position="ad_event_detail_3x2" />
+              </div> */}
+            </Col>
+          </Row>
         </div>
       </div>
     </MainLayout>

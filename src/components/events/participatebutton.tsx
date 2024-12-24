@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "../button";
+// import { Button } from "../button";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { Button, Alert, Typography } from "antd";
+const { Text } = Typography;
 
 export const ParticipateButton = ({ slug }: { slug: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,30 +40,28 @@ export const ParticipateButton = ({ slug }: { slug: string }) => {
     }
     setLoading(false);
   };
-  if (loading) {
-    return (
-      <div className="p-3 text-primary text-lg font-semibold text-center">
-        Уншиж байна...
-      </div>
-    );
-  }
+
   if (error) {
     return (
-      <div className="p-3 text-red-600 text-lg font-semibold text-center">
-        {error}
-      </div>
+      <Alert
+        type="warning"
+        message={<Text strong>{error}</Text>}
+        className="text-center"
+      />
     );
   }
   if (success) {
-    return (
-      <div className="p-3 text-primary text-lg font-semibold text-center">
-        {success}
-      </div>
-    );
+    return <Alert type="success" description={success} icon />;
   }
   return (
-    <Button className={`w-full`} onClick={() => participate()}>
-      ОРОЛЦОХ
+    <Button
+      type="primary"
+      block
+      size="large"
+      onClick={() => participate()}
+      loading={loading}
+    >
+      Оролцох
     </Button>
   );
 };
