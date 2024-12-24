@@ -72,9 +72,13 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
     }
 
     return eventData.isEnabled ? (
-      <Tag color="green">Нийтлэгдсэн</Tag>
+      <Tag color="green" key="green">
+        Нийтлэгдсэн
+      </Tag>
     ) : (
-      <Tag color="warning">Хянагдаж байна</Tag>
+      <Tag color="warning" key="warning">
+        Хянагдаж байна
+      </Tag>
     );
   };
 
@@ -246,20 +250,37 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
                 </div>
 
                 <List bordered className="bg-white">
-                  <List.Item actions={[<EventState />]}>
+                  <List.Item
+                    actions={[<EventState key="event-state" />]}
+                    key="Төлөв"
+                  >
                     <Typography.Text>Төлөв:</Typography.Text>
                   </List.Item>
 
                   <List.Item
                     actions={[
-                      <Avatar.Group>
-                        <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
-                        <Tooltip title="Ant User" placement="top">
-                          <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
+                      <Avatar.Group key="avatar-group">
+                        <Avatar
+                          src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png"
+                          key="avatar-1"
+                        />
+                        <Tooltip
+                          title="Ant User"
+                          placement="top"
+                          key="avatar-tooltip"
+                        >
+                          <Avatar
+                            src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png"
+                            key="avatar-2"
+                          />
                         </Tooltip>
-                        <Avatar src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png" />
+                        <Avatar
+                          src="https://d2mstmber8qwm7.cloudfront.net/uploads/18/5a/cfe32b6673fac90cf003d21ff4b7.png"
+                          key="avatar-3"
+                        />
                       </Avatar.Group>,
                     ]}
+                    key="avatar"
                   >
                     <Typography.Text>Хамтрагч байгууллага:</Typography.Text>
                   </List.Item>
@@ -272,6 +293,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
                         "YYYY/MM/DD"
                       )}`,
                     ]}
+                    key="date"
                   >
                     <Typography.Text>Бүртгэлийн хугацаа:</Typography.Text>
                   </List.Item>
@@ -282,6 +304,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
                         "YYYY/MM/DD"
                       )} - ${dayjs(eventData.endTime).format("YYYY/MM/DD")}`,
                     ]}
+                    key="endDate"
                   >
                     <Typography.Text>Үргэлжлэх хугацаа:</Typography.Text>
                   </List.Item>

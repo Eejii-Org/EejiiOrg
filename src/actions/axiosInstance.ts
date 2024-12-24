@@ -18,12 +18,7 @@ export const authHeader = () => {
 };
 
 let apiUrl;
-
-if (process.env.NODE_ENV === "development") {
-  apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-} else {
-  apiUrl = process.env.NEXT_PUBLIC_PROD_BACKEND_URL;
-}
+apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // Server Instance Options
 const AxiosInstance = axios.create({
