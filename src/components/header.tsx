@@ -60,7 +60,7 @@ export const Header = () => {
 
   return (
     <>
-      <div className="fixed w-full bg-white top-0 bg-red-600 h-8 text-white text-sm text-center leading-8 z-50">
+      <div className="fixed w-full top-0 bg-red-600 h-8 text-white text-sm text-center leading-8 z-50">
         (Туршилтын хувилбар) Хөгжүүлэлт хийгдэж байна. Хэрэв та алдаа олж
         илрүүлбэл бидэнд мэдэгдэнэ үү!
       </div>
