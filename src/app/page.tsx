@@ -32,6 +32,7 @@ const Home = async () => {
           (data?.thisMonthProjectsAndEvents as number) ?? 0
         }
       />
+
       <UserTypeExplain />
       <Features features={features} />
       <LatestProjects latestProjects={latestProjects} />

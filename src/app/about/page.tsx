@@ -89,7 +89,7 @@ const About = () => {
         </section>
 
         {/* second section */}
-        <section className="w-full bg-gradient-to-r from-[#F7F7F7] to-[#FFF8EE] py-16">
+        {/* <section className="w-full bg-gradient-to-r from-[#F7F7F7] to-[#FFF8EE] py-16">
           <div className="container">
             <p className="text-center font-semibold text-2xl md:text-3xl mb-5">
               Яагаад хураамж төлөх ёстой вэ?
@@ -144,8 +144,8 @@ const About = () => {
                     </button>
                   </Link>
                 </div>
-                {/* <div className="hidden max-md:snap-always max-md:snap-center w-[359px] flex-col justify-around rounded-xl bg-[url('/images/about/blueBG.png')] bg-cover pt-5  text-center before:relative before:h-[28px] before:bg-white before:w-[4px] before:rounded-sm">
-                  {' '}
+                <div className="hidden max-md:snap-always max-md:snap-center w-[359px] flex-col justify-around rounded-xl bg-[url('/images/about/blueBG.png')] bg-cover pt-5  text-center before:relative before:h-[28px] before:bg-white before:w-[4px] before:rounded-sm">
+                  {" "}
                   <section className="flex justify-around mx-auto">
                     <div className="flex pb-6 w-[329px] flex-col justify-around text-center">
                       <h2 className="relative bottom-7 left-3 flex text-3xl font-black">
@@ -181,7 +181,7 @@ const About = () => {
                       </Link>
                     </div>
                   </section>
-                </div> */}
+                </div>
 
                 <div className="mx-auto max-md:snap-always max-md:snap-center flex max-md:min-w-[80vw] md:flex-1 flex-col h-[278px] rounded-xl bg-[url('/assets/about/standartPartnerBG.png')] bg-cover px-5 py-6">
                   <h2 className="flex text-3xl mb-1 font-black before:relative before:h-[28px] before:bg-white before:w-[4px] before:rounded-sm before:right-5">
@@ -375,7 +375,7 @@ const About = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="bg-gradient-to-r from-[#C6EFF1] from-10% via-[#F4F1FF] to-[#F9E0BA] py-16 md:py-28">
           <div className="container grid sm:grid-cols-2 lg:grid-cols-4 justify-center gap-10">

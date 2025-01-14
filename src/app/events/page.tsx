@@ -14,16 +14,18 @@ import {
   Card,
   Avatar,
   Tooltip,
+  Tag,
   Radio,
   Flex,
   message,
+  Divider,
 } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Meta } = Card;
 const { Search } = Input;
 const options = [
@@ -135,9 +137,71 @@ const EventsPage = ({ searchParams }) => {
     return (
       <Row gutter={[20, 15]} className="mt-6">
         {events.map((item) => (
-          <Col span={6} key={item.id}>
-            {console.log("item")}
-            <Card
+          <Col span={16} key={item.id} offset={3}>
+            <div className="bg-white rounded-md shadow-sm overflow-hidden">
+              <Row gutter={[15, 15]}>
+                <Col span={10}>
+                  <Link href={"/events/" + item.slug}>
+                    <img
+                      alt="example"
+                      src={item.images[0]?.path || "/assets/placeholder.svg"}
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0,
+
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Link>
+                </Col>
+                <Col span={14}>
+                  <div className="py-8 px-6">
+                    <Link href={"/events/" + item.slug}>
+                      <Title level={4}>{item.title}</Title>
+                    </Link>
+                    {console.log("itemaaaaaaaaaaaaaaaaaa", item)}
+                    Eum reprehenderit eligendi magnam amet, quae, obcaecati
+                    voluptas repellat, sit illo necessitatibus qui cumque fugit
+                    rem ab? Eum reprehenderit eligendi magnam amet, quae,
+                    obcaecati voluptas repellat, sit illo necessitatibus qui
+                    cumque fugit rem ab?
+                    {item?.shortDescription}
+                    <Divider style={{ margin: "12px 0" }} />
+                    <Space>
+                      <Text type="secondary">
+                        <Space>
+                          <div>Хүний тоо:</div>
+                          <Tag color="orange">
+                            {item?.maxVolunteers ? item?.maxVolunteers : "NA"}
+                          </Tag>
+                        </Space>
+                      </Text>
+
+                      <Text type="secondary">
+                        <Space size="small">
+                          <div>Бүртгэл хаагдах:</div>
+                          <Tag color="orange">
+                            {dayjs(item?.endTime).format("YYYY.MM.DD")}
+                          </Tag>
+                        </Space>
+                      </Text>
+
+                      <Text type="secondary">
+                        <Space>
+                          <div>Хамтагч:</div>
+                          <Avatar src={item?.images[0]?.path} />
+                        </Space>
+                      </Text>
+                    </Space>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+
+            {/* <Card
               cover={
                 <Link href={"/events/" + item.slug}>
                   <img
@@ -173,7 +237,7 @@ const EventsPage = ({ searchParams }) => {
                   </div>
                 }
               />
-            </Card>
+            </Card> */}
           </Col>
         ))}
       </Row>
@@ -182,50 +246,44 @@ const EventsPage = ({ searchParams }) => {
 
   return (
     <MainLayout>
-      <FeaturedSlider featured={featured} />
+      {/* <FeaturedSlider featured={featured} /> */}
 
       <div className="bg-[#f5f5f5] pt-8">
         <div className="container">
-          <Space direction="vertical" style={{ width: "100%" }}>
-            <Title level={4}>Арга хэмжээнүүд</Title>
+          <Row gutter={[20, 15]} className="mt-6">
+            <Col span={12} offset={3}>
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <Title level={4}>Арга хэмжээнүүд</Title>
 
-            <div className="flex justify-between">
-              <Radio.Group
-                options={options}
-                defaultValue={null}
-                optionType="button"
-                buttonStyle="solid"
-                onChange={handleChangeType}
-              />
+                <div className="flex justify-between">
+                  <Radio.Group
+                    options={options}
+                    defaultValue={null}
+                    optionType="button"
+                    buttonStyle="solid"
+                    onChange={handleChangeType}
+                  />
 
-              <Space>
-                <Search placeholder="Search..." />
-                <Select
-                  allowClear
-                  style={{ width: 220 }}
-                  placeholder="Ангилал сонгох"
-                  onChange={handleSelectCategory}
-                  options={categories.map((item) => ({
-                    label: item.name,
-                    value: item.slug,
-                  }))}
-                />
+                  <Space>
+                    <Search placeholder="Search..." />
+                    <Select
+                      allowClear
+                      style={{ width: 220 }}
+                      placeholder="Ангилал сонгох"
+                      onChange={handleSelectCategory}
+                      options={categories.map((item) => ({
+                        label: item.name,
+                        value: item.slug,
+                      }))}
+                    />
+                  </Space>
+                </div>
               </Space>
-            </div>
-          </Space>
-
+            </Col>
+          </Row>
           {eventloading ? (
             <Row gutter={[20, 15]} className="mt-6">
-              <Col span={6}>
-                <Card loading={true} />
-              </Col>
-              <Col span={6}>
-                <Card loading={true} />
-              </Col>
-              <Col span={6}>
-                <Card loading={true} />
-              </Col>
-              <Col span={6}>
+              <Col span={12} offset={6}>
                 <Card loading={true} />
               </Col>
             </Row>

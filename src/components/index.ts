@@ -1,6 +1,7 @@
 export * from "./home";
 export * from "./auth";
 export * from "./events";
+export * from "./projects";
 export * from "./partners";
 export * from "./supporters";
 export * from "./profile";

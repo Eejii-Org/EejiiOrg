@@ -32,18 +32,18 @@ export const Banner = ({
   // //   : '';
   // console.log(HomeMiddleLeft);
   return (
-    <div className="container flex flex-col">
-      <div className="flex-1 flex flex-col justify-between items-center text-lg py-11 gap-16 text-center md:text-left">
-        <div className="flex flex-col text-center gap-6">
+    <div className="bg-[url('https://img.freepik.com/premium-photo/blur-colorful-background-gradient-blurred-colorful-with-grain-noise-effect_558873-5103.jpg?semt=ais_hybrid')] bg-cover bg-bottom bg-right">
+      <div className="container relative pt-40">
+        <div className="flex flex-col text-center gap-6 absolute m-0 left-10 right-10 top-20">
           <h1 className="text-2xl md:text-4xl font-bold text-[#245255]">
             Хамтдаа <br /> хайр дүүрэн ертөнцийг бүтээе
           </h1>
           <div className="flex flex-col gap-1">
-            <p className="text-lg md:text-2xl ">
+            <p className="text-lg md:text-xl ">
               Монгол дахь хүмүүнлэгийн үйл ажиллагаа <br /> болон сайн дурынхныг
               дэмжих сан
             </p>
-            <h2 className="text-primary pt-2 text-lg md:text-2xl font-extrabold uppercase">
+            <h2 className="text-primary pt-2 text-md md:text-xl font-extrabold uppercase">
               All in one
             </h2>
           </div>
