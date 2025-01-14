@@ -87,48 +87,48 @@ const EventsPage = ({ searchParams }) => {
 
   console.log("fraetured", featured);
 
-  // Load initial data on page load or filter change
-  useEffect(() => {
-    setEventLoading(true);
-    fetchEvent();
-    fetchCategories();
-    fetchFeatured();
-  }, [type, search, category, limit]);
+  // // Load initial data on page load or filter change
+  // useEffect(() => {
+  //   setEventLoading(true);
+  //   fetchEvent();
+  //   fetchCategories();
+  //   fetchFeatured();
+  // }, [type, search, category, limit]);
 
-  // Handle changing type filter
-  const handleChangeType = (e) => {
-    const value = e.target.value;
-    const currentParams = new URLSearchParams(window.location.search);
+  // // Handle changing type filter
+  // const handleChangeType = (e) => {
+  //   const value = e.target.value;
+  //   const currentParams = new URLSearchParams(window.location.search);
 
-    setEventLoading(true);
-    if (!value) {
-      currentParams.delete("type");
-    } else {
-      currentParams.set("type", value);
-    }
-    router.replace(`?${currentParams.toString()}`, { scroll: false });
-  };
+  //   setEventLoading(true);
+  //   if (!value) {
+  //     currentParams.delete("type");
+  //   } else {
+  //     currentParams.set("type", value);
+  //   }
+  //   router.replace(`?${currentParams.toString()}`, { scroll: false });
+  // };
 
-  // Handle category selection
-  const handleSelectCategory = (value) => {
-    const currentParams = new URLSearchParams(window.location.search);
-    setEventLoading(true);
+  // // Handle category selection
+  // const handleSelectCategory = (value) => {
+  //   const currentParams = new URLSearchParams(window.location.search);
+  //   setEventLoading(true);
 
-    if (!value) {
-      currentParams.delete("category.slug");
-    } else {
-      currentParams.set("category.slug", value);
-    }
-    router.replace(`?${currentParams.toString()}`, { scroll: false });
-  };
+  //   if (!value) {
+  //     currentParams.delete("category.slug");
+  //   } else {
+  //     currentParams.set("category.slug", value);
+  //   }
+  //   router.replace(`?${currentParams.toString()}`, { scroll: false });
+  // };
 
-  // Handle loading more events
-  const handleLoadMore = () => {
-    const currentParams = new URLSearchParams(window.location.search);
-    const currentLimit = parseInt(currentParams.get("limit") || "12", 10);
-    currentParams.set("limit", currentLimit + 12);
-    router.replace(`?${currentParams.toString()}`, { scroll: false });
-  };
+  // // Handle loading more events
+  // const handleLoadMore = () => {
+  //   const currentParams = new URLSearchParams(window.location.search);
+  //   const currentLimit = parseInt(currentParams.get("limit") || "12", 10);
+  //   currentParams.set("limit", currentLimit + 12);
+  //   router.replace(`?${currentParams.toString()}`, { scroll: false });
+  // };
 
   // Render event list
   const RenderList = () => {
