@@ -246,16 +246,15 @@ const EventsPage = ({ searchParams }) => {
 
   return (
     <MainLayout>
-      {/* <FeaturedSlider featured={featured} /> */}
+      <FeaturedSlider featured={featured} />
 
       <div className="bg-[#f5f5f5] pt-8">
         <div className="container">
-          <Row gutter={[20, 15]} className="mt-6">
+          <Row gutter={[20, 15]}>
             <Col span={12} offset={3}>
-              <Space direction="vertical" style={{ width: "100%" }}>
-                <Title level={4}>Арга хэмжээнүүд</Title>
-
-                <div className="flex justify-between">
+              <Title level={4}>Арга хэмжээнүүд</Title>
+              <Row gutter={10}>
+                <Col span={12}>
                   <Radio.Group
                     options={options}
                     defaultValue={null}
@@ -263,12 +262,13 @@ const EventsPage = ({ searchParams }) => {
                     buttonStyle="solid"
                     onChange={handleChangeType}
                   />
-
+                </Col>
+                <Col span={12}>
                   <Space>
-                    <Search placeholder="Search..." />
+                    <Search placeholder="Search..." style={{ width: "100%" }} />
                     <Select
                       allowClear
-                      style={{ width: 220 }}
+                      style={{ width: "100%" }}
                       placeholder="Ангилал сонгох"
                       onChange={handleSelectCategory}
                       options={categories.map((item) => ({
@@ -277,8 +277,8 @@ const EventsPage = ({ searchParams }) => {
                       }))}
                     />
                   </Space>
-                </div>
-              </Space>
+                </Col>
+              </Row>
             </Col>
           </Row>
           {eventloading ? (

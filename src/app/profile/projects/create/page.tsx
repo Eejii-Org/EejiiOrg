@@ -12,13 +12,13 @@ const ProjectCreate = () => {
   const router = useRouter();
   const [category, setCategory] = useState([]);
   const { user } = useAuth();
-  const { eventPermit, volunteeringEventPermit, state } = user;
+  const { fundraisingPermit, grantFundraisingPermit, state } = user;
   const checkState = state === "accepted";
-  const isEventPermit = eventPermit > 0;
-  const isVolPermit = volunteeringEventPermit > 0;
+  const isFundPermit = fundraisingPermit > 0;
+  const isGrantPermit = grantFundraisingPermit > 0;
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-  const eventType = searchParams.get("type");
+  const projectType = searchParams.get("type");
 
   useEffect(() => {
     if (!checkState) {
@@ -26,8 +26,8 @@ const ProjectCreate = () => {
       return;
     }
     if (
-      (!isVolPermit && eventType === "volunteering_event") ||
-      (!isEventPermit && eventType === "event")
+      (!isGrantPermit && projectType === "grant_fundraising") ||
+      (!isFundPermit && projectType === "fundraising")
     ) {
       router.push("/profile/result?reason=nopermit");
       return;
@@ -51,23 +51,23 @@ const ProjectCreate = () => {
     };
 
     fetchCategories();
-  }, [checkState, isVolPermit, eventType, isEventPermit, router]);
+  }, [checkState, isFundPermit, projectType, isFundPermit, router]);
 
   useEffect(() => {}, [state]);
 
   return (
     <div className="bg-white p-6 rounded-md">
       <Title level={5}>
-        {eventType === "volunteering_event"
-          ? "Хандив авах төсөл үүсгэх:"
-          : "Хандив өгөх төсөл үүсгэх:"}
+        {projectType === "fundraising"
+          ? "Хандив өгөх төсөл үүсгэх:"
+          : "Хандив босгох төсөл үүсгэх:"}
       </Title>
       <Divider />
 
       {loading ? (
         <Skeleton active />
       ) : (
-        <ProjectForm categories={category} eventType={eventType} />
+        <ProjectForm categories={category} projectType={projectType} />
       )}
     </div>
   );

@@ -2,13 +2,16 @@
 import { useEffect, useState } from "react";
 import { api } from "@/actions";
 import DonateModal from "@/components/donate/donateModal";
+import { useAuth } from "@/providers";
 import {
   Button,
   message,
   Typography,
   Space,
   Flex,
-  Select,
+  Row,
+  Col,
+  Tag,
   Skeleton,
 } from "antd";
 
@@ -19,9 +22,10 @@ const formatPrice = (priceInCents) => {
   });
 };
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const ProfilePermit = () => {
+  const { user } = useAuth();
   const [permitData, setPermitData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qpayResult, setQpayResult] = useState();
@@ -33,6 +37,8 @@ const ProfilePermit = () => {
   useEffect(() => {
     const getPermits = async () => {
       const result = await api.get("/api/permits");
+
+      console.log("result", result);
 
       if (!result.success) {
         message.warning(result.message.message);
@@ -68,50 +74,64 @@ const ProfilePermit = () => {
     setQpayResult(result.data);
   };
 
-  const volunteerEventQuantity = () =>
-    permitData
-      .filter((item) => item?.type === "volunteering_event")
-      .map((item) => ({
-        label: `${item.quantity} удаагын эрх`,
-        value: item?.code,
-        price: item?.price,
-      }));
+  if (!permitData) return <Skeleton />;
 
-  const options = volunteerEventQuantity();
-  const selectedPrice = options.find(
-    (item) => item.value === selectedOption
-  )?.price;
+  console.log("user", user);
 
-  if (!selectedPrice) return <Skeleton />;
+  const displayMyPermits = (permit) => {};
 
   return (
     <div>
-      <div>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <Flex justify="space-between" className="bg-white p-6 rounded-md">
-            <div>
-              <Title level={5}>Сайн дурын ажил үүсгэх эрх</Title>
-              Та уг эрхийг авсанаар cайн дурын ажил үүсгэх эрхтэй болно
-            </div>
-            <Space direction="vertical">
-              <Select
-                options={volunteerEventQuantity()}
-                onChange={(value) => setSelectedOption(value)}
-                defaultValue="createVolunteeringEvent"
-              />
-              <Button
-                loading={btnLoading}
-                block
-                type="primary"
-                onClick={() => handleBuy(selectedOption)} // Pass the selected option's value
-              >
-                {selectedPrice ? `₮${formatPrice(selectedPrice)}` : "Эрх авах"}
-                {/* Show price or default text */}
-              </Button>
-            </Space>
-          </Flex>
-        </Space>
-      </div>
+      <Row gutter={[15, 15]}>
+        {permitData.map((item) => (
+          <Col span={24}>
+            <Flex justify="space-between" className="bg-white p-6 rounded-md">
+              <div>
+                <Title level={5}>
+                  <Space>
+                    {item.name}
+                    <Tag color="green">
+                      Танд нийт {user[item.code]} эрх байна
+                    </Tag>
+                  </Space>
+                </Title>
+
+                <Text type="secondary">
+                  <div
+                    className="w-full"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                </Text>
+              </div>
+              <Space direction="vertical">
+                Эрх авах
+                {item?.originalPrice > 0 ? (
+                  <Button
+                    loading={btnLoading}
+                    block
+                    type="primary"
+                    onClick={() => handleBuy(item?.code)} // Pass the selected option's value
+                  >
+                    {item?.originalPrice
+                      ? `₮${formatPrice(item?.originalPrice)}`
+                      : "Эрх авах"}
+                    {/* Show price or default text */}
+                  </Button>
+                ) : (
+                  <Button
+                    loading={btnLoading}
+                    block
+                    type="primary"
+                    onClick={() => handleBuy(item?.code)} // Pass the selected option's value
+                  >
+                    Үнэгүй
+                  </Button>
+                )}
+              </Space>
+            </Flex>
+          </Col>
+        ))}
+      </Row>
 
       <DonateModal
         openModal={isModalOpen}

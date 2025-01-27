@@ -8,8 +8,8 @@ import dayjs from "dayjs";
 
 import {
   PlusCircleOutlined,
-  UsergroupAddOutlined,
-  CalendarOutlined,
+  DropboxOutlined,
+  CodeSandboxOutlined,
 } from "@ant-design/icons";
 import { Button, Table, Typography, Flex, Modal, Row, Col, Result } from "antd";
 
@@ -97,12 +97,12 @@ const ProfileProjects = () => {
           <Col span={12}>
             <Result
               className="bg-[#f5f5f5]  rounded-md"
-              icon={null}
-              title="Хандив өгөх төсөл"
+              icon={<DropboxOutlined />}
+              title="Өгөх төсөл"
               subTitle={`Танд хандив өгөх төсөл үүсгэх ${user?.fundraisingPermit} эрх байна.`}
               extra={[
                 <Link
-                  href="/profile/events/create?type=event"
+                  href="/profile/projects/create?type=fundraising"
                   key="Шинээр үүсгэх"
                 >
                   <Button type="primary" key="console">
@@ -116,12 +116,12 @@ const ProfileProjects = () => {
           <Col span={12}>
             <Result
               className="bg-[#f5f5f5]  rounded-md"
-              icon={null}
-              title="Хандив авах төсөл"
+              icon={<CodeSandboxOutlined />}
+              title="Хандив босгох төсөл"
               subTitle={`Танд хандив авах төсөл үүсгэх ${user?.grantFundraisingPermit} эрх байна.`}
               extra={[
                 <Link
-                  href="/profile/events/create?type=volunteering_event"
+                  href="/profile/projects/create?type=grant_fundraising"
                   key="Шинээр үүсгэх"
                 >
                   <Button type="primary" key="console">
