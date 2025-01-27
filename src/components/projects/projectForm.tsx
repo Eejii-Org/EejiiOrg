@@ -30,18 +30,21 @@ export const ProjectForm = ({
   const [form] = Form.useForm();
   const param = useSearchParams();
   const slug = param.get("slug");
-  form.setFieldsValue({ type: projectType });
+
+  if (projectType) {
+    form.setFieldsValue({ type: projectType });
+  }
 
   const onFinish = async (values: EventType) => {
     console.log("values", values);
     try {
       let result;
 
-      // if (slug) {
-      //   result = await api.put(`/api/events/${slug}`, values);
-      // } else {
-      //   result = await api.post("/api/projects/new", values);
-      // }
+      if (slug) {
+        result = await api.put(`/api/projects/${slug}`, values);
+      } else {
+        result = await api.post("/api/projects/new", values);
+      }
 
       result = await api.post("/api/projects/new", values);
 
@@ -51,7 +54,7 @@ export const ProjectForm = ({
       }
 
       message.success("Амжилттай!");
-      router.push("/profile/events");
+      router.push("/profile/projects");
     } catch (info) {
       console.log("Validation Failed:", info);
     }
@@ -102,7 +105,6 @@ export const ProjectForm = ({
                     width: "100%",
                   }}
                   placeholder="сонгох"
-                  defaultValue={projectType}
                   options={[
                     {
                       label: "Өгөх төсөл",

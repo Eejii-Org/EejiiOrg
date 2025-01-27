@@ -168,7 +168,10 @@ export const EventForm = ({
   const [form] = Form.useForm();
   const param = useSearchParams();
   const slug = param.get("slug");
-  form.setFieldsValue({ type: eventType });
+
+  if (eventType) {
+    form.setFieldsValue({ type: eventType });
+  }
 
   const onFinish = async (values: EventType) => {
     try {
@@ -237,7 +240,6 @@ export const EventForm = ({
                     width: "100%",
                   }}
                   placeholder="сонгох"
-                  defaultValue={eventType}
                   options={[
                     {
                       label: "Арга хэмжээ",
