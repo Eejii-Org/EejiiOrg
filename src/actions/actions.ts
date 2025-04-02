@@ -9,10 +9,6 @@ import {
 } from "@/types";
 import axios from "axios";
 
-/* 
-  Authentication
-*/
-
 export const signUp = async (userData: UserType) => {
   "use server";
 
@@ -21,7 +17,7 @@ export const signUp = async (userData: UserType) => {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register`,
       {
         ...userData,
-      }
+      },
     );
 
     return data;
@@ -38,7 +34,7 @@ export const verifyResetCode = async (email: string, resetCode: string) => {
       {
         email,
         resetCode,
-      }
+      },
     );
 
     return {
@@ -61,7 +57,7 @@ export const changePassword = async (resetData: ChangePasswordType) => {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/changePassword`,
       {
         ...resetData,
-      }
+      },
     );
 
     return {
@@ -76,14 +72,14 @@ export const changePassword = async (resetData: ChangePasswordType) => {
   }
 };
 
-/* 
+/*
   Home
 */
 
 export const getHomeStatistics = async () => {
   "use server";
   return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/statistics`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/statistics`,
   );
 };
 export const getHomeData = async () => {
@@ -91,19 +87,19 @@ export const getHomeData = async () => {
   try {
     const res = await Promise.all([
       axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&order[startTime]=asc&isEnabled=true&search=&limit=1`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&order[startTime]=asc&isEnabled=true&search=&limit=1`,
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&order[startTime]=asc&isEnabled=true&search=&type=event&limit=1`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&order[startTime]=asc&isEnabled=true&search=&type=event&limit=1`,
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&order[startTime]=asc&isEnabled=true&search=&type=volunteering_event&limit=1`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&order[startTime]=asc&isEnabled=true&search=&type=volunteering_event&limit=1`,
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&isEnabled=true&order[startTime]=asc&limit=3`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&isEnabled=true&order[startTime]=asc&limit=3`,
       ),
       axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media?order[startTime]=asc&limit=4`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media?order[startTime]=asc&limit=4`,
       ),
     ]);
     const resData = res.map((res, index) => {
@@ -133,7 +129,7 @@ export const registerCustomer = async (email: string) => {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/customers/new`,
       {
         email,
-      }
+      },
     );
     return res;
   } catch (e) {
@@ -159,14 +155,14 @@ export const registerCustomer = async (email: string) => {
 //   }
 // };
 
-/* 
+/*
   Categories
 */
 export const getCategories = async () => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`,
     );
     return res.data?.["hydra:member"];
   } catch (e) {
@@ -175,14 +171,14 @@ export const getCategories = async () => {
   }
 };
 
-/* 
+/*
   Advertisement
 */
 export const getAdvertisement = async (position: BannerPositionType) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/banners?bannerPosition.code=${position}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/banners?bannerPosition.code=${position}`,
     );
     return res.data["hydra:member"];
   } catch (e) {
@@ -191,7 +187,7 @@ export const getAdvertisement = async (position: BannerPositionType) => {
   }
 };
 
-/* 
+/*
   Media
 */
 
@@ -202,14 +198,14 @@ export const getMedias = async (page: number, q: string) => {
       process.env.NEXT_PUBLIC_BACKEND_URL
     }/api/media?order[startTime]=asc&limit=12&page=${page}${
       q ? "&title=" + q : ""
-    }`
+    }`,
   );
 };
 
 export const getMediaByPartner = async (partnerId: number, limit: number) => {
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media?order[startTime]=asc&limit=${limit}&owner.id=${partnerId}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/media?order[startTime]=asc&limit=${limit}&owner.id=${partnerId}`,
     );
     return res.data["hydra:member"];
   } catch (e) {
@@ -218,7 +214,7 @@ export const getMediaByPartner = async (partnerId: number, limit: number) => {
   }
 };
 
-/* 
+/*
   Events
 */
 
@@ -231,7 +227,7 @@ export const createEvent = async (params: EventType, token: string) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return {
@@ -250,7 +246,7 @@ export const getEvents = async (
   page: number,
   q: string,
   t: string,
-  category: string
+  category: string,
 ) => {
   "use server";
   return await axios.get(
@@ -258,14 +254,14 @@ export const getEvents = async (
       process.env.NEXT_PUBLIC_BACKEND_URL
     }/api/events?state=new&order[startTime]=asc&type=${t}&isEnabled=true&limit=12&page=${page}${
       category ? "&categories.slug=" + category : ""
-    }${q ? "&title=" + q : ""}`
+    }${q ? "&title=" + q : ""}`,
   );
 };
 
 export const getFeaturedEvents = async () => {
   "use server";
   return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&isEnabled=true&limit=4&isFeatured=true`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events?state=new&isEnabled=true&limit=4&isFeatured=true`,
   );
 };
 
@@ -273,7 +269,7 @@ export const getEvent = async (slug: string) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}`,
     );
     return res.data;
   } catch (e) {
@@ -286,7 +282,7 @@ export const getEventUsers = async (slug: string) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}/eventUsers`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${slug}/eventUsers`,
     );
     return res.data?.["hydra:member"];
   } catch (e) {
@@ -304,7 +300,7 @@ export const myEvents = async (token: string) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return res.data;
@@ -314,7 +310,7 @@ export const myEvents = async (token: string) => {
   }
 };
 
-/* 
+/*
   Events
 */
 
@@ -329,7 +325,7 @@ export const getCertificate = async (token: string) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return res.data;
@@ -348,7 +344,7 @@ export const myCertificate = async (id: string, token: string) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return res.data;
@@ -362,7 +358,7 @@ export const getProjects = async (
   page: number,
   q: string,
   t: string,
-  category: string
+  category: string,
 ) => {
   "use server";
   return await axios.get(
@@ -370,14 +366,14 @@ export const getProjects = async (
       process.env.NEXT_PUBLIC_BACKEND_URL
     }/api/projects?state=new&isEnabled=true&order[startTime]=asc&type=${t}&limit=12&page=${page}${
       q ? "&title=" + q : ""
-    }${category ? "&categories.slug=" + category : ""}`
+    }${category ? "&categories.slug=" + category : ""}`,
   );
 };
 
 export const getFeaturedProjects = async () => {
   "use server";
   return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&isEnabled=true&limit=4&isFeatured=true`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects?state=new&isEnabled=true&limit=4&isFeatured=true`,
   );
 };
 
@@ -385,7 +381,7 @@ export const getProject = async (slug: string) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects/${slug}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/projects/${slug}`,
     );
     return res;
   } catch (e) {
@@ -394,14 +390,14 @@ export const getProject = async (slug: string) => {
   }
 };
 
-/* 
+/*
   Partners
 */
 export const getPartners = async () => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners?state=accepted`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners?state=accepted`,
     );
     return res.data?.["hydra:member"];
   } catch (e) {
@@ -413,7 +409,7 @@ export const getPartner = async (id: string) => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners/${id}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/partners/${id}`,
     );
     return res.data;
   } catch (e) {
@@ -422,7 +418,7 @@ export const getPartner = async (id: string) => {
   }
 };
 
-/* 
+/*
   Volunteers
 */
 export const getVolunteers = async (q: string, level: string, page: number) => {
@@ -434,7 +430,7 @@ export const getVolunteers = async (q: string, level: string, page: number) => {
         process.env.NEXT_PUBLIC_BACKEND_URL
       }/api/volunteers?order[level]=desc&state=accepted&search=${q}&${
         level ? "level=" + level : ""
-      }&page=${page || 1}`
+      }&page=${page || 1}`,
     );
     return {
       pageLast: res.data?.["hydra:meta"].pagination.last,
@@ -450,7 +446,7 @@ export const getVolunteersCountry = async () => {
   "use server";
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/volunteersByCountry`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/home/volunteersByCountry`,
     );
     return res.data;
   } catch (e) {
@@ -459,7 +455,7 @@ export const getVolunteersCountry = async () => {
   }
 };
 
-/* 
+/*
   Supporters
 */
 
@@ -468,7 +464,7 @@ export const getSupporters = async (q: string) => {
 
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/supporters?order[totalActivityCount]=desc&totalActivityCount[gt]=0&search=${q}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/supporters?order[totalActivityCount]=desc&totalActivityCount[gt]=0&search=${q}`,
     );
     return res.data?.["hydra:member"];
   } catch (e) {
@@ -482,7 +478,7 @@ export const getSupporterData = async (id: string) => {
 
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${id}/activities`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${id}/activities`,
     );
     return res.data;
   } catch (e) {
