@@ -15,7 +15,7 @@ import {
   Skeleton,
 } from "antd";
 
-const formatPrice = (priceInCents) => {
+const formatPrice = (priceInCents: string) => {
   return (parseFloat(priceInCents) / 100).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -26,12 +26,12 @@ const { Title, Text } = Typography;
 
 const ProfilePermit = () => {
   const { user } = useAuth();
-  const [permitData, setPermitData] = useState([]);
+  const [permitData, setPermitData] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qpayResult, setQpayResult] = useState();
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>(
-    "createVolunteeringEvent"
+    "createVolunteeringEvent",
   );
 
   useEffect(() => {
@@ -78,20 +78,20 @@ const ProfilePermit = () => {
 
   console.log("user", user);
 
-  const displayMyPermits = (permit) => {};
+  const displayMyPermits = (permit: any) => {};
 
   return (
     <div>
       <Row gutter={[15, 15]}>
-        {permitData.map((item) => (
-          <Col span={24}>
+        {permitData.map((item, index) => (
+          <Col span={24} key={index}>
             <Flex justify="space-between" className="bg-white p-6 rounded-md">
               <div>
                 <Title level={5}>
                   <Space>
                     {item.name}
                     <Tag color="green">
-                      Танд нийт {user[item.code]} эрх байна
+                      Танд нийт {(user as any)?.[item.code]} эрх байна
                     </Tag>
                   </Space>
                 </Title>
@@ -137,6 +137,7 @@ const ProfilePermit = () => {
         openModal={isModalOpen}
         qpayResult={qpayResult}
         closeModal={() => setIsModalOpen(false)}
+        isDonate={false}
       />
     </div>
   );

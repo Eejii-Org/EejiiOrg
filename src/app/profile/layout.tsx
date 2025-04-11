@@ -22,7 +22,6 @@ const ProfileLayout = ({
 }>) => {
   const { user, userLoading } = useAuth();
 
-  console.log("userwwwwww", user);
   const router = useRouter();
   const pathname = usePathname();
   // Define routes that are restricted for 'volunteer' users
@@ -134,7 +133,7 @@ const ProfileLayout = ({
       item.userType === "all" ||
       (Array.isArray(item.userType)
         ? item.userType.includes(user.type)
-        : item.userType === user.type)
+        : item.userType === user.type),
   );
 
   return (
