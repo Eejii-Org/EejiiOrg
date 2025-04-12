@@ -20,6 +20,11 @@ export type UserType = {
   xp?: number;
   state?: string;
   organization?: string;
+  eventPermit?: number;
+  fundraisingPermit?: number;
+  grantFundraisingPermit?: number;
+  mediaPermit?: number;
+  volunteeringEventPermit?: number;
 };
 
 export type OwnerType = {
