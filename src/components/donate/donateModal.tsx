@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
-import { Row, Col, Divider, Modal, Form, Input, Select } from "antd";
+import { Row, Col, Divider, Modal, message, Button } from "antd";
+import { useState } from "react";
+import { api } from "@/actions";
 
 const amountOptions = [
   {
@@ -38,12 +40,42 @@ const DonateModal = ({
   closeModal,
   qpayResult,
   isDonate,
+  onSuccess,
 }: {
   openModal: boolean;
   closeModal: () => void;
   isDonate: boolean;
   qpayResult: any;
+  onSuccess?: () => void;
 }) => {
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
+
+  const handleCheck = async () => {
+    setBtnLoading(true);
+    const result = await api.get(
+      `/api/payments/${qpayResult.invoice_id}/check`,
+    );
+
+    if (!result.success) {
+      message.warning(result?.message?.message);
+      setBtnLoading(false);
+      return;
+    }
+
+    if (result.data.message.state !== "paid") {
+      message.warning("Төлбөр төлөгдөөгүй");
+    }
+
+    if (result.data.message.state === "paid") {
+      message.success("Амжилттай");
+      if (onSuccess) {
+        onSuccess();
+      }
+      closeModal();
+    }
+    setBtnLoading(false);
+  };
+
   return (
     <Modal
       title={isDonate ? `Хандив өгөх` : `Эрх авах`}
@@ -74,6 +106,15 @@ const DonateModal = ({
             </a>
           </Col>
         ))}
+      </Row>
+      <Row>
+        <Button
+          loading={btnLoading}
+          onClick={handleCheck}
+          className="w-full mt-4"
+        >
+          Төлбөр шалгах
+        </Button>
       </Row>
     </Modal>
   );
