@@ -15,6 +15,14 @@ const EventEdit = () => {
   const [detail, setDetail] = useState();
   const [category, setCategory] = useState([]);
 
+
+  useEffect(() => {
+    if(slug) {
+      fetchDetail();
+    }
+    
+  }, [slug]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       const result = await api.get('/api/categories');
@@ -38,8 +46,6 @@ const EventEdit = () => {
   const fetchDetail = async () => {
     const result = await api.get(`/api/events/${slug}`);
 
-    console.log('result', result);
-
     if (!result.success) return message.warning(result.message.message);
 
     const updatedCategory = result.data?.categories.map((cat) => ({
@@ -60,9 +66,8 @@ const EventEdit = () => {
     setDetail(updatedData);
   };
 
-  useEffect(() => {
-    fetchDetail();
-  }, [slug]);
+  console.log('detail', detail);
+
 
   return (
     <div className="bg-white p-6 rounded-md">
