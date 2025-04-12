@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
-import { Row, Col, Divider, Modal, Form, Input, Select } from "antd";
+import { Row, Col, Divider, Modal, message, Button } from "antd";
+import { useState } from "react";
+import { api } from "@/actions";
 
 const amountOptions = [
   {
@@ -33,7 +35,47 @@ const amountOptions = [
   },
 ];
 
-const DonateModal = ({ openModal, closeModal, qpayResult, isDonate }) => {
+const DonateModal = ({
+  openModal,
+  closeModal,
+  qpayResult,
+  isDonate,
+  onSuccess,
+}: {
+  openModal: boolean;
+  closeModal: () => void;
+  isDonate: boolean;
+  qpayResult: any;
+  onSuccess?: () => void;
+}) => {
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
+
+  const handleCheck = async () => {
+    setBtnLoading(true);
+    const result = await api.get(
+      `/api/payments/${qpayResult.invoice_id}/check`,
+    );
+
+    if (!result.success) {
+      message.warning(result?.message?.message);
+      setBtnLoading(false);
+      return;
+    }
+
+    if (result.data.message.state !== "paid") {
+      message.warning("Төлбөр төлөгдөөгүй");
+    }
+
+    if (result.data.message.state === "paid") {
+      message.success("Амжилттай");
+      if (onSuccess) {
+        onSuccess();
+      }
+      closeModal();
+    }
+    setBtnLoading(false);
+  };
+
   return (
     <Modal
       title={isDonate ? `Хандив өгөх` : `Эрх авах`}
@@ -51,11 +93,12 @@ const DonateModal = ({ openModal, closeModal, qpayResult, isDonate }) => {
       />
       <Divider>Гар утасны апп ашиглах</Divider>
       <Row gutter={[10, 10]}>
-        {qpayResult?.urls?.map((bank, idx) => (
+        {qpayResult?.urls?.map((bank: any, idx: number) => (
           <Col span={3} key={idx}>
             <a data-app={bank.link}>
-              <img
+              <Image
                 src={bank.logo}
+                alt=""
                 width={180}
                 height={180}
                 className="rounded-lg shadow-[0_5px_28px_0_rgba(0,0,0,0.1)] border border-[#e2e2e2]"
@@ -63,6 +106,15 @@ const DonateModal = ({ openModal, closeModal, qpayResult, isDonate }) => {
             </a>
           </Col>
         ))}
+      </Row>
+      <Row>
+        <Button
+          loading={btnLoading}
+          onClick={handleCheck}
+          className="w-full mt-4"
+        >
+          Төлбөр шалгах
+        </Button>
       </Row>
     </Modal>
   );

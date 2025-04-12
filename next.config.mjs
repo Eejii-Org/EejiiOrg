@@ -10,6 +10,18 @@ const nextConfig = {
         port: "",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "s3.qpay.mn",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "qpay.mn",
+        port: "",
+        pathname: "**",
+      },
     ],
   },
   experimental: {
