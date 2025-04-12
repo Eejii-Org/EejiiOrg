@@ -1,31 +1,31 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/providers";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Typography, Divider, message, Skeleton } from "antd";
-import { api } from "@/actions";
-import { EventForm } from "@/components";
-import dayjs from "dayjs";
+'use client';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/providers';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Typography, Divider, message, Skeleton } from 'antd';
+import { api } from '@/actions';
+import { EventForm } from '@/components';
+import dayjs from 'dayjs';
 const { Title } = Typography;
 
 const EventEdit = () => {
   const router = useRouter();
   const param = useSearchParams();
-  const slug = param.get("slug");
+  const slug = param.get('slug');
   const [detail, setDetail] = useState();
   const [category, setCategory] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const result = await api.get("/api/categories");
+      const result = await api.get('/api/categories');
 
       if (!result.success) return message.warning(result.message.message);
 
-      const categories = result.data?.["hydra:member"];
+      const categories = result.data?.['hydra:member'];
 
       const updatedCategory = categories.map((cat) => ({
         label: cat.name,
-        value: cat["@id"],
+        value: cat['@id'],
         key: cat.id,
       }));
 
@@ -38,11 +38,13 @@ const EventEdit = () => {
   const fetchDetail = async () => {
     const result = await api.get(`/api/events/${slug}`);
 
+    console.log('result', result);
+
     if (!result.success) return message.warning(result.message.message);
 
     const updatedCategory = result.data?.categories.map((cat) => ({
       label: cat.name,
-      value: cat["@id"],
+      value: cat['@id'],
       key: cat.id,
     }));
 
@@ -60,7 +62,7 @@ const EventEdit = () => {
 
   useEffect(() => {
     fetchDetail();
-  }, []);
+  }, [slug]);
 
   return (
     <div className="bg-white p-6 rounded-md">
